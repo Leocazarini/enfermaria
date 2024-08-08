@@ -19,7 +19,7 @@ def home(request):
 
 
 # Appointments views
-def student(request, id_name, id_number):
+def student(request):
     if request.method == 'GET':
         return render(request, 'appointment/student.html')
     
@@ -28,7 +28,7 @@ def student(request, id_name, id_number):
         pass
 
 
-def employee(request, id_name, id_number):
+def employee(request):
     if request.method == 'GET':
         return render(request, 'appointment/employee.html')
     

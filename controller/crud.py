@@ -3,9 +3,6 @@ from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.forms.models import model_to_dict
 
-# Create your views here.
-
-
 
 
 def create_object(model, data):
@@ -44,3 +41,19 @@ def delete_object(model, pk):
     obj = get_object_or_404(model, pk=pk)
     obj.delete()
     return JsonResponse({'status': 'success', 'message': 'Deleted successfully'})
+
+
+
+
+def create_multiple_objects(model, data_list):
+    try:
+        objects = []
+        for data in data_list:
+            obj = model.objects.create(**data)
+            obj.save()
+            objects.append(model_to_dict(obj))
+        return JsonResponse({'status': 'success', 'data': objects}, status=201)
+    except ValidationError as e:
+        return JsonResponse({'status': 'error', 'message': e.message_dict}, status=400)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
