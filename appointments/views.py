@@ -1,6 +1,9 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from . import models
+from patients.models import Student, Employee, Visitor
 
-# Create your views here.
+
 
 
 # Home view
@@ -10,17 +13,34 @@ def home(request):
     
 
 
+
+
+
+
+
 # Appointments views
-def student(request):
+def student(request, id_name, id_number):
     if request.method == 'GET':
         return render(request, 'appointment/student.html')
     
+    if request.method == 'POST': 
+        
+        pass
 
 
-def employee(request):
+def employee(request, id_name, id_number):
     if request.method == 'GET':
         return render(request, 'appointment/employee.html')
     
+
+
+
+
+
+
+
+
+
 
 def visitor(request):
     if request.method == 'GET':

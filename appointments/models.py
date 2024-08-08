@@ -5,16 +5,26 @@ from patients.models import Student, Employee, Visitor
 
 
 
-# workspace indentifier
+# workspace indentifiers
 class Infirmary(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
-    capacity = models.IntegerField()
+
 
     def __str__(self):
         return self.name
     
+
+class Nurse(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
+    badge_number = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
 
 # appointment models
 

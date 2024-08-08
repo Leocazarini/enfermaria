@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 
     # Project apps
     'appointments.apps.AppointmentsConfig',
-    'control.apps.ControlConfig',
+    'controller.apps.ControllerConfig',
     'patients.apps.PatientsConfig',
     'reports.apps.ReportsConfig',
 ]
