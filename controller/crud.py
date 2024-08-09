@@ -1,30 +1,45 @@
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.core.exceptions import ValidationError
 from django.forms.models import model_to_dict
 
 
 
-def create_object(model, data):
+def create_objects(model, data_list):
     try:
-        obj = model.objects.create(**data)
-        obj.save()
-        return JsonResponse({'status': 'success', 'id': obj.id}, status=201)
-    
+        objects = []
+        for data in data_list:
+            obj = model.objects.create(**data)
+            obj.save()
+            objects.append(model_to_dict(obj))
+        return JsonResponse({'status': 'success', 'data': objects}, status=201)
     except ValidationError as e:
         return JsonResponse({'status': 'error', 'message': e.message_dict}, status=400)
-    
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
-def get_object(model, name=None, record=None):
+
+
+
+def get_object(model, name=None, registry=None):
     if name:
-        obj = get_object_or_404(model, name=name)
-    elif record:
-        obj = get_object_or_404(model, record=record)
+        objs = model.objects.filter(name__icontains=name)
+        if not objs.exists():
+            raise Http404('No records found.')
+        return objs  
+    elif registry:
+        obj = get_object_or_404(model, registry=registry)
+        return obj  
     else:
-        return JsonResponse({'status': 'error', 'message': 'Name or record must be provided'}, status=400)
-    
-    return JsonResponse({'status': 'success', 'data': model_to_dict(obj)})
+        raise Http404('Name or registry must be provided.')
+
+
+def get_by_id(model, pk):
+    obj = get_object_or_404(model, pk=pk)
+    return obj
+
+
 
 
 
@@ -45,15 +60,3 @@ def delete_object(model, pk):
 
 
 
-def create_multiple_objects(model, data_list):
-    try:
-        objects = []
-        for data in data_list:
-            obj = model.objects.create(**data)
-            obj.save()
-            objects.append(model_to_dict(obj))
-        return JsonResponse({'status': 'success', 'data': objects}, status=201)
-    except ValidationError as e:
-        return JsonResponse({'status': 'error', 'message': e.message_dict}, status=400)
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
