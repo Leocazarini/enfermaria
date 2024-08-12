@@ -145,3 +145,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# Activate when the login template is ready
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_ONLY = True

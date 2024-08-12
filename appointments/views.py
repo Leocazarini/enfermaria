@@ -2,11 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from . import models
 from patients.models import Student, Employee, Visitor
+from django.contrib.auth.decorators import login_required
 
 
 
 
 # Home view
+
+@login_required
 def home(request):
     if request.method == 'GET':
         return render(request, 'appointment/home.html')

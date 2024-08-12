@@ -14,23 +14,23 @@
         <div class="col-md-9">
             <div class="input-group mb-3">
               <span class="input-group-text">Data</span>
-              <input type="date" class="form-control" id="campoDataAtendimentoAluno" placeholder="Data" aria-label="aluno_data">
+              <input type="date" class="form-control" id="studentDateField" placeholder="Data" aria-label="student_date">
               <span class="input-group-text">Enfermeira</span>
-              <input type="text" class="form-control" id="campoEnfermeiraAtendimentoAluno" placeholder="Enfermeira" aria-label="aluno_enfermeira">
+              <input type="text" class="form-control" id="nurseField" placeholder="Enfermeira" aria-label="student_nurse">
               <span class="input-group-text">Enfermaria</span>
-              <input type="text" class="form-control" id="campoEnfermariaAtendimentoAluno" placeholder="Enfermaria" aria-label="aluno_enfermaria">            
+              <input type="text" class="form-control" id="infirmaryField" placeholder="Enfermaria" aria-label="student_infirmary">            
             </div>
             <div class="row mb-3"> 
               <div class="col-md-3">
                 <div class="input-group"> 
                   <span class="input-group-text">ID</span>
-                  <input type="number" class="form-control" id="campoIdAluno" placeholder="RA do Aluno" aria-label="aluno_id" >
+                  <input type="number" class="form-control" id="studentIdField" placeholder="RA do Aluno" aria-label="student_id">
                 </div>
               </div>
               <div class="col-md-9">
                 <div class="input-group"> 
                   <span class="input-group-text">Nome</span>
-                  <input type="text" class="form-control" id="campoNomeAluno" placeholder="Nome do Aluno" aria-label="name" >
+                  <input type="text" class="form-control" id="studentNameField" placeholder="Nome do Aluno" aria-label="student_name">
                 </div>
               </div>
             </div>
@@ -38,72 +38,65 @@
               <div class="col-md-3">
                 <div class="input-group"> 
                   <span class="input-group-text">Sexo</span>
-                  <input type="text" class="form-control" id="campoSexoAluno" placeholder="Sexo" aria-label="aluno_sexo">
+                  <input type="text" class="form-control" id="studentGenderField" placeholder="Sexo" aria-label="student_gender">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="input-group"> 
                   <span class="input-group-text">Idade</span>
-                  <input type="number" class="form-control" id="campoIdadeAluno" placeholder="Idade" aria-label="aluno_idade">
+                  <input type="number" class="form-control" id="studentAgeField" placeholder="Idade" aria-label="student_age">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="input-group">
                   <span class="input-group-text">Turma</span>
-                  <input type="text" class="form-control" id="campoTurmaAtualAluno" placeholder="Turma" aria-label="aluno_turma">
+                  <input type="text" class="form-control" id="studentClassField" placeholder="Turma" aria-label="student_class">
                 </div>
               </div> 
               <div class="col-md-3">
                 <div class="input-group">
                   <span class="input-group-text">Aula</span>
-                  <input type="text" class="form-control" id="campoAulaAtualAluno" placeholder="Aula atual" aria-label="aluno_aula">
+                  <input type="text" class="form-control" id="currentLessonField" placeholder="Aula atual" aria-label="student_current_lesson">
                 </div>
               </div> 
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text">Alergias</span>
-              <input type="text" class="form-control" id="campoQueixaAluno" placeholder="Alergias" aria-label="aluno_alergia">
+              <input type="text" class="form-control" id="studentAllergyField" placeholder="Alergias" aria-label="student_allergy">
+            </div>
             <div class="input-group mb-3 mt-3">
               <span class="input-group-text w-100">Ocorrência</span>
-              <textarea class="form-control" id="campoOcorrenciaAluno" placeholder="Ocorrência" aria-label="aluno_ocorrencia"></textarea>
+              <textarea class="form-control" id="occurrenceField" placeholder="Ocorrência" aria-label="student_occurrence"></textarea>
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text w-100">Procedimentos</span>
-              <textarea class="form-control" id="campoProcedimentoAluno" placeholder="Procedimentos" aria-label="aluno_procedimento"></textarea>
+              <textarea class="form-control" id="procedureField" placeholder="Procedimentos" aria-label="student_procedure"></textarea>
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text w-100">Observações</span>
-              <textarea class="form-control" id="campoObservacaoAluno" placeholder="Observações" aria-label="aluno_observacao"></textarea>
+              <textarea class="form-control" id="observationField" placeholder="Observações" aria-label="student_observation"></textarea>
             </div>
           
             <div class="form-check mb-3">
-              <input class="form-check-input" type="checkbox" value="" id="contatoPaisCheck">
-              <label class="form-check-label" for="contatoPaisCheck">
+              <input class="form-check-input" type="checkbox" value="" id="parentContactCheck">
+              <label class="form-check-label" for="parentContactCheck">
                 Entrou em contato com os pais
               </label>
             </div>
             <div class="form-check mb-3">
-              <input class="form-check-input" type="checkbox" value="" id="reavaliacaoAlunoCheck">
-              <label class="form-check-label" for="reavaliacaoAlunoCheck">
+              <input class="form-check-input" type="checkbox" value="" id="reEvaluationCheck">
+              <label class="form-check-label" for="reEvaluationCheck">
                 Reavaliação
               </label>
             </div>
           </div>
-
-
-        
-
-
 
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 
     </div>
 
-
-
-
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 </body>
 </html>
