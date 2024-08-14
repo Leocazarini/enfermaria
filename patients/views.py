@@ -18,8 +18,22 @@ import json
 
 '''
 
+############################################################################################################
+'''  
+    Alterar as funções para que elas estabaleçam uma relação entre si internamente, 
+    e disponibilizem um endpoint apenas quando for necessária a interação com o usuário.
+
+    
+
+
+'''
+############################################################################################################
+
 #### ----------------- STUDENTS VIEWS ----------------- ####
 
+
+
+# endpoint - /students/create -> # Operação interna
 @csrf_exempt
 def create_students(request):
     if request.method == 'POST':
@@ -34,7 +48,7 @@ def create_students(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
-
+# endpoint - /students-info/create -> # Há interação com o usuário
 @csrf_exempt
 def create_student_info(request):
     if request.method == 'POST':
@@ -49,7 +63,26 @@ def create_student_info(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
+# endpoint - /class-groups/create -> # Operação interna
+@csrf_exempt
+def create_class_group(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            if isinstance(data, list):
+                return create_objects(ClassGroup, data)
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Invalid data format, expected a list of objects'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
+
+###
+
+
+# endpoint - /students/search -> # Há interação com o usuário
 def search_student(request):
     name = request.GET.get('name', None)
     ra = request.GET.get('ra', None)
@@ -68,7 +101,7 @@ def search_student(request):
     except Http404:
         return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
 
-
+# endpoint - /students/search/name -> # Há interação com o usuário
 def search_student_by_name(request):
     query = request.GET.get('q', '')
     if query:
@@ -89,7 +122,7 @@ def search_student_by_name(request):
         data = []
     return JsonResponse({'results': data}, status=200)    
 
-
+# endpoint - /students/search/id -> # Operação interna
 def search_student_by_id(request):
     pk = request.GET.get('id', None)
     try:
@@ -108,6 +141,8 @@ def search_student_by_id(request):
 
 
 #### ----------------- EMPLOYEES VIEWS ----------------- ####
+
+# endpoint - /employees/create -> # Operação interna
 @csrf_exempt
 def create_employees(request):
     if request.method == 'POST':
@@ -122,8 +157,8 @@ def create_employees(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
-
-@csrf_exempt
+# endpoint - /employees-info/create -> # Há interação com o usuário
+@csrf_exempt 
 def create_employee_info(request):
     if request.method == 'POST':
         try:
@@ -137,6 +172,26 @@ def create_employee_info(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
+# endpoint - /departments/create -> # Operação interna
+@csrf_exempt
+def create_department(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            if isinstance(data, list):
+                return create_objects(Department, data)
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Invalid data format, expected a list of objects'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+
+###
+
+
+# endpoint - /employees/search -> # Há interação com o usuário
 def search_employee(request):
     name = request.GET.get('name', None)
     badge = request.GET.get('badge', None)
@@ -155,6 +210,7 @@ def search_employee(request):
     except Http404:
         return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
 
+# endpoint - /employees/search/name -> # Há interação com o usuário
 def search_employee_by_name(request):
     query = request.GET.get('q', '')
     if query:
@@ -173,7 +229,7 @@ def search_employee_by_name(request):
             data = []
     return JsonResponse({'results': data}, status=200)
 
-
+# endpoint - /employees/search/id  -> # Operação interna
 def search_employee_by_id(request):
     pk = request.GET.get('id', None)
     try:
@@ -188,7 +244,12 @@ def search_employee_by_id(request):
         return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
     
 
+
+
+
 #### ----------------- VISITORS VIEWS ----------------- ####
+
+# endpoint - /visitors/create -> # Há interação com o usuário
 @csrf_exempt
 def create_visitor(request):
     if request.method == 'POST':
@@ -201,7 +262,7 @@ def create_visitor(request):
         except json.JSONDecodeError:
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
 
-
+# endpoint - /visitors-info/create -> # Há interação com o usuário
 @csrf_exempt
 def create_visitor_info(request):
     if request.method == 'POST':
@@ -217,6 +278,9 @@ def create_visitor_info(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 
+###
+
+# endpoint - /visitors/search -> # Há interação com o usuário
 def search_visitor(request):
     name = request.GET.get('name', None)
     visitors = get_object(Visitor, name=name, related_fields=['visitor_info'])
@@ -231,6 +295,7 @@ def search_visitor(request):
     except Http404:
         return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
     
+# endpoint - /visitors/search/name -> # Há interação com o usuário
 def search_visitor_by_name(request):
     query = request.GET.get('q', '')
     if query:
@@ -249,8 +314,7 @@ def search_visitor_by_name(request):
         data = []
     return JsonResponse({'results': data}, status=200)
 
-
-
+# endpoint - /visitors/search/id -> # Operação interna
 def search_visitor_by_id(request):
     pk = request.GET.get('id', None)
     try:
