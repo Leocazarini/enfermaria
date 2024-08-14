@@ -22,22 +22,39 @@ def create_objects(model, data_list):
 
 
 
-def get_object(model, name=None, registry=None):
+def get_object(model, name=None, registry=None, related_fields=None):
+
+    query = model.objects.all()
+    if related_fields:
+        if isinstance(related_fields, list):
+            query = query.select_related(*related_fields)
+        else:
+            query = query.select_related(related_fields)
+    
     if name:
-        objs = model.objects.filter(name__icontains=name)
+        objs = query.filter(name__icontains=name)
         if not objs.exists():
             raise Http404('No records found.')
-        return objs  
+        return list(objs)  
     elif registry:
-        obj = get_object_or_404(model, registry=registry)
-        return obj  
+        obj = get_object_or_404(query, registry=registry)
+        return [obj]  
     else:
         raise Http404('Name or registry must be provided.')
 
 
-def get_by_id(model, pk):
-    obj = get_object_or_404(model, pk=pk)
-    return obj
+
+
+def get_by_id(model, pk, related_fields=None):
+    query = model.objects.all()
+    
+    if related_fields:
+        if isinstance(related_fields, list):
+            query = query.select_related(*related_fields)
+        else:
+            query = query.select_related(related_fields)
+    
+    return get_object_or_404(query, pk=pk)
 
 
 
