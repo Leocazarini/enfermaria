@@ -7,7 +7,7 @@ from controller.crud import create_objects, get_object, get_by_id
 import json
 
 
-
+############################################################################################################
 ''' 
     Module responsible for the functionalities to be rendered on pages that require patient information.
 
@@ -17,14 +17,10 @@ import json
     controller app to persist the data in the database.
 
 '''
-
 ############################################################################################################
 '''  
     Alterar as funções para que elas estabaleçam uma relação entre si internamente, 
     e disponibilizem um endpoint apenas quando for necessária a interação com o usuário.
-
-    
-
 
 '''
 ############################################################################################################
@@ -33,22 +29,19 @@ import json
 
 
 
-# endpoint - /students/create -> # Operação interna
-@csrf_exempt
-def create_students(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            if isinstance(data, list):
-                return create_objects(Student, data)
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Invalid data format, expected a list of objects'}, status=400)
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+# endpoint -> # Internal operation 
+def create_students(data):
+    if data is not None:
+        if isinstance(data, list):
+            create_objects(Student, data)
+            return {'status': 'success'}
+        else:
+            return {'status': 'error', 'message': 'Invalid data format, expected a list of objects'}
     else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+        return {'status': 'error', 'message': 'No data provided'}
 
-# endpoint - /students-info/create -> # Há interação com o usuário
+
+# endpoint - /students-info/create -> # User operation
 @csrf_exempt
 def create_student_info(request):
     if request.method == 'POST':
@@ -63,31 +56,26 @@ def create_student_info(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
-# endpoint - /class-groups/create -> # Operação interna
-@csrf_exempt
-def create_class_group(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            if isinstance(data, list):
-                return create_objects(ClassGroup, data)
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Invalid data format, expected a list of objects'}, status=400)
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+
+# endpoint -> # Internal operation 
+def create_class_group(data):
+    if data is not None:
+        if isinstance(data, list):
+            create_objects(ClassGroup, data)
+            return {'status': 'success'}
+        else:
+            return {'status': 'error', 'message': 'Invalid data format, expected a list of objects'}
     else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+        return {'status': 'error', 'message': 'No data provided'}
 
 
-###
+###7nh
 
 
-# endpoint - /students/search -> # Há interação com o usuário
-def search_student(request):
-    name = request.GET.get('name', None)
-    ra = request.GET.get('ra', None)
+# endpoint - /students/search -> # Internal operation
+def search_student(name, registry):    
     try:
-        students = get_object(Student, name=name, registry=ra, related_fields=['info', 'class_group'])
+        students = get_object(Student, name=name, registry=registry, related_fields=['info', 'class_group'])
         if len(students) > 1:
             return JsonResponse({'status': 'error', 'message': 'More than one record found for the given information.'}, status=400)
         
@@ -97,11 +85,11 @@ def search_student(request):
         student_data['info'] = student_info_data
         student_data['class_group_name'] = student.class_group.name if student.class_group else None
 
-        return JsonResponse({'status': 'success', 'data': student_data}, status=200)
+        return student_data
     except Http404:
         return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
 
-# endpoint - /students/search/name -> # Há interação com o usuário
+# endpoint - /students/search/name -> # User operation
 def search_student_by_name(request):
     query = request.GET.get('q', '')
     if query:
@@ -112,6 +100,7 @@ def search_student_by_name(request):
                 {
                     'id': student.id,
                     'name': student.name,
+                    'registry': student.registry,
                     'class_group_name': student.class_group.name if student.class_group else None
                 }
                 for student in results
@@ -122,7 +111,7 @@ def search_student_by_name(request):
         data = []
     return JsonResponse({'results': data}, status=200)    
 
-# endpoint - /students/search/id -> # Operação interna
+# endpoint  -> # Internal operation 
 def search_student_by_id(request):
     pk = request.GET.get('id', None)
     try:
@@ -142,22 +131,19 @@ def search_student_by_id(request):
 
 #### ----------------- EMPLOYEES VIEWS ----------------- ####
 
-# endpoint - /employees/create -> # Operação interna
-@csrf_exempt
-def create_employees(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            if isinstance(data, list):
-                return create_objects(Employee, data)
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Invalid data format, expected a list of objects'}, status=400)
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+# endpoint --> # Internal operation
 
-# endpoint - /employees-info/create -> # Há interação com o usuário
+def create_employees(data):
+    if data is not None:
+        if isinstance(data, list):
+            create_objects(Employee, data)
+            return {'status': 'success'}
+        else:
+            return {'status': 'error', 'message': 'Invalid data format, expected a list of objects'}
+    else:
+        return {'status': 'error', 'message': 'No data provided'}
+
+# endpoint - /employees-info/create -> # User operation
 @csrf_exempt 
 def create_employee_info(request):
     if request.method == 'POST':
@@ -172,31 +158,27 @@ def create_employee_info(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
-# endpoint - /departments/create -> # Operação interna
-@csrf_exempt
-def create_department(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            if isinstance(data, list):
-                return create_objects(Department, data)
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Invalid data format, expected a list of objects'}, status=400)
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+# endpoint - /departments/create -> # Internal operation 
+
+def create_department(data):
+    if data is not None:
+        if isinstance(data, list):
+            create_objects(Department, data)
+            return {'status': 'success'}
+        else:
+            return {'status': 'error', 'message': 'Invalid data format, expected a list of objects'}
     else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+        return {'status': 'error', 'message': 'No data provided'}
 
 
 ###
 
 
-# endpoint - /employees/search -> # Há interação com o usuário
-def search_employee(request):
-    name = request.GET.get('name', None)
-    badge = request.GET.get('badge', None)
+# endpoint --> # Internal operation
+def search_employee(name, registry):
+    
     try:
-        employees = get_object(Employee, name=name, registry=badge, related_fields=['employee_info', 'department'])
+        employees = get_object(Employee, name=name, registry=registry, related_fields=['employee_info', 'department'])
         if len(employees) > 1:
             return JsonResponse({'status': 'error', 'message': 'More than one record found for the given information.'}, status=400)
         
@@ -206,11 +188,11 @@ def search_employee(request):
         employee_data['info'] = employee_info_data
         employee_data['department_name'] = employee.department.name if employee.department else None
         
-        return JsonResponse({'status': 'success', 'data': employee_data}, status=200)
+        return employee_data
     except Http404:
         return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
 
-# endpoint - /employees/search/name -> # Há interação com o usuário
+# endpoint - /employees/search/name -> # User operation
 def search_employee_by_name(request):
     query = request.GET.get('q', '')
     if query:
@@ -220,6 +202,7 @@ def search_employee_by_name(request):
                 {
                     'id': employee.id,
                     'name': employee.name,
+                    'registry': employee.registry,
                     'department_name': employee.department.name if employee.department else None
                 }
                 for employee in results
@@ -229,7 +212,7 @@ def search_employee_by_name(request):
             data = []
     return JsonResponse({'results': data}, status=200)
 
-# endpoint - /employees/search/id  -> # Operação interna
+# endpoint - /employees/search/id  -> # Internal operation 
 def search_employee_by_id(request):
     pk = request.GET.get('id', None)
     try:
@@ -249,7 +232,7 @@ def search_employee_by_id(request):
 
 #### ----------------- VISITORS VIEWS ----------------- ####
 
-# endpoint - /visitors/create -> # Há interação com o usuário
+# endpoint - /visitors/create -> # User operation
 @csrf_exempt
 def create_visitor(request):
     if request.method == 'POST':
@@ -262,7 +245,7 @@ def create_visitor(request):
         except json.JSONDecodeError:
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
 
-# endpoint - /visitors-info/create -> # Há interação com o usuário
+# endpoint - /visitors-info/create -> # User operation
 @csrf_exempt
 def create_visitor_info(request):
     if request.method == 'POST':
@@ -280,9 +263,9 @@ def create_visitor_info(request):
 
 ###
 
-# endpoint - /visitors/search -> # Há interação com o usuário
-def search_visitor(request):
-    name = request.GET.get('name', None)
+# endpoint - /visitors/search -> # Internal operation
+def search_visitor(name):
+    
     visitors = get_object(Visitor, name=name, related_fields=['visitor_info'])
     try:
         
@@ -295,7 +278,7 @@ def search_visitor(request):
     except Http404:
         return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
     
-# endpoint - /visitors/search/name -> # Há interação com o usuário
+# endpoint - /visitors/search/name -> # User operation
 def search_visitor_by_name(request):
     query = request.GET.get('q', '')
     if query:
@@ -314,7 +297,7 @@ def search_visitor_by_name(request):
         data = []
     return JsonResponse({'results': data}, status=200)
 
-# endpoint - /visitors/search/id -> # Operação interna
+# endpoint - /visitors/search/id -> # Internal operation 
 def search_visitor_by_id(request):
     pk = request.GET.get('id', None)
     try:
