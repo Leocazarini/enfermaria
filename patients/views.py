@@ -5,6 +5,7 @@ from django.forms.models import model_to_dict
 from .models import *
 from controller.crud import create_objects, get_object, get_by_id
 import json
+import logging
 
 
 ############################################################################################################
@@ -41,12 +42,13 @@ def create_students(data):
         return {'status': 'error', 'message': 'No data provided'}
 
 
-# endpoint - /students-info/create -> # User operation
+# endpoint - /students/create/info -> # User operation
 @csrf_exempt
 def create_student_info(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            logging.info(f"Received data: {data}")
             if isinstance(data, list):
                 return create_objects(StudentInfo, data)
             else:

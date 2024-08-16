@@ -60,19 +60,32 @@ def get_by_id(model, pk, related_fields=None):
 
 
 
-def update_object(model, pk, data):
-    obj = get_object_or_404(model, pk=pk)
-    for key, value in data.items():
-        setattr(obj, key, value)
-    obj.save()
-    return JsonResponse({'status': 'success', 'data': model_to_dict(obj)})
+def update_object(model, registry, data):
+
+    try:
+        obj = get_object_or_404(model, registry=registry)
+        for key, value in data.items():
+            setattr(obj, key, value)
+        obj.save()
+        return JsonResponse({'status': 'success', 'data': model_to_dict(obj)})
+    except Http404:
+        return JsonResponse({'status': 'error', 'message': 'Object not found'}, status=404)
+    except ValidationError as e:
+        return JsonResponse({'status': 'error', 'message': e.message_dict}, status=400)
 
 
 
-def delete_object(model, pk):
-    obj = get_object_or_404(model, pk=pk)
-    obj.delete()
-    return JsonResponse({'status': 'success', 'message': 'Deleted successfully'})
+
+
+def delete_object(model, registry):
+    try:
+        obj = get_object_or_404(model, registry=registry)
+        obj.delete()
+        return JsonResponse({'status': 'success', 'message': 'Deleted successfully'})    
+    except Http404:
+        return JsonResponse({'status': 'error', 'message': 'Object not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
 
