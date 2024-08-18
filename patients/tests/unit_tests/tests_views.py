@@ -69,16 +69,16 @@ class TestCreateStudentInfo(TestCase):
             class_group=self.class_group
         )
         self.valid_data = json.dumps([{
-            'student': self.student.registry,
+            'student': self.student.pk,
             'allergies': 'Peanuts',
             'notes': 'Carries EpiPen'
         }])
         self.invalid_data_format = json.dumps({
-            'student': self.student.registry,
+            'student': self.student.pk,
             'allergies': 'Peanuts',
             'notes': 'Carries EpiPen'
         })
-        self.invalid_json = "{'student': " + str(self.student.registry) + ", 'allergies': 'Peanuts', 'notes': 'Carries EpiPen'" 
+        self.invalid_json = "{'student': " + str(self.student.pk) + ", 'allergies': 'Peanuts', 'notes': 'Carries EpiPen'" 
 
     def test_create_student_info_success(self):
         url = reverse('create_student_info')
