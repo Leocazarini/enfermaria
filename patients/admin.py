@@ -6,6 +6,11 @@ from .models import Employee, Student, Visitor
 
 
 admin.site.register(Employee)
+admin.site.register(EmployeeInfo)
+admin.site.register(Department)
 admin.site.register(Student)
+admin.site.register(StudentInfo)
+admin.site.register(ClassGroup)
 admin.site.register(Visitor) 
+admin.site.register(VisitorInfo)
 
