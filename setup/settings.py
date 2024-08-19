@@ -1,10 +1,13 @@
-from pathlib import Path
 import os
+import logging
+from pathlib import Path
 from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+LOGS_DIR = BASE_DIR / 'logs'
 
 
 # Load environment variables
@@ -92,9 +95,115 @@ DATABASES = {
     }
 }
 
+def create_log_dirs():
+    app_dirs = {
+        'patients': ['views', 'models'],
+        'appointments': ['views', 'models'],
+        'controller': ['crud', 'api_totvs'],
+    }
+    
+    for app, modules in app_dirs.items():
+        for module in modules:
+            dir_path = LOGS_DIR / app
+            if not dir_path.exists():
+                os.makedirs(dir_path)
 
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+# Crie os diretórios antes de configurar o logging
+create_log_dirs()
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        # Handlers app patients
+        'patients_views_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOGS_DIR / 'patients' / 'views.log',
+            'formatter': 'verbose',
+        },
+        'patients_models_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOGS_DIR / 'patients' / 'models.log',
+            'formatter': 'verbose',
+        },
+        # Handlers app appointments
+        'appointments_views_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOGS_DIR / 'appointments' / 'views.log',
+            'formatter': 'verbose',
+        },
+        'appointments_models_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOGS_DIR / 'appointments' / 'models.log',
+            'formatter': 'verbose',
+        },
+        # Handlers app controller
+        'controller_crud_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOGS_DIR / 'controller' / 'crud.log',
+            'formatter': 'verbose',
+        },
+        'controller_api_totvs_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOGS_DIR / 'controller' / 'api_totvs.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        # Loggers app patients
+        'patients.views': {
+            'handlers': ['patients_views_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'patients.models': {
+            'handlers': ['patients_models_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        # Loggers app appointments
+        'appointments.views': {
+            'handlers': ['appointments_views_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'appointments.models': {
+            'handlers': ['appointments_models_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        # Loggers app controller
+        'controller.crud': {
+            'handlers': ['controller_crud_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'controller.api_totvs': {
+            'handlers': ['controller_api_totvs_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
+
+
+
+
 
 
 

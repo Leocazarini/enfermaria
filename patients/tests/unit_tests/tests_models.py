@@ -170,35 +170,18 @@ class TestVisitorModel(TestCase):
             name='Mary Johnson',
             age=45,
             gender='Female',
-            relationship='Mother'
+            relationship='Mother',
+            allergies='None',
+            notes='Visits once a week'
         )
 
     def test_visitor_model(self):
         visitor = Visitor.objects.get(name='Mary Johnson')
         self.assertEqual(visitor.__str__(), 'Mary Johnson')
         self.assertEqual(visitor.relationship, 'Mother')
+        self.assertEqual(visitor.allergies, 'None')
+        self.assertEqual(visitor.notes, 'Visits once a week')
 
-
-class TestVisitorInfoModel(TestCase):
-
-    def setUp(self):
-        self.visitor = Visitor.objects.create(
-            name='Tom Brown',
-            age=50,
-            gender='Male',
-            relationship='Father'
-        )
-        self.visitor_info = VisitorInfo.objects.create(
-            visitor=self.visitor,
-            allergies='Hay fever',
-            notes='Visits once a month'
-        )
-
-    def test_visitor_info_model(self):
-        visitor_info = VisitorInfo.objects.get(visitor=self.visitor)
-        self.assertEqual(visitor_info.__str__(), f"Info for {self.visitor.name}")
-        self.assertEqual(visitor_info.allergies, 'Hay fever')
-        self.assertEqual(visitor_info.notes, 'Visits once a month')
 
 
 ############################################################################################################

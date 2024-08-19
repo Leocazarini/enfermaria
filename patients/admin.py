@@ -12,5 +12,5 @@ admin.site.register(Student)
 admin.site.register(StudentInfo)
 admin.site.register(ClassGroup)
 admin.site.register(Visitor) 
-admin.site.register(VisitorInfo)
+
 

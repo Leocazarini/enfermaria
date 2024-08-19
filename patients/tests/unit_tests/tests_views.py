@@ -64,35 +64,52 @@ class TestCreateStudentInfo(TestCase):
             name='John Doe',
             age=15,
             gender='Male',
-            registry='Z123456',
+            registry='S123456',
             current_class='9th Grade',
             class_group=self.class_group
         )
-        self.valid_data = json.dumps([{
-            'student': self.student.pk,
-            'allergies': 'Peanuts',
-            'notes': 'Carries EpiPen'
-        }])
-        self.invalid_data_format = json.dumps({
-            'student': self.student.pk,
+        self.valid_data_new = json.dumps({
+            'student_id': self.student.id,  # Mudança para 'student_id'
             'allergies': 'Peanuts',
             'notes': 'Carries EpiPen'
         })
-        self.invalid_json = "{'student': " + str(self.student.pk) + ", 'allergies': 'Peanuts', 'notes': 'Carries EpiPen'" 
+        self.valid_data_update = json.dumps({
+            'student_id': self.student.id,  # Mudança para 'student_id'
+            'allergies': 'Peanuts and Shellfish',
+            'notes': 'Carries EpiPen and requires regular check-ups'
+        })
+        self.invalid_data_format = json.dumps([{
+            'student_id': self.student.id,
+            'allergies': 'Peanuts',
+            'notes': 'Carries EpiPen'
+        }])
+        self.invalid_json = "{'student_id': " + str(self.student.id) + ", 'allergies': 'Peanuts', 'notes': 'Carries EpiPen'"  # JSON malformado
 
     def test_create_student_info_success(self):
         url = reverse('create_student_info')
-        response = self.client.post(url, data=self.valid_data, content_type='application/json')
-        self.assertEqual(response.status_code, 201)
+        response = self.client.post(url, data=self.valid_data_new, content_type='application/json')
+        self.assertEqual(response.status_code, 200)  # Mudança de 201 para 200
         self.assertEqual(StudentInfo.objects.count(), 1)
         self.assertEqual(StudentInfo.objects.first().allergies, 'Peanuts')
+
+    def test_update_student_info_success(self):
+        # Primeiro, crie o registro inicial
+        self.client.post(reverse('create_student_info'), data=self.valid_data_new, content_type='application/json')
+        
+        # Em seguida, faça uma atualização
+        url = reverse('create_student_info')
+        response = self.client.post(url, data=self.valid_data_update, content_type='application/json')
+        self.assertEqual(response.status_code, 200)  # Mudança de 201 para 200
+        self.assertEqual(StudentInfo.objects.count(), 1)
+        self.assertEqual(StudentInfo.objects.first().allergies, 'Peanuts and Shellfish')
+        self.assertEqual(StudentInfo.objects.first().notes, 'Carries EpiPen and requires regular check-ups')
 
     def test_create_student_info_invalid_data_format(self):
         url = reverse('create_student_info')
         response = self.client.post(url, data=self.invalid_data_format, content_type='application/json')
         self.assertEqual(response.status_code, 400)
         response_data = json.loads(response.content)
-        self.assertEqual(response_data['message'], 'Invalid data format, expected a list of objects')
+        self.assertEqual(response_data['message'], 'Invalid data format, expected a dictionary')
 
     def test_create_student_info_invalid_json(self):
         url = reverse('create_student_info')
@@ -107,11 +124,7 @@ class TestCreateStudentInfo(TestCase):
         self.assertEqual(response.status_code, 405)
         response_data = json.loads(response.content)
         self.assertEqual(response_data['message'], 'Invalid request method')
-
-
-
-
-
+    
 
 
 

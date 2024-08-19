@@ -91,16 +91,11 @@ class Visitor(models.Model):
     age = models.IntegerField()
     gender = models.CharField(max_length=10)
     relationship = models.CharField(max_length=50)
+    allergies = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
-class VisitorInfo(models.Model):
-    visitor = models.OneToOneField(Visitor, on_delete=models.CASCADE, related_name='info')
-    allergies = models.TextField(blank=True, null=True)
-    notes = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return f"Info for {self.visitor.name}"
