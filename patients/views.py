@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from .models import *
-from controller.crud import create_objects, get_object, get_by_id, update_object, get_info_by_patient, create_info, update_info
+from controller.crud import create_objects, get_object, get_by_id, update_object, update_info
 import json
 import logging
 
@@ -144,7 +144,7 @@ def search_student_by_name(request):
     
     if query:
         try: 
-            results = get_object(Student, name__icontains=query, related_fields=['class_group'])
+            results = get_object(Student, name=query, related_fields=['class_group'])
             logger.debug(f"{len(results)} students found with the query '{query}'.")
 
             data = [
@@ -187,7 +187,6 @@ def search_student_by_id(request):
 ########################## ----------------- EMPLOYEES VIEWS ----------------- ##############################
 
 # endpoint --> # Internal operation
-
 def create_employees(data):
     logger.info("Starting create_employees function.")
     
@@ -240,7 +239,6 @@ def create_employee_info(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 # endpoint - /departments/create -> # Internal operation 
-
 def create_department(data):
     logger.info("Starting create_department function.")
     
@@ -266,7 +264,7 @@ def search_employee(name, registry):
     logger.info(f"Starting search for employee with name: {name} and registry: {registry}.")
     
     try:
-        employees = get_object(Employee, name=name, registry=registry, related_fields=['employee_info', 'department'])
+        employees = get_object(Employee, name=name, registry=registry, related_fields=['info', 'department'])
         logger.debug(f"{len(employees)} employees found with the given criteria.")
         
         if len(employees) > 1:
@@ -275,7 +273,7 @@ def search_employee(name, registry):
         
         employee = employees[0]
         employee_data = model_to_dict(employee)
-        employee_info_data = model_to_dict(employee.employee_info)
+        employee_info_data = model_to_dict(employee.info)
         employee_data['info'] = employee_info_data
         employee_data['department_name'] = employee.department.name if employee.department else None
         
@@ -288,15 +286,12 @@ def search_employee(name, registry):
 
 # endpoint - /employees/search/name -> # User operation
 def search_employee_by_name(request):
-    logger = logging.getLogger('patients.views')
-
-def search_employee_by_name(request):
     query = request.GET.get('q', '')
     logger.info(f"Starting search for employee by name with query: {query}")
     
     if query:
         try: 
-            results = get_object(Employee, name__icontains=query, related_fields=['department'])
+            results = get_object(Employee, name=query, related_fields=['department'])
             logger.debug(f"{len(results)} employees found with the query '{query}'.")
 
             data = [
@@ -360,22 +355,25 @@ def create_visitor(request):
         except json.JSONDecodeError:
             logger.error("Failed to parse JSON from request body.")
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
-
+    else:
+        logger.error(f"Invalid request method: {request.method}")
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 ###
 
 # endpoint - /visitors/search -> # Internal operation
 def search_visitor(name):
-    
-    visitors = get_object(Visitor, name=name, related_fields=['visitor_info'])
     try:
+        visitors = get_object(Visitor, name=name)
         
-        visitor = model_to_dict(visitors[0])
+        if not visitors:
+            raise Http404('No records found.')
+        
+        visitor = visitors[0]  
         visitor_data = model_to_dict(visitor)
-        visitor_info_data = model_to_dict(visitor.visitor_info)
-        visitor_data['info'] = visitor_info_data
         
         return JsonResponse({'status': 'success', 'data': visitor_data}, status=200)
+    
     except Http404:
         return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
     
@@ -386,7 +384,7 @@ def search_visitor_by_name(request):
     
     if query:
         try: 
-            results = get_object(Visitor, name__icontains=query)
+            results = get_object(Visitor, name=query)
             logger.debug(f"{len(results)} visitors found with the query '{query}'.")
 
             data = [
