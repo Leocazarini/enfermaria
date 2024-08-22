@@ -18,17 +18,12 @@
   
   <!-- Favicon -->
   <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" />
-  
-  <!-- Code Block -->
-  <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
-  <script src="{% static 'assets/js/off-canvas.js' %}"></script>
-  <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
-  <script src="{% static 'assets/js/template.js' %}"></script>
-  <script src="{% static 'assets/js/settings.js' %}"></script>
 </head>
 
 <body>
+
   <div class="container-scroller">
+
     <!-- Navbar (Menu Superior) -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <!-- Logotipo -->
@@ -43,6 +38,7 @@
 
       <!-- Menu do lado direito -->
       <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+
         <!-- Botão de Minimizador de Menu -->
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
           <span class="icon-menu"></span>
@@ -57,6 +53,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
               <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+
               <!-- Notificação de Erro -->
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
@@ -71,6 +68,7 @@
                   </p>
                 </div>
               </a>
+
               <!-- Notificação de Configurações -->
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
@@ -85,6 +83,7 @@
                   </p>
                 </div>
               </a>
+
               <!-- Notificação de Novo Usuário -->
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
@@ -128,8 +127,38 @@
     </nav>
     <!-- Fim da Navbar -->
 
-    <!-- Sidebar (Menu Lateral) -->
+    
+    <!-- Início  do Page Body Wrapper -->
     <div class="container-fluid page-body-wrapper">
+      
+      
+      <!-- Botão de Configurações Flutuante -->
+      <div class="theme-setting-wrapper">
+        <div id="settings-trigger"><i class="ti-settings"></i></div>
+        <div id="theme-settings" class="settings-panel">
+          <i class="settings-close ti-close"></i>
+          <p class="settings-heading">SIDEBAR SKINS</p>
+          <div class="sidebar-bg-options selected" id="sidebar-light-theme">
+            <div class="img-ss rounded-circle bg-light border mr-3"></div>Light
+          </div>
+          <div class="sidebar-bg-options" id="sidebar-dark-theme">
+            <div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark
+          </div>
+          <p class="settings-heading mt-2">HEADER SKINS</p>
+          <div class="color-tiles mx-0 px-4">
+            <div class="tiles success"></div>
+            <div class="tiles warning"></div>
+            <div class="tiles danger"></div>
+            <div class="tiles info"></div>
+            <div class="tiles dark"></div>
+            <div class="tiles default"></div>
+          </div>
+        </div>
+      </div>
+  
+    
+
+      <!-- Sidebar (Menu Lateral) -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
@@ -235,34 +264,29 @@
         </ul>
       </nav>
       <!-- Fim do Sidebar -->
+      
+      <div class="main-panel">
+        <div class="content-wrapper">
+        
 
-      <!-- Botão de Configurações Flutuante -->
-      <div class="theme-setting-wrapper">
-        <div id="settings-trigger"><i class="ti-settings"></i></div>
-        <div id="theme-settings" class="settings-panel">
-          <i class="settings-close ti-close"></i>
-          <p class="settings-heading">SIDEBAR SKINS</p>
-          <div class="sidebar-bg-options selected" id="sidebar-light-theme">
-            <div class="img-ss rounded-circle bg-light border mr-3"></div>Light
-          </div>
-          <div class="sidebar-bg-options" id="sidebar-dark-theme">
-            <div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark
-          </div>
-          <p class="settings-heading mt-2">HEADER SKINS</p>
-          <div class="color-tiles mx-0 px-4">
-            <div class="tiles success"></div>
-            <div class="tiles warning"></div>
-            <div class="tiles danger"></div>
-            <div class="tiles info"></div>
-            <div class="tiles dark"></div>
-            <div class="tiles default"></div>
-          </div>
+        
+        <!-- Fim do Main Panel -->
         </div>
+      
+
+      
       </div>
+      <!-- Fim do Main Panel -->
+
     </div>   
-    <!-- Fim do Wrapper da Página -->
+      <!-- Fim do Wrapper da Página -->
+
+
   </div>
-  <!-- Fim do Container Scroller -->
+    <!-- Fim do Container Scroller -->
+
+
+
 
   <!-- Scripts -->
   <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
@@ -270,6 +294,7 @@
   <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
   <script src="{% static 'assets/js/template.js' %}"></script>
   <script src="{% static 'assets/js/settings.js' %}"></script>
+  <script src="{% static 'assets/js/todolist.js' %}"></script>
 </body>
 
 </html>
