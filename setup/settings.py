@@ -271,5 +271,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_ONLY = True
 
-LOGIN_REDIRECT_URL = '/appointments/home'
-LOGOUT_REDIRECT_URL = '/appointments/home'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'accounts/logout'

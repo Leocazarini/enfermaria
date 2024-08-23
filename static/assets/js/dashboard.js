@@ -182,16 +182,21 @@
       var SalesChart = new Chart(SalesChartCanvas, {
         type: 'bar',
         data: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+          labels: ["Seg", "Ter", "Qua", "Qui", "Sex"],
           datasets: [{
-              label: 'Offline Sales',
-              data: [480, 230, 470, 210, 330],
+              label: 'Infantil',
+              data: [40, 32, 15, 6, 18],
               backgroundColor: '#98BDFF'
             },
             {
-              label: 'Online Sales',
-              data: [400, 340, 550, 480, 170],
+              label: 'Fundamental',
+              data: [24, 60, 23, 19, 16],
               backgroundColor: '#4B49AC'
+            },
+            {
+              label: 'Ensino Médio',
+              data: [10, 8, 15, 22, 7],
+              backgroundColor: '#3AA655'
             }
           ]
         },
@@ -218,7 +223,7 @@
               ticks: {
                 display: true,
                 min: 0,
-                max: 560,
+                max: 100,
                 callback: function(value, index, values) {
                   return  value + '$' ;
                 },
@@ -678,4 +683,12 @@ $('#example tbody').on('click', 'td.details-control', function () {
 } );
   
   });
+
+
+  
+  document.getElementById('logoutButton').addEventListener('click', function(event) {
+    event.preventDefault();  
+    document.getElementById('logoutForm').submit();
+  });
+
 })(jQuery);
