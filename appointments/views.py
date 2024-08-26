@@ -14,18 +14,27 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     if request.method == 'GET':
 
-        return render(request, 'appointment/home.html')
+        return render(request, 'index.html')
     
 
 
+def student_identify(request):
+    if request.method == 'GET':
+        return render(request, 'search_student.html')
+    
 
+def employee_identify(request):
+    if request.method == 'GET':
+        return render(request, 'search_employee.html')
+    
 
+def visitor_identify(request):
+    if request.method == 'GET':
+        return render(request, 'search_visitor.html')
 
-
-
+        
 
 # Appointments views
-
 
 @login_required
 def student_appointment(request):
@@ -34,7 +43,7 @@ def student_appointment(request):
         registry = request.GET.get('ra', None)
         student = search_student(name, registry)
 
-        return render(request, 'appointment/student.html', {'student': student})
+        return render(request, 'ap_student.html', {'student': student})
 
     if request.method == 'POST':        
         pass
@@ -48,7 +57,7 @@ def employee_appointment(request):
         registry = request.GET.get('badge', None)
         employee = search_employee(name, registry)
 
-        return render(request, 'appointment/employee.html', {'employee': employee})
+        return render(request, 'ap_employee.html', {'employee': employee})
 
     if request.method == 'POST': 
         pass
@@ -63,9 +72,9 @@ def visitor_appointment(request):
         if name:
             visitor = search_visitor(name)
 
-            return render(request, 'appointment/visitor.html', {'visitor': visitor}) 
+            return render(request, 'ap_visitor.html', {'visitor': visitor}) 
               
-        return render(request, 'appointment/visitor.html')
+        return render(request, 'ap_visitor.html')
     
     if request.method == 'POST':
         pass

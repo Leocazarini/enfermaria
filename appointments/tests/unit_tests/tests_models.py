@@ -75,6 +75,7 @@ class TestStudentAppointmentModel(TestCase):
             infirmary=self.infirmary,
             nurse=self.nurse,
             date= '2024-08-15 10:00:00',
+            current_class='Class 2',
             reason='Headache',
             treatment='Pain relief medication',
             notes='Student reported feeling better',

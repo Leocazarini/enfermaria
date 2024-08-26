@@ -117,7 +117,6 @@
             </div>
             
             <!-- Adicione o script antes do fechamento da tag </body> -->
-          
           </li>
         </ul>
         
@@ -177,15 +176,9 @@
             </a>
             <div class="collapse" id="appointment">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> 
-                  <a class="nav-link" href="{% url 'student_identify' %}">Aluno</a>
-                </li>
-                <li class="nav-item"> 
-                  <a class="nav-link" href="{% url 'employee_identify' %}">Colaborador</a>
-                </li>
-                <li class="nav-item"> 
-                  <a class="nav-link" href="{% url 'visitor_identify'%}">Visitante</a>
-                </li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'student_identify' %}">Aluno</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'employee_identify' %}">Colaborador</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'visitor_identify'%}">Visitante</a></li>
               </ul>
             </div>
           </li>
@@ -221,73 +214,118 @@
       
       <div class="main-panel">
         <div class="content-wrapper">
-        
-          <div class="row">
-            <!-- div bem vindo + info enfermarias -->
-            <div class="col-md-12 grid-margin">
-              <div class="row">
-                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                  <h3 class="font-weight-bold">Seja bem vinda!</h3>
-                  <h6 class="font-weight-normal mb-0">Enfermaria Beit Yaacov</h6>
-                </div>
-
-                <div class="col-12 col-xl-4">
-                 <div class="justify-content-end d-flex">
-                  <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                    <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                     <i class="mdi mdi-calendar"></i> Enfermaria
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
-                      <a class="dropdown-item" href="#">Infantil</a>
-                      <a class="dropdown-item" href="#">Fundamental</a>
-                      <a class="dropdown-item" href="#">Ensino Médio</a>
-                      <a class="dropdown-item" href="#">Atendiemento Externo</a>
+            
+            <div class="row">
+              <div class="col-lg-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Informações do Colaborador</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>
+                                        <form class="forms-sample">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <label for="allergies">Alergias:</label>
+                                                    <input type="text" class="form-control mb-3" id="allergies" value="{{ employee.allergies }}">
+            
+                                                    <label for="employee_notes">Observações do Colaborador:</label>
+                                                    <textarea class="form-control" id="employee_notes" rows="8">{{ employee.notes }}</textarea>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </th>
+                                    <th>
+                                        <img src="{% static 'assets/images/faces/face30.jpg' %}"
+                                             class="mb-5" width="200" height="200" alt="">
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <td>{{ employee.name }}</td>                               
+                                    </tr>
+                                    <tr>
+                                        <th>Nº do Crachá</th>
+                                        <td>{{ employee.badge_number }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Idade</th>
+                                        <td>{{ employee.age }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Data de nascimento</th>
+                                        <td>{{ employee.birth_date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Gênero</th>
+                                        <td>{{ employee.gender }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Departamento</th>
+                                        <td>{{ employee.department }}</td>
+                                    </tr>                              
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                  </div>
-                 </div>
                 </div>
-              </div>
             </div>
-          </div>
+            
+                  <div class="col-md-6 grid-margin stretch-card">
+                    <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Atendimento</h4>
+                        <p class="card-description">
+                            Informações do atendimento
+                        </p>
+                        <form class="forms-sample" action="" method="POST">  {% csrf_token %}                                   
+                            <div class="form-group">
+                                <label for="reason">Ocorrência:</label>
+                                <textarea class="form-control" id="reason" rows="4"></textarea>
+                                
+                            </div>
+                            <div class="form-group">
+                                <label for="treatment">Procedimentos:</label>
+                                <textarea class="form-control" id="treatment" rows="4"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="notes">Observações:</label>
+                                <textarea class="form-control" id="notes" rows="4"></textarea>
+                            </div>                        
+                            <div class="form-check form-check-flat form-check-primary">
+                                <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" id="revaluation">
+                                    Reavaliação
+                                </label>
+                            </div>                           
+                            <div class="row">
+                                <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Enfermeira:</label>
+                                    <div class="col-sm-9">
+                                    <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Enfermaria:</label>
+                                    <div class="col-sm-9">
+                                    <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            <button class="btn btn-light">Cancel</button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
 
-          <div class="row">
-            <div class="col-md-3 grid-margin stretch-card transparent">
-              <div class="card card-tale">
-                <div class="card-body">
-                  <p class="mb-4">Total de atendimentos:</p>
-                  <p class="fs-30 mb-2">60</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 grid-margin stretch-card transparent">
-              <div class="card card-dark-blue">
-                <div class="card-body">
-                  <p class="mb-4">Seus atendimentos:</p>
-                  <p class="fs-30 mb-2">19</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 grid-margin stretch-card transparent">
-              <div class="card card-light-blue">
-                <div class="card-body">
-                  <p class="mb-4">Atendimentos Enfermaria Atual:</p>
-                  <p class="fs-30 mb-2">22</p>
-                  <p class="fs-30 py-3" id="enfermaria-info">Infantil</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 grid-margin stretch-card transparent">
-              <div class="card card-light-danger">
-                <div class="card-body">
-                  <p class="mb-4">Total de atendimentos na semana:</p>
-                  <p class="fs-30 mb-2">132</p>
-                  
-                </div>
-              </div>
-            </div>
           </div>
-
-          
 
 
           </div>
@@ -309,11 +347,6 @@
 
 
 
-
-
-  
-
-
   <!-- Scripts -->
   <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
   <!-- endinject -->
@@ -330,7 +363,6 @@
   <script src="{% static 'assets/js/template.js' %}"></script>
   <script src="{% static 'assets/js/settings.js' %}"></script>
   <script src="{% static 'assets/js/todolist.js' %}"></script>
-  <script src="{% static 'assets/js/modal-demo.js' %}"></script>
   <!-- endinject -->
   <!-- Custom js for this page-->
   <script src="{% static 'assets/js/dashboard.js' %}"></script>
@@ -341,3 +373,4 @@
 </body>
 
 </html>
+

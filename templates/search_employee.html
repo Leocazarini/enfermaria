@@ -223,72 +223,27 @@
         <div class="content-wrapper">
         
           <div class="row">
-            <!-- div bem vindo + info enfermarias -->
-            <div class="col-md-12 grid-margin">
-              <div class="row">
-                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                  <h3 class="font-weight-bold">Seja bem vinda!</h3>
-                  <h6 class="font-weight-normal mb-0">Enfermaria Beit Yaacov</h6>
-                </div>
-
-                <div class="col-12 col-xl-4">
-                 <div class="justify-content-end d-flex">
-                  <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                    <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                     <i class="mdi mdi-calendar"></i> Enfermaria
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
-                      <a class="dropdown-item" href="#">Infantil</a>
-                      <a class="dropdown-item" href="#">Fundamental</a>
-                      <a class="dropdown-item" href="#">Ensino Médio</a>
-                      <a class="dropdown-item" href="#">Atendiemento Externo</a>
-                    </div>
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Buscar Colaborador</h4>
+                    <p class="card-description">
+                      Digite o nome ou o número do chachá do colaborador para buscar informações no sistema.
+                    </p>
+                    <form action="{% url 'employee_appointment' %}" method="GET" class="form-inline">
+                    {% csrf_token %}
+                        
+                        <label class="mr-2"for="name">Nome</label>
+                        <input type="text" class="form-control mr-2" id="name" placeholder="Digite o nome do colaborador">
+                       
+                        <label class="mr-2" for="registry">Nº do Crachá</label>
+                        <input type="text" class="form-control mr-2" id="registry" placeholder="Digite o nº do crachá">
+                        
+                        <button type="submit" class="btn btn-primary mb-2">Buscar</button>
+                    </form>
                   </div>
-                 </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-3 grid-margin stretch-card transparent">
-              <div class="card card-tale">
-                <div class="card-body">
-                  <p class="mb-4">Total de atendimentos:</p>
-                  <p class="fs-30 mb-2">60</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 grid-margin stretch-card transparent">
-              <div class="card card-dark-blue">
-                <div class="card-body">
-                  <p class="mb-4">Seus atendimentos:</p>
-                  <p class="fs-30 mb-2">19</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 grid-margin stretch-card transparent">
-              <div class="card card-light-blue">
-                <div class="card-body">
-                  <p class="mb-4">Atendimentos Enfermaria Atual:</p>
-                  <p class="fs-30 mb-2">22</p>
-                  <p class="fs-30 py-3" id="enfermaria-info">Infantil</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 grid-margin stretch-card transparent">
-              <div class="card card-light-danger">
-                <div class="card-body">
-                  <p class="mb-4">Total de atendimentos na semana:</p>
-                  <p class="fs-30 mb-2">132</p>
-                  
-                </div>
-              </div>
-            </div>
-          </div>
-
-          
-
 
           </div>
         <!-- Fim do Main Panel -->
@@ -330,11 +285,12 @@
   <script src="{% static 'assets/js/template.js' %}"></script>
   <script src="{% static 'assets/js/settings.js' %}"></script>
   <script src="{% static 'assets/js/todolist.js' %}"></script>
-  <script src="{% static 'assets/js/modal-demo.js' %}"></script>
+ 
   <!-- endinject -->
   <!-- Custom js for this page-->
   <script src="{% static 'assets/js/dashboard.js' %}"></script>
   <script src="{% static 'assets/js/Chart.roundedBarCharts.js' %}"></script>
+  <script src="{% static 'assets/js/search.js' %}"></script>
   <!-- End custom js for this page-->
   
 

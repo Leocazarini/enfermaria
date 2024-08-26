@@ -19,7 +19,6 @@ class Student(models.Model):
     gender = models.CharField(max_length=10)
     registry = models.CharField(max_length=20, unique=True)
     class_group = models.ForeignKey(ClassGroup, on_delete=models.SET_NULL, null=True, related_name='students')
-    current_class = models.CharField(max_length=50)
     birth_date = models.DateField(null=True, blank=True)
     father_name = models.CharField(max_length=100, null=True, blank=True)
     father_phone = models.CharField(max_length=20, null=True, blank=True)
