@@ -41,7 +41,6 @@ class TestStudentModel(TestCase):
             gender='Male',
             registry='123456',
             class_group=self.class_group,
-            current_class='9th Grade',
             birth_date='2009-08-15',
             father_name='John Senior',
             father_phone='555-1234',
@@ -72,7 +71,6 @@ class TestStudentInfoModel(TestCase):
             gender='Female',
             registry='654321',
             class_group=self.class_group,
-            current_class='8th Grade',
             birth_date='2010-05-20'
         )
         self.student_info = StudentInfo.objects.create(

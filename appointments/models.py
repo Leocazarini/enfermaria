@@ -34,6 +34,7 @@ class StudentAppointment(models.Model):
     student_info = models.ForeignKey(StudentInfo, on_delete=models.CASCADE)
     infirmary = models.ForeignKey(Infirmary, on_delete=models.CASCADE)
     nurse = models.ForeignKey(Nurse, on_delete=models.CASCADE)
+    current_class = models.CharField(max_length=50)
     date = models.DateTimeField()
     reason = models.TextField()
     treatment = models.TextField()

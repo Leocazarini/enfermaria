@@ -16,7 +16,6 @@ class TestCreateObjects(TestCase):
                 'age': 15,
                 'gender': 'Male',
                 'registry': 'S123456',
-                'current_class': '9th Grade'
             }
         ]
         self.data_multiple = [
@@ -25,21 +24,18 @@ class TestCreateObjects(TestCase):
                 'age': 15,
                 'gender': 'Male',
                 'registry': 'S123456',
-                'current_class': '9th Grade'
             },
             {
                 'name': 'Jane Doe',
                 'age': 14,
                 'gender': 'Female',
                 'registry': 'S654321',
-                'current_class': '8th Grade'
             },
             {
                 'name': 'Bob Smith',
                 'age': 16,
                 'gender': 'Male',
                 'registry': 'S789012',
-                'current_class': '10th Grade'
             }
         ]
 
@@ -74,7 +70,6 @@ class TestGetObject(TestCase):
             gender='Male',
             registry='S123456',
             class_group=self.class_group,
-            current_class='9th Grade'
         )
         self.student_info1 = StudentInfo.objects.create(
             student=self.student1,
@@ -88,7 +83,6 @@ class TestGetObject(TestCase):
             gender='Female',
             registry='S654321',
             class_group=self.class_group,
-            current_class='8th Grade'
         )
         self.student_info2 = StudentInfo.objects.create(
             student=self.student2,
@@ -151,7 +145,6 @@ class TestGetById(TestCase):
             gender='Male',
             registry='S123456',
             class_group=self.class_group,
-            current_class='9th Grade'
         )
         self.student_info = StudentInfo.objects.create(
             student=self.student,
@@ -183,21 +176,18 @@ class TestUpdateObject(TestCase):
             age=15,
             gender='Male',
             registry='S123456',
-            current_class='9th Grade'
         )
 
     def test_update_object_success(self):
         data = {
             'name': 'Johnathan Doe',
             'age': 16,
-            'current_class': '10th Grade'
         }
         response = update_object(Student, 'S123456', data)
         self.assertEqual(response.status_code, 200)
         updated_student = Student.objects.get(registry='S123456')
         self.assertEqual(updated_student.name, 'Johnathan Doe')
         self.assertEqual(updated_student.age, 16)
-        self.assertEqual(updated_student.current_class, '10th Grade')
 
     def test_update_object_invalid_data(self):
         data = {
@@ -223,7 +213,6 @@ class TestDeleteObject(TestCase):
             age=15,
             gender='Male',
             registry='S123456',
-            current_class='9th Grade'
         )
 
     def test_delete_object_success(self):
