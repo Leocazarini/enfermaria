@@ -272,4 +272,27 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_ONLY = True
 
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = 'accounts/logout'
+LOGOUT_REDIRECT_URL = '/'
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        
+        "APPS": [
+            {
+                "client_id": os.getenv('GOOGLE_ID'),
+                "secret": os.getenv('GOOGLE_SECRET'),
+                "key": ""
+            },
+        ],
+        # These are provider-specific settings that can only be
+        # listed here:
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}

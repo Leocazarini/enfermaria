@@ -12,6 +12,18 @@
         }
       })
 
+    } else if (type === 'error-message') {
+      swal({
+        title: 'Erro!',
+        text: message,  // Usa a mensagem recebida como parâmetro
+        icon: 'error',
+        button: {
+          text: "OK",
+          value: true,
+          visible: true,
+          className: "btn btn-primary"
+        }
+      });
     } else if (type === 'title-and-text') {
       swal({
         title: 'Read the alert!',
@@ -98,5 +110,45 @@
       })
     }
   }
+
+
+  $(document).ready(function() {
+    $('#searchForm').on('submit', function(event) {
+      event.preventDefault();  // Impede o envio padrão do formulário
+
+      var form = $(this);
+      var actionUrl = form.attr('action');
+      var formData = form.serialize();
+
+      // Faz uma requisição AJAX para a URL especificada
+      $.ajax({
+        url: actionUrl,
+        method: 'GET',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+          if (response.status === 'success') {
+            // Lida com os dados do paciente retornados com sucesso
+            // Aqui você pode redirecionar, exibir os dados, etc.
+            // Exemplo de redirecionamento ou renderização de informações na página
+            window.location.href = "appointments/student";  // Ajuste isso conforme sua lógica
+          } else if (response.status === 'error') {
+            // Exibe a mensagem de erro usando swal
+            showSwal('error-message', response.message);
+          }
+        },
+        error: function(xhr) {
+          var response = xhr.responseJSON;
+          if (response && response.status === 'error') {
+            // Exibe a mensagem de erro usando swal
+            showSwal('error-message', response.message);
+          } else {
+            // Lida com possíveis outros erros de rede
+            showSwal('error-message', 'Ocorreu um erro inesperado. Tente novamente.');
+          }
+        }
+      });
+    });
+  });
 
 })(jQuery);

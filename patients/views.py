@@ -135,7 +135,7 @@ def search_student(name, registry):
     
     except Http404:
         logger.warning("No records found for the given criteria.")
-        return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
+        return None
 
 # endpoint - /students/search/name -> # User operation
 def search_student_by_name(request):
@@ -371,8 +371,8 @@ def search_visitor(name):
         
         visitor = visitors[0]  
         visitor_data = model_to_dict(visitor)
-        
-        return JsonResponse({'status': 'success', 'data': visitor_data}, status=200)
+        logger.info(f"Visitor found: {visitor_data}")
+        return visitor_data
     
     except Http404:
         return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)

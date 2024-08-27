@@ -6,7 +6,7 @@
   <!-- Meta Tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Skydash Admin</title>
+  <title>Enfermaria Beit Yaacov</title>
 
   <!-- CSS Principal -->
   <link rel="stylesheet" href="{% static 'assets/vendors/feather/feather.css' %}">
@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="{% static 'assets/css/vertical-layout-light/style.css' %}">
   
   <!-- Favicon -->
-  <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" />
+  <link rel="shortcut icon" href="{% static 'assets/images/BY_logo_WHITE.png' %}" />
 </head>
 
 <body>
@@ -28,10 +28,10 @@
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <!-- Logotipo -->
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-            <a class="navbar-brand brand-logo mr-3" href="{% url 'home' %}">
+            <a class="navbar-brand brand-logo mr-3" href="{% url 'index' %}">
             <img src="{% static 'assets/images/2logo365x90.svg' %}" class="mr-5" alt="logo"/>
             </a>
-            <a class="navbar-brand brand-logo-mini" href="{% url 'home' %}">
+            <a class="navbar-brand brand-logo-mini" href="{% url 'index' %}">
             <img src="{% static 'assets/images/logo90x73.svg' %}" alt="logo"/>
             </a>
         </div>
@@ -163,7 +163,7 @@
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">
+                    <a class="nav-link" href="{% url 'index' %}">
                     <i class="icon-grid menu-icon"></i>
                     <span class="menu-title">Home</span>
                     </a>

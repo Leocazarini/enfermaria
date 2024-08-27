@@ -6,7 +6,7 @@
   <!-- Meta Tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Skydash Admin</title>
+  <title>Enfermaria Beit Yaacov</title>
 
   <!-- CSS Principal -->
   <link rel="stylesheet" href="{% static 'assets/vendors/feather/feather.css' %}">
@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="{% static 'assets/css/vertical-layout-light/style.css' %}">
   
   <!-- Favicon -->
-  <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" />
+  <link rel="shortcut icon" href="{% static 'assets/images/BY_logo_WHITE.png' %}" />
 </head>
 
 <body>
@@ -28,10 +28,10 @@
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <!-- Logotipo -->
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="navbar-brand brand-logo mr-5" href="{% url 'home' %}">
+        <a class="navbar-brand brand-logo mr-5" href="{% url 'index' %}">
           <img src="{% static 'assets/images/2logo365x90.svg' %}" class="mr-2" alt="logo"/>
         </a>
-        <a class="navbar-brand brand-logo-mini" href="{% url 'home' %}">
+        <a class="navbar-brand brand-logo-mini" href="{% url 'index' %}">
           <img src="{% static 'assets/images/logo90x73.svg' %}" alt="logo"/>
         </a>
       </div>
@@ -164,7 +164,7 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}">
+            <a class="nav-link" href="{% url 'index' %}">
               <i class="icon-grid menu-icon"></i>
               <span class="menu-title">Home</span>
             </a>
@@ -230,17 +230,18 @@
                     <p class="card-description">
                       Digite o nome ou o número do chachá do colaborador para buscar informações no sistema.
                     </p>
-                    <form action="{% url 'employee_appointment' %}" method="GET" class="form-inline">
+                    <form id="searchForm" action="{% url 'employee_appointment' %}" method="GET" class="form-inline">
                     {% csrf_token %}
                         
                         <label class="mr-2"for="name">Nome</label>
-                        <input type="text" class="form-control mr-2" id="name" placeholder="Digite o nome do colaborador">
+                        <input type="text" class="form-control mr-2" name="name" id="name" placeholder="Digite o nome do colaborador">
                        
                         <label class="mr-2" for="registry">Nº do Crachá</label>
-                        <input type="text" class="form-control mr-2" id="registry" placeholder="Digite o nº do crachá">
+                        <input type="text" class="form-control mr-2" name="registry" id="registry" placeholder="Digite o nº do crachá">
                         
                         <button type="submit" class="btn btn-primary mb-2">Buscar</button>
                     </form>
+                    <div id="error-message-container" class="mt-3"></div>
                   </div>
                 </div>
               </div>
@@ -286,6 +287,7 @@
   <script src="{% static 'assets/js/settings.js' %}"></script>
   <script src="{% static 'assets/js/todolist.js' %}"></script>
  
+  <script src="{% static 'assets/js/form.js' %}?v=1.0"></script>
   <!-- endinject -->
   <!-- Custom js for this page-->
   <script src="{% static 'assets/js/dashboard.js' %}"></script>

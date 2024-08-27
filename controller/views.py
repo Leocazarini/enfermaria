@@ -12,4 +12,4 @@ def index(request):
 
 def logout(request):
     if request.method == 'GET':
-        return render(request, 'logout.html')
+        return render(request, 'user/account/logout.html')

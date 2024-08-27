@@ -5,6 +5,49 @@
       alert("submitted!");
     }
   });
+  $.validator.addMethod("atLeastOne", function(value, element, params) {
+    var oneFilled = false;
+    $(params).each(function() {
+      if ($(this).val().trim() !== "") {
+        oneFilled = true;
+      }
+    });
+    return oneFilled;
+  }, "Por favor, preencha pelo menos um dos campos.");
+
+  $.validator.setDefaults({
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+  $(function() {
+    // Validação do formulário de busca de aluno
+    $("form.form-inline").validate({
+      rules: {
+        name: {
+          atLeastOne: ["#name", "#registry"]
+        },
+        registry: {
+          atLeastOne: ["#name", "#registry"]
+        }
+      },
+      messages: {
+        name: "Por favor, preencha pelo menos um dos campos (Nome ou RA).",
+        registry: "Por favor, preencha pelo menos um dos campos (Nome ou RA)."
+      },
+      errorPlacement: function(label, element) {
+        label.addClass('mt-2 text-danger');
+        label.insertAfter(element);
+      },
+      highlight: function(element, errorClass) {
+        $(element).parent().addClass('has-danger');
+        $(element).addClass('form-control-danger');
+      }
+    });
+  });
+
+
   $(function() {
     // validate the comment form when it is submitted
     $("#commentForm").validate({
