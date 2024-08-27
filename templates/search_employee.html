@@ -230,6 +230,11 @@
                     <p class="card-description">
                       Digite o nome ou o número do chachá do colaborador para buscar informações no sistema.
                     </p>
+                    {% if error_message %}
+                      <div class="alert alert-danger">
+                          {{ error_message }}
+                      </div>
+                    {% endif %}
                     <form id="searchForm" action="{% url 'employee_appointment' %}" method="GET" class="form-inline">
                     {% csrf_token %}
                         
@@ -285,7 +290,7 @@
   <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
   <script src="{% static 'assets/js/template.js' %}"></script>
   <script src="{% static 'assets/js/settings.js' %}"></script>
-  <script src="{% static 'assets/js/todolist.js' %}"></script>
+
  
   <script src="{% static 'assets/js/form.js' %}?v=1.0"></script>
   <!-- endinject -->

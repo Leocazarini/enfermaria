@@ -230,12 +230,16 @@
                     <p class="card-description">
                       Deixe em branco caso seja a primeira vez do paciente.
                     </p>
+                    {% if error_message %}
+                      <div class="alert alert-danger">
+                          {{ error_message }}
+                      </div>
+                    {% endif %}
                     <form id="searchForm" action="{% url 'visitor_appointment' %}" method="GET" class="form-inline">
                     {% csrf_token %}
                         
                         <label class="mr-2"for="name">Nome</label>
                         <input type="text" class="form-control mr-2" name="name" id="name" placeholder="Digite o nome do paciente">
-                       
 
                         <button type="submit" class="btn btn-primary mb-2">Buscar</button>
                     </form>

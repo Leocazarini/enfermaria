@@ -282,7 +282,7 @@ def search_employee(name, registry):
     
     except Http404:
         logger.warning("No records found for the given criteria.")
-        return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
+        return None
 
 # endpoint - /employees/search/name -> # User operation
 def search_employee_by_name(request):
@@ -375,7 +375,7 @@ def search_visitor(name):
         return visitor_data
     
     except Http404:
-        return JsonResponse({'status': 'error', 'message': 'No records found'}, status=404)
+        return None
     
 # endpoint - /visitors/search/name -> # User operation
 def search_visitor_by_name(request):

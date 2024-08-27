@@ -24,7 +24,7 @@ $(document).ready(function() {
             event.preventDefault();
 
             // Exibe a mensagem de erro no contêiner de erro
-            $("#error-message-container").html("<div class='alert alert-danger'>Por favor, preencha pelo menos um dos campos</div>");
+            $("#error-message-container").html("<div class='alert alert-danger'>Por favor, preencha pelo menos um dos campos.</div>");
 
             // Adiciona classes de erro para destacar os campos
             nameField.addClass('form-control-danger');
@@ -35,6 +35,8 @@ $(document).ready(function() {
             nameField.removeClass('form-control-danger');
             registryField.removeClass('form-control-danger');
             $("#error-message-container").html(""); // Limpa a mensagem de erro
+
+        
         }
     });
 });

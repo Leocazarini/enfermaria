@@ -85,7 +85,7 @@ def student_appointment(request):
        
         if student is None:
             logger.error('Student not found')
-            return JsonResponse({'status': 'error', 'message': 'Student not found'}, status=404)
+            return render(request, 'search_student.html', {'error_message': 'Estudante não encontrado.'}) 
 
         return render(request, 'ap_student.html', {'student': student})
 
@@ -101,6 +101,10 @@ def employee_appointment(request):
         registry = request.GET.get('badge', None)
         employee = search_employee(name, registry)
 
+        if employee is None:
+            logger.error('Employee not found')
+            return render(request, 'search_employee.html', {'error_message': 'Colaborador não encontrado.'})
+
         return render(request, 'ap_employee.html', {'employee': employee})
 
     if request.method == 'POST': 
@@ -115,6 +119,10 @@ def visitor_appointment(request):
         name = request.GET.get('name', None)
         if name:
             visitor = search_visitor(name)
+
+            if visitor is None:
+                logger.error('Visitor not found')
+                return render(request, 'search_visitor.html', {'error_message': 'Visitante não encontrado.'})
 
             return render(request, 'ap_visitor.html', {'visitor': visitor}) 
               
