@@ -24,14 +24,14 @@ class TestCreateStudents(TestCase):
                 'age': 15,
                 'gender': 'Male',
                 'registry': 'S123456',
-                'current_class': '9th Grade'
+
             },
             {
                 'name': 'Jane Doe',
                 'age': 14,
                 'gender': 'Female',
                 'registry': 'S654321',
-                'current_class': '8th Grade'
+
             }
         ]
         self.invalid_data_format = {
@@ -39,7 +39,7 @@ class TestCreateStudents(TestCase):
             'age': 15,
             'gender': 'Male',
             'registry': 'S123456',
-            'current_class': '9th Grade'
+
         }
         self.no_data = None
 
@@ -72,7 +72,6 @@ class TestCreateStudentInfo(TestCase):
             age=15,
             gender='Male',
             registry='S123456',
-            current_class='9th Grade',
             class_group=self.class_group
         )
         self.valid_data_new = json.dumps({
@@ -183,7 +182,6 @@ class TestSearchStudent(TestCase):
             gender='Male',
             registry='S123456',
             class_group=self.class_group,
-            current_class='9th Grade'
         )
         self.student_info1 = StudentInfo.objects.create(
             student=self.student1,
@@ -197,7 +195,6 @@ class TestSearchStudent(TestCase):
             gender='Female',
             registry='S654321',
             class_group=self.class_group,
-            current_class='8th Grade'
         )
         self.student_info2 = StudentInfo.objects.create(
             student=self.student2,
@@ -220,7 +217,6 @@ class TestSearchStudent(TestCase):
             gender='Male',
             registry='S789012',
             class_group=self.class_group,
-            current_class='10th Grade'
         )
 
         response = search_student(name='John Doe', registry=None)
@@ -231,10 +227,7 @@ class TestSearchStudent(TestCase):
 
     def test_search_student_not_found(self):
         response = search_student(name='Nonexistent Name', registry='NonexistentRegistry')
-        self.assertIsInstance(response, JsonResponse)
-        response_data = json.loads(response.content)
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response_data['message'], 'No records found')
+        self.assertEqual(response, None)
 
 class TestSearchStudentByName(TestCase):
 
@@ -250,7 +243,6 @@ class TestSearchStudentByName(TestCase):
             age=15,
             gender='Male',
             registry='S123456',
-            current_class='9th Grade',
             class_group=self.class_group
         )
         self.student2 = Student.objects.create(
@@ -258,7 +250,6 @@ class TestSearchStudentByName(TestCase):
             age=14,
             gender='Female',
             registry='S654321',
-            current_class='8th Grade',
             class_group=self.class_group
         )
         self.student3 = Student.objects.create(
@@ -266,7 +257,6 @@ class TestSearchStudentByName(TestCase):
             age=16,
             gender='Male',
             registry='S987654',
-            current_class='10th Grade',
             class_group=self.class_group
         )
 
@@ -519,11 +509,7 @@ class TestSearchEmployee(TestCase):
 
     def test_search_no_results(self):
         response = search_employee(name='Nonexistent', registry='E999999')
-        self.assertIsInstance(response, JsonResponse)
-        response_data = json.loads(response.content)
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response_data['status'], 'error')
-        self.assertEqual(response_data['message'], 'No records found')
+        self.assertEqual(response, None)
 
 class TestSearchEmployeeByName(TestCase):
 
@@ -673,20 +659,17 @@ class TestSearchVisitor(TestCase):
 
     def test_search_single_visitor(self):
         response = search_visitor(name='John Doe')
-        self.assertIsInstance(response, JsonResponse)
-        self.assertEqual(response.status_code, 200)
-        response_data = json.loads(response.content)
-        self.assertEqual(response_data['status'], 'success')
-        self.assertEqual(response_data['data']['name'], 'John Doe')
-        self.assertEqual(response_data['data']['allergies'], 'None')
+        self.assertIsInstance(response, dict)
+        self.assertEqual(response['name'], 'John Doe')
+        self.assertEqual(response['age'], 45)
+        self.assertEqual(response['gender'], 'Male')
+        self.assertEqual(response['relationship'], 'Father')
+        self.assertEqual(response['allergies'], 'None')
+        self.assertEqual(response['notes'], 'Regular visitor')
 
     def test_search_visitor_not_found(self):
         response = search_visitor(name='Nonexistent Name')
-        self.assertIsInstance(response, JsonResponse)
-        response_data = json.loads(response.content)
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response_data['status'], 'error')
-        self.assertEqual(response_data['message'], 'No records found')
+        self.assertEqual(response, None)
 
 class TestSearchVisitorByName(TestCase):
 
