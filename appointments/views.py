@@ -98,7 +98,7 @@ def student_appointment(request):
 def employee_appointment(request):
     if request.method == 'GET':
         name = request.GET.get('name', None)
-        registry = request.GET.get('badge', None)
+        registry = request.GET.get('registry', None)
         employee = search_employee(name, registry)
 
         if employee is None:

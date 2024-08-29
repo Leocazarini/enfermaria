@@ -691,7 +691,5 @@ $('#example tbody').on('click', 'td.details-control', function () {
     document.getElementById('logoutForm').submit();
   });
 
-
-
-
+  
 })(jQuery);

@@ -330,7 +330,8 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Enfermeira:</label>
                                     <div class="col-sm-9">
-                                    <input type="text" class="form-control" />
+                                    <input id="userFirstName" type="text" class="form-control" value="{{ user.first_name }}" readonly />
+                                      
                                     </div>
                                 </div>
                                 </div>
@@ -338,13 +339,13 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Enfermaria:</label>
                                     <div class="col-sm-9">
-                                    <input type="text" class="form-control" />
+                                    <input id="selectedInfirmary" type="text" class="form-control" readonly />
                                     </div>
                                 </div>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary mr-2">Salvar</button>
-                            <button class="btn btn-light">Cancel</button>
+                            <a href="{% url 'index' %}" class="btn btn-light">Cancelar</a>
                         </form>
                     </div>
                     </div>
@@ -375,6 +376,10 @@
   <!-- Scripts -->
   <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
   <!-- endinject -->
+
+  <!-- Session scripts-->
+  <script src="{% static 'assets/js/session.js' %}"></script>
+
   <!-- Plugin js for this page -->
   <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
   <script src="{% static 'assets/vendors/datatables.net/jquery.dataTables.js' %}"></script>

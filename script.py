@@ -44,7 +44,38 @@ def create_student_info_direct(data):
         logger.error(f"An error occurred: {str(e)}")
         return {'status': 'error', 'message': str(e)}
 
-# Função auxiliar de criação direta de Visitor
+
+def create_employee_info_direct(data):
+    """
+    Função auxiliar para criar ou atualizar EmployeeInfo diretamente usando um dicionário de dados.
+    """
+    try:
+        logger.info("Creating or updating employee info directly")
+        logger.debug(f"Request data: {data}")
+
+        if not isinstance(data, dict):
+            logger.error("Invalid data format, expected a dictionary")
+            return {'status': 'error', 'message': 'Invalid data format, expected a dictionary'}
+        
+        employee_id = data.get('employee_id')
+        allergies = data.get('allergies')
+        notes = data.get('notes')
+
+        if not employee_id:
+            logger.error("Missing required field: employee_id")
+            return {'status': 'error', 'message': 'Missing required field: employee_id'}
+
+        logger.info(f"Calling update_info for employee_id: {employee_id}")
+        updated_info = update_info(EmployeeInfo, employee_id, 'employee_id', allergies, notes)
+        logger.info(f"Employee info updated successfully for employee_id: {employee_id}")
+
+        return {'status': 'success', 'message': 'Employee info updated successfully', 'data': updated_info.id}
+
+    except Exception as e:
+        logger.error(f"An error occurred: {str(e)}")
+        return {'status': 'error', 'message': str(e)}
+
+
 def create_visitors_direct(data_list):
     """
     Função auxiliar para criar visitantes diretamente usando uma lista de dicionários.
@@ -95,8 +126,8 @@ def run_data_insertion():
     ]
 
     students_data = [
-        {'name': 'João da Silva', 'age': 12, 'gender': 'Masculino', 'registry': 'STU001', 'class_group_id': 1, 'birth_date': '2012-05-10'},
-        {'name': 'Ana Maria', 'age': 14, 'gender': 'Feminino', 'registry': 'STU002', 'class_group_id': 2, 'birth_date': '2010-07-12'}
+        {'name': 'João da Silva', 'age': 12, 'gender': 'Masculino', 'registry': 'STU001', 'class_group_id': 1, 'birth_date': '2012-05-10', 'father_name': 'Carlos da Silva', 'father_phone': '123456789', 'mother_name': 'Ana da Silva', 'mother_phone': '987654321'},
+        {'name': 'Ana Maria', 'age': 14, 'gender': 'Feminino', 'registry': 'STU002', 'class_group_id': 2, 'birth_date': '2010-07-12', 'father_name': 'João Maria', 'father_phone': '123123123', 'mother_name': 'Maria Clara', 'mother_phone': '321321321'}
     ]
 
     student_info_data = [
@@ -147,7 +178,7 @@ def run_data_insertion():
 
     # Criar informações adicionais para os funcionários usando a função auxiliar
     for info in employee_info_data:
-        create_student_info_direct(info)
+        create_employee_info_direct(info)
 
     # Usar a nova função para criar visitantes diretamente
     create_visitors_direct(visitors_data)
