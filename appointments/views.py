@@ -69,6 +69,8 @@ def visitor_identify(request):
     if request.method == 'GET':
         return render(request, 'search_visitor.html')
 
+
+
         
 
 # Appointments views

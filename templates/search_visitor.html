@@ -239,7 +239,7 @@
                     {% csrf_token %}
                         
                         <label class="mr-2"for="name">Nome</label>
-                        <input type="text" class="form-control mr-2" name="name" id="name" placeholder="Digite o nome do paciente">
+                        <input type="text" class="form-control mr-2" name="name" id="visitor-name-input" placeholder="Digite o nome do paciente">
 
                         <button type="submit" class="btn btn-primary mb-2">Buscar</button>
                     </form>
@@ -247,6 +247,29 @@
                 </div>
               </div>
 
+          </div>
+
+
+          <div class="row">
+            <div class="card" id="results-container" style="display: none;">
+              <div class="card-body">
+                  <h4 class="card-title">Resultados da Busca - Visitantes</h4>
+                  <div class="table-responsive">
+                      <table class="table table-hover" id="results-table">
+                          <thead>
+                              <tr>
+                                  <th>Nome</th>
+                                  <th>Idade</th>
+                                  <th>Relação com a Escola</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <!-- Resultados da busca para visitantes serão inseridos aqui -->
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
           </div>
         <!-- Fim do Main Panel -->
         </div>
@@ -275,6 +298,8 @@
   <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
   <!-- endinject -->
    
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <!-- Session scripts-->
   <script src="{% static 'assets/js/session.js' %}"></script>
 
@@ -290,9 +315,11 @@
   <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
   <script src="{% static 'assets/js/template.js' %}"></script>
   <script src="{% static 'assets/js/settings.js' %}"></script>
-  <script src="{% static 'assets/js/todolist.js' %}"></script>
- 
+  
   <!-- endinject -->
+
+  <script src="{% static 'assets/js/form.js' %}?v=1.0"></script>
+
   <!-- Custom js for this page-->
   <script src="{% static 'assets/js/dashboard.js' %}"></script>
   <script src="{% static 'assets/js/Chart.roundedBarCharts.js' %}"></script>

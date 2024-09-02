@@ -149,9 +149,9 @@ def search_student_by_name(request):
 
             data = [
                 {
-                    'id': student.id,
                     'name': student.name,
                     'registry': student.registry,
+                    'age': student.age,
                     'class_group_name': student.class_group.name if student.class_group else None
                 }
                 for student in results
@@ -389,8 +389,10 @@ def search_visitor_by_name(request):
 
             data = [
                 {
-                    'id': visitor.id,
-                    'name': visitor.name
+                
+                    'name': visitor.name,
+                    'age': visitor.age,
+                    'relationship': visitor.relationship,
                 }
                 for visitor in results
             ]

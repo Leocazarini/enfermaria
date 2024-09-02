@@ -240,10 +240,10 @@
                     {% csrf_token %}
                         
                         <label class="mr-2" for="name">Nome</label>
-                        <input type="text" class="form-control mr-2" id="name" name="name" placeholder="Digite o nome do aluno">
+                        <input type="text" class="form-control mr-2" id="student-name-input" name="name" placeholder="Digite o nome do aluno">
                        
                         <label class="mr-2" for="registry">RA</label>
-                        <input type="text" class="form-control mr-2" id="registry" name="registry" placeholder="Digite o RA do aluno">
+                        <input type="text" class="form-control mr-2" id="student-registry-input" name="registry" placeholder="Digite o RA do aluno">
                         
                         <button type="submit" class="btn btn-primary mb-2">Buscar</button>
                     </form>
@@ -252,6 +252,36 @@
                   </div>
                 </div>
               </div>
+
+          </div>
+
+
+          <div class="row">
+
+            <div class="card" id="results-container" style="display: none;">
+              <div class="card-body">
+                  <h4 class="card-title">Resultados da Busca - Alunos</h4>
+                  <div class="table-responsive">
+                      <table class="table table-hover" id="results-table">
+                          <thead>
+                              <tr>
+                                  <th>Nome</th>
+                                  <th>RA</th>
+                                  <th>Idade</th>
+                                  <th>Turma</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <!-- Resultados da busca serão inseridos aqui -->
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+
+            
+
+
 
           </div>
         <!-- Fim do Main Panel -->
@@ -283,6 +313,8 @@
 <!-- Scripts -->
 <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
 <!-- endinject -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Session scripts-->
 <script src="{% static 'assets/js/session.js' %}"></script>

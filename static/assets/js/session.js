@@ -1,6 +1,3 @@
-const userFirstName = document.getElementById('userFirstName').textContent.trim();
-sessionStorage.setItem('userFirstName', userFirstName);
-console.log('Nome do usuário armazenado:', userFirstName);
 
         
 function saveInfirmary(infirmary) {

@@ -39,4 +39,153 @@ $(document).ready(function() {
         
         }
     });
+
+
+    // Busca de nomes
+    // Função para buscar alunos
+    function searchStudents(query) {
+        $.ajax({
+            url: '/patients/students/search/name/',
+            data: {
+                'q': query
+            },
+            success: function(data) {
+                var results = data.results;
+                var resultsTable = $('#results-table tbody');
+                resultsTable.empty(); // Limpa resultados anteriores
+
+                if (results.length > 0) {
+                    $('#results-container').show(); // Mostra a tabela
+
+                    results.forEach(function(student) {
+                        resultsTable.append(
+                            '<tr>' +
+                            '<td>' + student.name + '</td>' +
+                            '<td>' + student.registry + '</td>' +
+                            '<td>' + student.age + '</td>' +
+                            '<td>' + student.class_group_name + '</td>' +
+                            '</tr>'
+                        );
+                    });
+
+                    // Adiciona evento de clique em cada linha
+                    $('#results-table tbody tr').on('click', function() {
+                        var name = $(this).find('td:eq(0)').text();
+                        var registry = $(this).find('td:eq(1)').text();
+                        $('#student-name-input').val(name);
+                        $('#student-registry-input').val(registry);
+                        $('#results-container').hide(); // Esconde a tabela após seleção
+                    });
+                } else {
+                    $('#results-container').hide(); // Esconde a tabela se não houver resultados
+                }
+            }
+        });
+    }
+
+    // Função para buscar funcionários
+    function searchEmployees(query) {
+        $.ajax({
+            url: '/patients/employees/search/name/',
+            data: {
+                'q': query
+            },
+            success: function(data) {
+                var results = data.results;
+                var resultsTable = $('#results-table tbody');
+                resultsTable.empty(); // Limpa resultados anteriores
+
+                if (results.length > 0) {
+                    $('#results-container').show(); // Mostra a tabela
+
+                    results.forEach(function(employee) {
+                        resultsTable.append(
+                            '<tr>' +
+                            '<td>' + employee.name + '</td>' +
+                            '<td>' + employee.registry + '</td>' +
+                            '<td>' + employee.department_name + '</td>' +
+                            '</tr>'
+                        );
+                    });
+
+                    // Adiciona evento de clique em cada linha
+                    $('#results-table tbody tr').on('click', function() {
+                        var name = $(this).find('td:eq(0)').text();
+                        var registry = $(this).find('td:eq(1)').text();
+                        $('#employee-name-input').val(name);
+                        $('#employee-registry-input').val(registry);
+                        $('#results-container').hide(); // Esconde a tabela após seleção
+                    });
+                } else {
+                    $('#results-container').hide(); // Esconde a tabela se não houver resultados
+                }
+            }
+        });
+    }
+
+    // Função para buscar visitantes
+    function searchVisitors(query) {
+        $.ajax({
+            url: '/patients/visitors/search/name/',
+            data: {
+                'q': query
+            },
+            success: function(data) {
+                var results = data.results;
+                var resultsTable = $('#results-table tbody');
+                resultsTable.empty(); // Limpa resultados anteriores
+
+                if (results.length > 0) {
+                    $('#results-container').show(); // Mostra a tabela
+
+                    results.forEach(function(visitor) {
+                        resultsTable.append(
+                            '<tr>' +
+                            '<td>' + visitor.name + '</td>' +
+                            '<td>' + visitor.age + '</td>' +
+                            '<td>' + visitor.relationship + '</td>' +
+                            '</tr>'
+                        );
+                    });
+
+                    // Adiciona evento de clique em cada linha
+                    $('#results-table tbody tr').on('click', function() {
+                        var name = $(this).find('td:eq(0)').text();
+                        $('#visitor-name-input').val(name);
+                        $('#results-container').hide(); // Esconde a tabela após seleção
+                    });
+                } else {
+                    $('#results-container').hide(); // Esconde a tabela se não houver resultados
+                }
+            }
+        });
+    }
+
+    // Captura de eventos de keyup para diferentes inputs
+    $('#student-name-input').on('keyup', function() {
+        var query = $(this).val();
+        if (query.length >= 3) {
+            searchStudents(query);
+        } else {
+            $('#results-container').hide();
+        }
+    });
+
+    $('#employee-name-input').on('keyup', function() {
+        var query = $(this).val();
+        if (query.length >= 3) {
+            searchEmployees(query);
+        } else {
+            $('#results-container').hide();
+        }
+    });
+
+    $('#visitor-name-input').on('keyup', function() {
+        var query = $(this).val();
+        if (query.length >= 3) {
+            searchVisitors(query);
+        } else {
+            $('#results-container').hide();
+        }
+    });
 });
