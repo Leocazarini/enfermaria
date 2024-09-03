@@ -28,6 +28,9 @@ def create_infirmary(data):
         logger.warning("No data provided.")
         return {'status': 'error', 'message': 'No data provided'}
 
+
+
+
 def create_nurses(data):
     logger.info("Starting create_nurses function.")
     

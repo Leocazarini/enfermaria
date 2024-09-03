@@ -132,34 +132,34 @@ def get_info_by_patient(info_model, foreign_key_value, foreign_key_field):
 
 
 
-def update_info(info_model, foreign_key_value, foreign_key_field, allergies=None, notes=None):
+def update_info(info_model, foreign_key_value, foreign_key_field, allergies=None, patient_notes=None):
     logger.info(f"Starting update_info function for model: {info_model.__name__}.")
-    logger.debug(f"Updating information for {foreign_key_field} = {foreign_key_value}. Allergies: {allergies}, Notes: {notes}")
+    logger.debug(f"Updating information for {foreign_key_field} = {foreign_key_value}. Allergies: {allergies}, Notes: {patient_notes}")
     
     info = get_info_by_patient(info_model, foreign_key_value, foreign_key_field)
     
     if info:
         logger.info(f"Information found for {foreign_key_field} = {foreign_key_value}. Updating record.")
         info.allergies = allergies
-        info.notes = notes
+        info.patient_notes = patient_notes
         info.save()
         logger.info(f"Information updated for {foreign_key_field} = {foreign_key_value}.")
         return info
     else:
         logger.warning(f"No information found for {foreign_key_field} = {foreign_key_value}. Creating new record.")
         
-        return create_info(info_model, foreign_key_value, foreign_key_field, allergies, notes)
+        return create_info(info_model, foreign_key_value, foreign_key_field, allergies, patient_notes)
 
 
 
-def create_info(info_model, foreign_key_value, foreign_key_field, allergies=None, notes=None):
+def create_info(info_model, foreign_key_value, foreign_key_field, allergies=None, patient_notes=None):
     logger.info(f"Starting create_info function for model: {info_model.__name__}.")
-    logger.debug(f"Creating information for {foreign_key_field} = {foreign_key_value}. Allergies: {allergies}, Notes: {notes}")
+    logger.debug(f"Creating information for {foreign_key_field} = {foreign_key_value}. Allergies: {allergies}, Notes: {patient_notes}")
     
     info = info_model.objects.create(**{
         foreign_key_field: foreign_key_value,
         'allergies': allergies,
-        'notes': notes
+        'patient_notes': patient_notes
     })
     
     logger.info(f"Information created successfully for {foreign_key_field} = {foreign_key_value}.")

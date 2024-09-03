@@ -33,7 +33,7 @@ class Student(models.Model):
 class StudentInfo(models.Model):
     student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='info')
     allergies = models.TextField(blank=True, null=True)
-    notes = models.TextField(blank=True, null=True)
+    patient_notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Info for {self.student.name}"
@@ -73,7 +73,7 @@ class Employee(models.Model):
 class EmployeeInfo(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE, related_name='info')
     allergies = models.TextField(blank=True, null=True)
-    notes = models.TextField(blank=True, null=True)
+    patient_notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Info for {self.employee.name}"
@@ -91,7 +91,7 @@ class Visitor(models.Model):
     gender = models.CharField(max_length=10)
     relationship = models.CharField(max_length=50)
     allergies = models.TextField(blank=True, null=True)
-    notes = models.TextField(blank=True, null=True)
+    patient_notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

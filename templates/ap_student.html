@@ -231,7 +231,7 @@
                                                     <input type="text" class="form-control mb-3" id="allergies" value="{{ student.info.allergies }}">
         
                                                     <label for="student_notes">Observações do Aluno:</label>
-                                                    <textarea class="form-control" id="student_notes" rows="8">{{ student.info.notes }}</textarea>
+                                                    <textarea class="form-control" id="student_notes" rows="8">{{ student.info.patient_notes }}</textarea>
                                                 </div>
                                             </div>
                                         </form>
@@ -330,7 +330,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Enfermeira:</label>
                                     <div class="col-sm-9">
-                                    <input id="userFirstName" type="text" class="form-control" value="{{ user.first_name }}" readonly />
+                                    <input id="userFirstName" name="userFirstName" type="text" class="form-control" readonly />
                                       
                                     </div>
                                 </div>

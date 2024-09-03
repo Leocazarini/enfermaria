@@ -1,7 +1,6 @@
 import os
 import django
-import json
-import logging
+
 # Configurando o ambiente Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'setup.settings')  
 django.setup()
@@ -19,72 +18,70 @@ def create_student_info_direct(data):
     Função auxiliar para criar ou atualizar StudentInfo diretamente usando um dicionário de dados.
     """
     try:
-        logger.info("Creating or updating student info directly")
-        logger.debug(f"Request data: {data}")
+        print("Creating or updating student info directly")
+        print(f"Request data: {data}")
 
         if not isinstance(data, dict):
-            logger.error("Invalid data format, expected a dictionary")
+            print("Invalid data format, expected a dictionary")
             return {'status': 'error', 'message': 'Invalid data format, expected a dictionary'}
         
         student_id = data.get('student_id')
         allergies = data.get('allergies')
-        notes = data.get('notes')
+        patient_notes = data.get('patient_notes')
 
         if not student_id:
-            logger.error("Missing required field: student_id")
+            print("Missing required field: student_id")
             return {'status': 'error', 'message': 'Missing required field: student_id'}
 
-        logger.info(f"Calling update_info for student_id: {student_id}")
-        updated_info = update_info(StudentInfo, student_id, 'student_id', allergies, notes)
-        logger.info(f"Student info updated successfully for student_id: {student_id}")
+        print(f"Calling update_info for student_id: {student_id}")
+        updated_info = update_info(StudentInfo, student_id, 'student_id', allergies, patient_notes)
+        print(f"Student info updated successfully for student_id: {student_id}")
 
         return {'status': 'success', 'message': 'Student info updated successfully', 'data': updated_info.id}
 
     except Exception as e:
-        logger.error(f"An error occurred: {str(e)}")
+        print(f"An error occurred: {str(e)}")
         return {'status': 'error', 'message': str(e)}
-
 
 def create_employee_info_direct(data):
     """
     Função auxiliar para criar ou atualizar EmployeeInfo diretamente usando um dicionário de dados.
     """
     try:
-        logger.info("Creating or updating employee info directly")
-        logger.debug(f"Request data: {data}")
+        print("Creating or updating employee info directly")
+        print(f"Request data: {data}")
 
         if not isinstance(data, dict):
-            logger.error("Invalid data format, expected a dictionary")
+            print("Invalid data format, expected a dictionary")
             return {'status': 'error', 'message': 'Invalid data format, expected a dictionary'}
         
         employee_id = data.get('employee_id')
         allergies = data.get('allergies')
-        notes = data.get('notes')
+        patient_notes = data.get('patient_notes')
 
         if not employee_id:
-            logger.error("Missing required field: employee_id")
+            print("Missing required field: employee_id")
             return {'status': 'error', 'message': 'Missing required field: employee_id'}
 
-        logger.info(f"Calling update_info for employee_id: {employee_id}")
-        updated_info = update_info(EmployeeInfo, employee_id, 'employee_id', allergies, notes)
-        logger.info(f"Employee info updated successfully for employee_id: {employee_id}")
+        print(f"Calling update_info for employee_id: {employee_id}")
+        updated_info = update_info(EmployeeInfo, employee_id, 'employee_id', allergies, patient_notes)
+        print(f"Employee info updated successfully for employee_id: {employee_id}")
 
         return {'status': 'success', 'message': 'Employee info updated successfully', 'data': updated_info.id}
 
     except Exception as e:
-        logger.error(f"An error occurred: {str(e)}")
+        print(f"An error occurred: {str(e)}")
         return {'status': 'error', 'message': str(e)}
-
 
 def create_visitors_direct(data_list):
     """
     Função auxiliar para criar visitantes diretamente usando uma lista de dicionários.
     """
-    logger.info("Creating visitors directly")
+    print("Creating visitors directly")
     if isinstance(data_list, list):
         for data in data_list:
             if not isinstance(data, dict):
-                logger.error("Invalid data format, expected a dictionary")
+                print("Invalid data format, expected a dictionary")
                 return {'status': 'error', 'message': 'Invalid data format, expected a dictionary'}
             
             name = data.get('name')
@@ -92,10 +89,10 @@ def create_visitors_direct(data_list):
             gender = data.get('gender')
             relationship = data.get('relationship')
             allergies = data.get('allergies', '')
-            notes = data.get('notes', '')
+            patient_notes = data.get('patient_notes', '')
 
             if not name or not age or not gender or not relationship:
-                logger.error("Missing required fields in visitor data")
+                print("Missing required fields in visitor data")
                 return {'status': 'error', 'message': 'Missing required fields'}
 
             visitor = Visitor.objects.create(
@@ -104,20 +101,16 @@ def create_visitors_direct(data_list):
                 gender=gender,
                 relationship=relationship,
                 allergies=allergies,
-                notes=notes
+                patient_notes=patient_notes
             )
-            logger.info(f"Visitor {visitor.name} created successfully")
+            print(f"Visitor {visitor.name} created successfully")
         return {'status': 'success', 'message': 'Visitors created successfully'}
     else:
-        logger.error("Invalid data format, expected a list of dictionaries")
+        print("Invalid data format, expected a list of dictionaries")
         return {'status': 'error', 'message': 'Invalid data format, expected a list of dictionaries'}
 
-# Configuração do logger
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 def run_data_insertion():
-    logger.info("Starting data insertion script")
+    print("Starting data insertion script")
 
     # Dados para inserir no banco
     class_groups_data = [
@@ -125,44 +118,95 @@ def run_data_insertion():
         {'name': 'Turma B', 'segment': 'Secundário', 'director': 'Maria Oliveira'}
     ]
 
+    # Nomes realistas para estudantes
+    student_names = [
+        "Pedro Silva", "Ana Maria", "Carla Oliveira", "Lucas Fernandes", "Mariana Souza", 
+        "João da Silva", "Luísa Costa", "Gabriel Rocha", "Beatriz Santos", "Felipe Araújo",
+        "Sofia Lima", "Rafael Almeida", "Fernanda Duarte", "Mateus Mendes", "Isabela Reis", 
+        "Thiago Cardoso", "Juliana Nogueira", "Leonardo Gonçalves", "Larissa Martins", 
+        "Gustavo Barros", "Camila Fonseca", "Eduardo Carvalho", "Renata Borges", 
+        "Vinícius Almeida", "Patrícia Teixeira", "Rodrigo Cavalcante", "Letícia Pinto", 
+        "César Monteiro", "Bárbara Figueiredo", "Marcelo Ferreira"
+    ]
+    
+    parent_names = [
+        ("Carlos", "Ana"), ("Paulo", "Maria"), ("Roberto", "Clara"), ("Fernando", "Juliana"), 
+        ("José", "Fernanda"), ("Bruno", "Patrícia"), ("Ricardo", "Renata"), ("Gustavo", "Helena"), 
+        ("André", "Beatriz"), ("Sérgio", "Lúcia"), ("Fábio", "Cristina"), ("Miguel", "Bianca"), 
+        ("Henrique", "Marina"), ("Alexandre", "Natália"), ("Danilo", "Carolina")
+    ]
+
     students_data = [
-        {'name': 'João da Silva', 'age': 12, 'gender': 'Masculino', 'registry': 'STU001', 'class_group_id': 1, 'birth_date': '2012-05-10', 'father_name': 'Carlos da Silva', 'father_phone': '123456789', 'mother_name': 'Ana da Silva', 'mother_phone': '987654321'},
-        {'name': 'Ana Maria', 'age': 14, 'gender': 'Feminino', 'registry': 'STU002', 'class_group_id': 2, 'birth_date': '2010-07-12', 'father_name': 'João Maria', 'father_phone': '123123123', 'mother_name': 'Maria Clara', 'mother_phone': '321321321'}
+        {'name': student_names[i], 'age': 10 + i % 10, 'gender': 'Masculino' if i % 2 == 0 else 'Feminino', 
+         'registry': f'STU{100+i:03}', 'class_group_id': (i % 2) + 1, 'birth_date': f'201{i % 10}-01-01', 
+         'father_name': parent_names[i % len(parent_names)][0], 
+         'father_phone': '123456789', 'mother_name': parent_names[i % len(parent_names)][1], 'mother_phone': '987654321'} 
+         for i in range(30)
     ]
 
+    # Adicionando homônimos
+    students_data[2]['name'] = 'Ana Maria Oliveira'  
+    students_data[3]['name'] = 'Ana Maria Pereira'   
+    students_data[4]['name'] = 'Ana Maria Costa'     
+    
+    # Dois alunos com o mesmo nome completo
+    students_data[10]['name'] = 'João da Silva'
+    students_data[11]['name'] = 'João da Silva'  
+    
     student_info_data = [
-        {'student_id': 1, 'allergies': 'Amendoim', 'notes': 'Alergia leve'},
-        {'student_id': 2, 'allergies': 'Lactose', 'notes': 'Usar leite sem lactose'}
+        {'student_id': i+1, 'allergies': 'Amendoim' if i % 3 == 0 else '', 
+         'patient_notes': 'Alergia leve' if i % 3 == 0 else ''} for i in range(30)
     ]
 
-    departments_data = [
-        {'name': 'Recursos Humanos', 'director': 'Joana Almeida'},
-        {'name': 'TI', 'director': 'Roberto Costa'}
+    department_names = ["Recursos Humanos", "TI", "Administração", "Educação", "Saúde"]
+
+    departments_data = [{'name': department_names[i % len(department_names)], 'director': f"Diretor {i}"} for i in range(5)]
+
+    employee_names = [
+        "Carlos Eduardo", "Paula Mendes", "Rodrigo Silva", "Mariana Costa", "Tiago Ferreira", 
+        "Fernanda Almeida", "José Santos", "Ana Paula", "Bruno Lima", "Claudia Rocha", 
+        "Marcelo Teixeira", "Patricia Souza", "Rafael Lopes", "Juliana Araujo", "Pedro Martins", 
+        "Larissa Rodrigues", "Diego Pires", "Gabriela Monteiro", "Vinicius Souza", "Monica Dias",
+        "Fernando Meirelles", "Camila Borges", "Thiago Cardoso", "Renata Braga", "André Silva", 
+        "Juliana Lima", "Lucas Moreira", "Isabel Farias", "Rafael Carvalho", "Sandra Freitas"
     ]
 
     employees_data = [
-        {'name': 'Pedro Gomes', 'age': 30, 'gender': 'Masculino', 'registry': 'EMP001', 'department_id': 1, 'position': 'Gerente', 'birth_date': '1994-04-23'},
-        {'name': 'Mariana Lima', 'age': 25, 'gender': 'Feminino', 'registry': 'EMP002', 'department_id': 2, 'position': 'Analista', 'birth_date': '1999-09-19'}
+        {'name': employee_names[i], 'age': 25 + i % 10, 'gender': 'Masculino' if i % 2 == 0 else 'Feminino', 
+         'registry': f'EMP{100+i:03}', 'department_id': (i % len(departments_data)) + 1, 'position': f'Cargo {i}', 
+         'birth_date': f'198{i % 10}-01-01'} for i in range(30)
     ]
 
     employee_info_data = [
-        {'employee_id': 1, 'allergies': 'Poeira', 'notes': 'Evitar locais empoeirados'},
-        {'employee_id': 2, 'allergies': 'Nenhuma', 'notes': 'Nenhuma observação'}
+        {'employee_id': i+1, 'allergies': 'Poeira' if i % 3 == 0 else '', 
+         'patient_notes': 'Evitar locais empoeirados' if i % 3 == 0 else ''} for i in range(30)
+    ]
+
+    visitor_names = [
+        "Cláudio Alves", "Maria Eduarda", "Antônio Nunes", "Fernanda Oliveira", "Ricardo Gomes", 
+        "Laura Campos", "João Lucas", "Beatriz Ramos", "Paulo Henrique", "Cecília Duarte", 
+        "Marcos Aurélio", "Lívia Almeida", "Felipe Bastos", "Vanessa Carvalho", "Caio Augusto", 
+        "Juliana Pereira", "Daniel Gonçalves", "Amanda Souza", "Bruno Machado", "Natalia Santos",
+        "Rafael Costa", "Ana Cláudia", "Renato Silva", "Bianca Fernandes", "Leonardo Cunha", 
+        "Raquel Monteiro", "Lucas Santos", "Marta Ribeiro", "Guilherme Barros", "Tatiane Vieira"
     ]
 
     visitors_data = [
-        {'name': 'Carlos Souza', 'age': 45, 'gender': 'Masculino', 'relationship': 'Pai', 'allergies': 'Nenhuma', 'notes': 'Visita mensal'},
-        {'name': 'Maria Santos', 'age': 35, 'gender': 'Feminino', 'relationship': 'Mãe', 'allergies': 'Nenhuma', 'notes': 'Visita semanal'}
+        {'name': visitor_names[i], 'age': 30 + i % 20, 'gender': 'Masculino' if i % 2 == 0 else 'Feminino', 
+         'relationship': 'Parente'} for i in range(30)
     ]
 
     infirmaries_data = [
-        {'name': 'Enfermaria Central', 'location': 'Prédio Principal'},
-        {'name': 'Enfermaria Secundária', 'location': 'Prédio B'}
+        {'name': 'Infantil', 'location': 'Prédio Infantil - Térreo'},
+        {'name': 'Fundamental', 'location': 'Prédio Fundamental - Térreo'},
+        {'name': 'Ensino Médio', 'location': 'Prédio Ensino Médio - Térreo'},
+        {'name': 'Atendimento Externo', 'location': ''}
     ]
 
     nurses_data = [
-        {'name': 'Camila Ferreira', 'username': 'camila.ferreira', 'badge_number': 'NUR001'},
-        {'name': 'Lucas Mendes', 'username': 'lucas.mendes', 'badge_number': 'NUR002'}
+        {'name': 'Bianca Silva', 'username': 'Bianca', 'registry_number': 'NUR001'},
+        {'name': 'Letícia Oliveira', 'username': 'Letícia', 'registry_number': 'NUR002'},
+        {'name': 'Megy Santos', 'username': 'Megy', 'registry_number': 'NUR003'}
     ]
 
     # Inserir dados usando as funções de criação
@@ -186,7 +230,7 @@ def run_data_insertion():
     create_infirmary(infirmaries_data)
     create_nurses(nurses_data)
 
-    logger.info("Data insertion completed successfully")
+    print("Data insertion completed successfully")
 
 # Executar o script
 if __name__ == "__main__":

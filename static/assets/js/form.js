@@ -15,8 +15,8 @@ $(document).ready(function() {
         var registryField = $("#registry");
 
         // Obtém os valores dos campos e remove espaços em branco
-        var nameValue = nameField.val().trim();
-        var registryValue = registryField.val().trim();
+        var nameValue = nameField.val();
+        var registryValue = registryField.val();
 
         // Verifica se ambos os campos estão vazios
         if (nameValue === "" && registryValue === "") {
@@ -72,7 +72,7 @@ $(document).ready(function() {
                     $('#results-table tbody tr').on('click', function() {
                         var name = $(this).find('td:eq(0)').text();
                         var registry = $(this).find('td:eq(1)').text();
-                        $('#student-name-input').val(name);
+                        $('#student-name-input').val("");
                         $('#student-registry-input').val(registry);
                         $('#results-container').hide(); // Esconde a tabela após seleção
                     });

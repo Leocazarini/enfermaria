@@ -70,7 +70,7 @@ def create_student_info(request):
             
             student_id = data.get('student_id')
             allergies = data.get('allergies')
-            notes = data.get('notes')
+            patient_notes = data.get('patient_notes')
 
             if not student_id:
                 logger.error("Missing required field: student_id")
@@ -78,7 +78,7 @@ def create_student_info(request):
 
            
             logger.info(f"Calling update_info for student_id: {student_id}")
-            updated_info = update_info(StudentInfo, student_id, 'student_id', allergies, notes)
+            updated_info = update_info(StudentInfo, student_id, 'student_id', allergies, patient_notes)
             logger.info(f"Student info updated successfully for student_id: {student_id}")
             
             return JsonResponse({'status': 'success', 'message': 'Student info updated successfully', 'data': updated_info.id}, status=200)
@@ -218,14 +218,14 @@ def create_employee_info(request):
             
             employee_id = data.get('employee_id')
             allergies = data.get('allergies')
-            notes = data.get('notes')
+            patient_notes = data.get('patient_notes')
 
             if not employee_id:
                 logger.error("Missing required field: employee_id")
                 return JsonResponse({'status': 'error', 'message': 'Missing required field: employee_id'}, status=400)
 
             logger.info(f"Calling update_info for employee_id: {employee_id}")
-            updated_info = update_info(EmployeeInfo, employee_id, 'employee_id', allergies, notes)
+            updated_info = update_info(EmployeeInfo, employee_id, 'employee_id', allergies, patient_notes)
             logger.info(f"Employee info updated successfully for employee_id: {employee_id}")
             
             return JsonResponse({'status': 'success', 'message': 'Employee info updated successfully', 'data': updated_info.id}, status=200)
