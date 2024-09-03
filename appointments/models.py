@@ -5,34 +5,13 @@ from patients.models import *
 
 
 
-# workspace indentifiers
-
-class Infirmary(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    location = models.CharField(max_length=100, null=True)
-
-    def __str__(self):
-        return self.name
-    
-
-class Nurse(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    username = models.CharField(max_length=100)
-    registry_number = models.CharField(max_length=20, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 # appointment models
 
 class StudentAppointment(models.Model):
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    infirmary = models.ForeignKey(Infirmary, on_delete=models.CASCADE)
-    nurse = models.ForeignKey(Nurse, on_delete=models.CASCADE)
+    infirmary = models.CharField(max_length=50)
+    nurse = models.CharField(max_length=50)
     current_class = models.CharField(max_length=50)
     date = models.DateTimeField()
     reason = models.TextField()
@@ -49,8 +28,8 @@ class StudentAppointment(models.Model):
 class EmployeeAppointment(models.Model):
     id = models.AutoField(primary_key=True)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    infirmary = models.ForeignKey(Infirmary, on_delete=models.CASCADE)
-    nurse = models.ForeignKey(Nurse, on_delete=models.CASCADE)
+    infirmary = models.CharField(max_length=50)
+    nurse = models.CharField(max_length=50)
     date = models.DateTimeField()
     reason = models.TextField()
     treatment = models.TextField()
@@ -65,8 +44,8 @@ class EmployeeAppointment(models.Model):
 class VisitorAppointment(models.Model):
     id = models.AutoField(primary_key=True)
     visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE)
-    infirmary = models.ForeignKey(Infirmary, on_delete=models.CASCADE)
-    nurse = models.ForeignKey(Nurse, on_delete=models.CASCADE)
+    infirmary = models.CharField(max_length=50)
+    nurse = models.CharField(max_length=50)
     date = models.DateTimeField()
     reason = models.TextField()
     treatment = models.TextField()

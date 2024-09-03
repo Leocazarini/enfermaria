@@ -10,7 +10,6 @@ from patients.models import (Student, ClassGroup, StudentInfo, Employee,
 from patients.views import (create_students, create_student_info, create_class_group, 
                             create_employees, create_employee_info, create_department, 
                             create_visitor)
-from appointments.views import create_infirmary, create_nurses
 from controller.crud import create_objects, update_info
 
 def create_student_info_direct(data):
@@ -196,18 +195,7 @@ def run_data_insertion():
          'relationship': 'Parente'} for i in range(30)
     ]
 
-    infirmaries_data = [
-        {'name': 'Infantil', 'location': 'Prédio Infantil - Térreo'},
-        {'name': 'Fundamental', 'location': 'Prédio Fundamental - Térreo'},
-        {'name': 'Ensino Médio', 'location': 'Prédio Ensino Médio - Térreo'},
-        {'name': 'Atendimento Externo', 'location': ''}
-    ]
-
-    nurses_data = [
-        {'name': 'Bianca Silva', 'username': 'Bianca', 'registry_number': 'NUR001'},
-        {'name': 'Letícia Oliveira', 'username': 'Letícia', 'registry_number': 'NUR002'},
-        {'name': 'Megy Santos', 'username': 'Megy', 'registry_number': 'NUR003'}
-    ]
+    
 
     # Inserir dados usando as funções de criação
     create_class_group(class_groups_data)
@@ -227,8 +215,7 @@ def run_data_insertion():
     # Usar a nova função para criar visitantes diretamente
     create_visitors_direct(visitors_data)
 
-    create_infirmary(infirmaries_data)
-    create_nurses(nurses_data)
+   
 
     print("Data insertion completed successfully")
 

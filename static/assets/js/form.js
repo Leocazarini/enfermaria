@@ -8,37 +8,42 @@ $(document).ready(function() {
     // Seleciona o formulário
     var form = $("#searchForm");
 
-    // Adiciona um evento de submissão ao formulário
+// Adiciona um evento de submissão ao formulário
     form.on("submit", function(event) {
+        console.log("Evento de submissão capturado."); // Log de depuração
         // Seleciona os campos de nome e RA
-        var nameField = $("#name");
-        var registryField = $("#registry");
+        var nameField = $("#student-name-input");
+        var registryField = $("#student-registry-input");
 
         // Obtém os valores dos campos e remove espaços em branco
-        var nameValue = nameField.val();
-        var registryValue = registryField.val();
+        var nameValue = nameField.val().trim();
+        var registryValue = registryField.val().trim();
+
+        // Logs de depuração
+        console.log("Nome:", nameValue); 
+        console.log("RA:", registryValue); 
 
         // Verifica se ambos os campos estão vazios
-        if (nameValue === "" && registryValue === "") {
-            // Evita o envio do formulário e a navegação para a próxima página
-            event.preventDefault();
+    if (nameValue === "" && registryValue === "") {
+        // Evita o envio do formulário e a navegação para a próxima página
+        event.preventDefault();
+        console.log("Campos vazios, formulário não enviado."); // Log de depuração
 
-            // Exibe a mensagem de erro no contêiner de erro
-            $("#error-message-container").html("<div class='alert alert-danger'>Por favor, preencha pelo menos um dos campos.</div>");
+        // Exibe a mensagem de erro no contêiner de erro
+        $("#error-message-container").html("<div class='alert alert-danger'>Por favor, preencha pelo menos um dos campos.</div>");
 
-            // Adiciona classes de erro para destacar os campos
-            nameField.addClass('form-control-danger');
-            registryField.addClass('form-control-danger');
+        // Adiciona classes de erro para destacar os campos
+        nameField.addClass('form-control-danger');
+        registryField.addClass('form-control-danger');
 
-        } else {
-            // Se pelo menos um campo estiver preenchido, remove as mensagens de erro e classes
-            nameField.removeClass('form-control-danger');
-            registryField.removeClass('form-control-danger');
-            $("#error-message-container").html(""); // Limpa a mensagem de erro
+    } else {
+        // Se pelo menos um campo estiver preenchido, remove as mensagens de erro e classes
+        nameField.removeClass('form-control-danger');
+        registryField.removeClass('form-control-danger');
+        $("#error-message-container").html(""); // Limpa a mensagem de erro
+    }
+});
 
-        
-        }
-    });
 
 
     // Busca de nomes
@@ -73,6 +78,8 @@ $(document).ready(function() {
                         var name = $(this).find('td:eq(0)').text();
                         var registry = $(this).find('td:eq(1)').text();
                         $('#student-name-input').val("");
+                        // O valor de nome não está sendo preenchido, pois está gerando bug com homônimos
+                        // Corrigir em uma proxima versão
                         $('#student-registry-input').val(registry);
                         $('#results-container').hide(); // Esconde a tabela após seleção
                     });
@@ -112,7 +119,9 @@ $(document).ready(function() {
                     $('#results-table tbody tr').on('click', function() {
                         var name = $(this).find('td:eq(0)').text();
                         var registry = $(this).find('td:eq(1)').text();
-                        $('#employee-name-input').val(name);
+                        $('#employee-name-input').val("");
+                        // O valor de nome não está sendo preenchido, pois está gerando bug com homônimos
+                        // Corrigir em uma proxima versão
                         $('#employee-registry-input').val(registry);
                         $('#results-container').hide(); // Esconde a tabela após seleção
                     });

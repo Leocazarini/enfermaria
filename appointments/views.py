@@ -1,51 +1,19 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from .models import *
 from patients.models import Student, Employee, Visitor
 from patients.views import search_student, search_employee, search_visitor
-from controller.crud import create_objects
+from controller.crud import create_objects, create_info ,get_info_by_patient, update_info
 from django.contrib.auth.decorators import login_required
 import logging
+import json
 
 
 
 logger = logging.getLogger('appointments.views')
 
 
-def create_infirmary(data):
-    logger.info("Starting create_infirmary function.")
-    
-    if data is not None:
-        if isinstance(data, list):
-            logger.debug(f"Received data is a list with {len(data)} items.")
-            create_objects(Infirmary, data)
-            logger.info("Infirmaries successfully created.")
-            return {'status': 'success'}
-        else:
-            logger.warning("Invalid data format, expected a list of objects.")
-            return {'status': 'error', 'message': 'Invalid data format, expected a list of objects'}
-    else:
-        logger.warning("No data provided.")
-        return {'status': 'error', 'message': 'No data provided'}
-
-
-
-
-def create_nurses(data):
-    logger.info("Starting create_nurses function.")
-    
-    if data is not None:
-        if isinstance(data, list):
-            logger.debug(f"Received data is a list with {len(data)} items.")
-            create_objects(Nurse, data)
-            logger.info("Nurses successfully created.")
-            return {'status': 'success'}
-        else:
-            logger.warning("Invalid data format, expected a list of objects.")
-            return {'status': 'error', 'message': 'Invalid data format, expected a list of objects'}
-    else:
-        logger.warning("No data provided.")
-        return {'status': 'error', 'message': 'No data provided'}
 
 
 # Home view
@@ -117,7 +85,6 @@ def employee_appointment(request):
     
 
 
-
 @login_required
 def visitor_appointment(request):
     if request.method == 'GET':
@@ -135,3 +102,81 @@ def visitor_appointment(request):
     
     if request.method == 'POST':
         pass
+
+
+@csrf_exempt
+def student_record(request):
+    if request.method == 'POST':
+        try:
+            # Lendo o JSON da requisição
+            data = json.loads(request.body)
+
+            # Extraindo os campos do JSON
+            student_id = data.get('student_id')
+            allergies = data.get('allergies')
+            patient_notes = data.get('patient_notes')
+            infirmary = data.get('infirmary')
+            nurse = data.get('nurse')
+            current_class = data.get('current_class')
+            date = data.get('date')
+            reason = data.get('reason')
+            treatment = data.get('treatment')
+            notes = data.get('notes')
+            revaluation = data.get('revaluation')
+            contact_parents = data.get('contact_parents')
+
+            # Desempacotando os valores da lista para os dados do aluno
+            data_info_list = [
+                student_id,
+                allergies,
+                patient_notes
+            ]
+
+            # Verificar e atualizar os dados do aluno se necessário
+            info = get_info_by_patient(StudentInfo, student_id, 'student')
+            logger.debug('Info: %s', info)
+            if info:
+                if allergies != info.allergies or patient_notes != info.patient_notes:
+                    update_info(StudentInfo, student_id, 'student', allergies, patient_notes)
+                    logger.debug('Data updated successfully: %s', data_info_list)
+                else:
+                    logger.debug('No update needed for student info')
+            else:
+                # Caso não exista informação prévia, crie-a
+                create_info(StudentInfo, student_id, 'student', allergies, patient_notes)
+                logger.debug('New student info created: %s', data_info_list)
+
+            # Montando o dicionário para os dados de atendimento
+            data_dict = {
+                'student_id': student_id,
+                'infirmary': infirmary,
+                'nurse': nurse,
+                'current_class': current_class,
+                'date': date,
+                'reason': reason,
+                'treatment': treatment,
+                'notes': notes,
+                'revaluation': revaluation,
+                'contact_parents': contact_parents
+            }
+
+            # Criar uma lista de dicionários para enviar para create_objects
+            data_list = [data_dict]
+
+            # Criar registro na tabela de atendimentos
+            response = create_objects(StudentAppointment, data_list)
+            logger.debug('Data saved on database!: %s', response)
+
+            # Retornar a resposta de sucesso ou erro
+            return response
+
+        except json.JSONDecodeError:
+            logger.error('Failed to decode JSON', exc_info=True)
+            return JsonResponse({'error': 'Falha ao decodificar JSON'}, status=400)
+        except Exception as e:
+            logger.error('An error occurred: %s', e, exc_info=True)
+            return JsonResponse({'error': str(e)}, status=500)
+
+    # Se a requisição não for POST, retornar um erro
+    logger.error('Method not allowed')
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
