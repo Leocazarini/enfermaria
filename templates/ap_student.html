@@ -107,7 +107,7 @@
               <img src="{% static 'assets/images/faces/face28.jpg' %}" alt="profile"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <form id="logoutForm" method="POST" action="{% url 'logout' %}">
+              <form id="logoutForm" method="GET" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <a class="dropdown-item" id="logoutButton" href="#">
                   <i class="ti-power-off text-primary"></i>
@@ -230,7 +230,7 @@
                                                     <label for="student_notes"><b>Alergias:</b></label>
                                                     <input type="text" class="form-control mb-3" id="allergies" value="{{ student.info.allergies }}">
         
-                                                    <label for="student_notes">Observações do Aluno:</label>
+                                                    <label for="student-notes">Observações do Aluno:</label>
                                                     <textarea class="form-control" id="student-notes" rows="8">{{ student.info.patient_notes }}</textarea>
                                                 </div>
                                             </div>

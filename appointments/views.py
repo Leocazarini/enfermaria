@@ -165,7 +165,85 @@ def student_record(request):
 
             # Criar registro na tabela de atendimentos
             response = create_objects(StudentAppointment, data_list)
-            logger.debug('Data saved on database!: %s', response)
+            logger.debug('Response: %s', response)
+
+            # Retornar a resposta de sucesso ou erro
+            return response
+
+        except json.JSONDecodeError:
+            logger.error('Failed to decode JSON', exc_info=True)
+            return JsonResponse({'error': 'Falha ao decodificar JSON'}, status=400)
+        except Exception as e:
+            logger.error('An error occurred: %s', e, exc_info=True)
+            return JsonResponse({'error': str(e)}, status=500)
+
+    # Se a requisição não for POST, retornar um erro
+    logger.error('Method not allowed')
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+
+
+@csrf_exempt
+def employee_record(request):
+    if request.method == 'POST':
+        try:
+            # Lendo o JSON da requisição
+            data = json.loads(request.body)
+
+            # Extraindo os campos do JSON
+            employee_id = data.get('employee_id')
+            allergies = data.get('allergies')
+            patient_notes = data.get('patient_notes')
+            infirmary = data.get('infirmary')
+            nurse = data.get('nurse')
+            date = data.get('date')
+            reason = data.get('reason')
+            treatment = data.get('treatment')
+            notes = data.get('notes')
+            revaluation = data.get('revaluation')
+
+
+
+            # Desempacotando os valores da lista para os dados do aluno
+            data_info_list = [
+                employee_id,
+                allergies,
+                patient_notes
+            ]
+
+            # Verificar e atualizar os dados do aluno se necessário
+            info = get_info_by_patient(EmployeeInfo, employee_id, 'employee')
+            logger.debug('Info: %s', info)
+            if info:
+                if allergies != info.allergies or patient_notes != info.patient_notes:
+                    update_info(EmployeeInfo, employee_id, 'employee', allergies, patient_notes)
+                    logger.debug('Data updated successfully: %s', data_info_list)
+                else:
+                    logger.debug('No update needed for employee info')
+            else:
+                # Caso não exista informação prévia, crie-a
+                create_info(EmployeeInfo, employee_id, 'employee', allergies, patient_notes)
+                logger.debug('New employee info created: %s', data_info_list)
+
+
+            # Montando o dicionário para os dados de atendimento
+            data_dict = {
+                'employee_id': employee_id,
+                'infirmary': infirmary,
+                'nurse': nurse,
+                'date': date,
+                'reason': reason,
+                'treatment': treatment,
+                'notes': notes,
+                'revaluation': revaluation,
+            }
+
+            # Criar uma lista de dicionários para enviar para create_objects
+            data_list = [data_dict]
+
+            # Criar registro na tabela de atendimentos
+            response = create_objects(EmployeeAppointment, data_list)
+            logger.debug('Response:: %s', response)
 
             # Retornar a resposta de sucesso ou erro
             return response

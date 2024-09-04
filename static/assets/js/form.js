@@ -12,8 +12,9 @@ $(document).ready(function() {
     form.on("submit", function(event) {
         console.log("Evento de submissão capturado."); // Log de depuração
         // Seleciona os campos de nome e RA
-        var nameField = $("#student-name-input");
-        var registryField = $("#student-registry-input");
+        var nameField = $("#student-name-input").length ? $("#student-name-input") : $("#employee-name-input");
+        var registryField = $("#student-registry-input").length ? $("#student-registry-input") : $("#employee-registry-input");
+
 
         // Obtém os valores dos campos e remove espaços em branco
         var nameValue = nameField.val().trim();
@@ -21,7 +22,7 @@ $(document).ready(function() {
 
         // Logs de depuração
         console.log("Nome:", nameValue); 
-        console.log("RA:", registryValue); 
+        console.log("Registro:", registryValue); 
 
         // Verifica se ambos os campos estão vazios
     if (nameValue === "" && registryValue === "") {
