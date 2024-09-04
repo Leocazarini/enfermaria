@@ -255,3 +255,8 @@ def employee_record(request):
     # Se a requisição não for POST, retornar um erro
     logger.error('Method not allowed')
     return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+
+@csrf_exempt
+def visitor_record(request):
+    pass

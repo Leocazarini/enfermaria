@@ -362,9 +362,9 @@ def create_visitor(request):
 ###
 
 # endpoint - /visitors/search -> # Internal operation
-def search_visitor(name):
+def search_visitor(name, email):
     try:
-        visitors = get_object(Visitor, name=name)
+        visitors = get_object(Visitor, name=name, email=email)
         
         if not visitors:
             raise Http404('No records found.')

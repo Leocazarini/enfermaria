@@ -12,4 +12,5 @@ urlpatterns = [
 
     path('visitor/', views.visitor_appointment, name='visitor_appointment'),
     path('visitor/search/', views.visitor_identify, name='visitor_identify'),
+    path('visitor/record/', views.visitor_record, name='visitor_record'),
 ]

@@ -28,7 +28,7 @@ def create_objects(model, data_list):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
-def get_object(model, name=None, registry=None, related_fields=None):
+def get_object(model, name=None, registry=None, email=None, related_fields=None):
     logger.info(f"Starting get_object function for model: {model.__name__}.")
 
     query = model.objects.all()
@@ -41,6 +41,12 @@ def get_object(model, name=None, registry=None, related_fields=None):
             logger.debug(f"Selecting related field: {related_fields}.")
             query = query.select_related(related_fields)
     
+    if email:
+        logger.debug(f"Filtering object with email: {email}.")
+        obj = get_object_or_404(query, email=email)
+        logger.info(f"Object found with email: {email}.")
+        return [obj]
+
     if name:
         logger.debug(f"Filtering objects with name containing: {name}.")
         objs = query.filter(name__icontains=name)

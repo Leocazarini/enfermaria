@@ -87,10 +87,11 @@ def create_visitors_direct(data_list):
             age = data.get('age')
             gender = data.get('gender')
             relationship = data.get('relationship')
+            email = data.get('email')  # Adicionando email
             allergies = data.get('allergies', '')
             patient_notes = data.get('patient_notes', '')
 
-            if not name or not age or not gender or not relationship:
+            if not name or not age or not gender or not relationship or not email:
                 print("Missing required fields in visitor data")
                 return {'status': 'error', 'message': 'Missing required fields'}
 
@@ -99,10 +100,11 @@ def create_visitors_direct(data_list):
                 age=age,
                 gender=gender,
                 relationship=relationship,
+                email=email,  # Adicionando email ao objeto Visitor
                 allergies=allergies,
                 patient_notes=patient_notes
             )
-            print(f"Visitor {visitor.name} created successfully")
+            print(f"Visitor {visitor.name} created successfully with email {visitor.email}")
         return {'status': 'success', 'message': 'Visitors created successfully'}
     else:
         print("Invalid data format, expected a list of dictionaries")
@@ -139,8 +141,9 @@ def run_data_insertion():
         {'name': student_names[i], 'age': 10 + i % 10, 'gender': 'Masculino' if i % 2 == 0 else 'Feminino', 
          'registry': f'STU{100+i:03}', 'class_group_id': (i % 2) + 1, 'birth_date': f'201{i % 10}-01-01', 
          'father_name': parent_names[i % len(parent_names)][0], 
-         'father_phone': '123456789', 'mother_name': parent_names[i % len(parent_names)][1], 'mother_phone': '987654321'} 
-         for i in range(30)
+         'father_phone': '123456789', 'mother_name': parent_names[i % len(parent_names)][1], 
+         'mother_phone': '987654321', 'email': f'{student_names[i].lower().replace(" ", ".")}@example.com'} 
+         for i in range(30)  # Adicionando email para estudantes
     ]
 
     # Adicionando homônimos
@@ -173,7 +176,8 @@ def run_data_insertion():
     employees_data = [
         {'name': employee_names[i], 'age': 25 + i % 10, 'gender': 'Masculino' if i % 2 == 0 else 'Feminino', 
          'registry': f'EMP{100+i:03}', 'department_id': (i % len(departments_data)) + 1, 'position': f'Cargo {i}', 
-         'birth_date': f'198{i % 10}-01-01'} for i in range(30)
+         'birth_date': f'198{i % 10}-01-01', 'email': f'{employee_names[i].lower().replace(" ", ".")}@example.com'} 
+         for i in range(30)  # Adicionando email para funcionários
     ]
 
     employee_info_data = [
@@ -187,15 +191,14 @@ def run_data_insertion():
         "Marcos Aurélio", "Lívia Almeida", "Felipe Bastos", "Vanessa Carvalho", "Caio Augusto", 
         "Juliana Pereira", "Daniel Gonçalves", "Amanda Souza", "Bruno Machado", "Natalia Santos",
         "Rafael Costa", "Ana Cláudia", "Renato Silva", "Bianca Fernandes", "Leonardo Cunha", 
-        "Raquel Monteiro", "Lucas Santos", "Marta Ribeiro", "Guilherme Barros", "Tatiane Vieira"
+        "Raquel Monteiro", "Lucas Santos", "Marta Ribeiro", "Guilherme Boulos", "Tatiane Vieira"
     ]
 
     visitors_data = [
         {'name': visitor_names[i], 'age': 30 + i % 20, 'gender': 'Masculino' if i % 2 == 0 else 'Feminino', 
-         'relationship': 'Parente'} for i in range(30)
+         'relationship': 'Parente', 
+         'email': f'{visitor_names[i].lower().replace(" ", ".")}@example.com'} for i in range(30)  # Adicionando email
     ]
-
-    
 
     # Inserir dados usando as funções de criação
     create_class_group(class_groups_data)
@@ -214,8 +217,6 @@ def run_data_insertion():
 
     # Usar a nova função para criar visitantes diretamente
     create_visitors_direct(visitors_data)
-
-   
 
     print("Data insertion completed successfully")
 

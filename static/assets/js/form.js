@@ -153,7 +153,7 @@ $(document).ready(function() {
                             '<tr>' +
                             '<td>' + visitor.name + '</td>' +
                             '<td>' + visitor.age + '</td>' +
-                            '<td>' + visitor.relationship + '</td>' +
+                            '<td>' + visitor.email + '</td>' +
                             '</tr>'
                         );
                     });
@@ -161,7 +161,9 @@ $(document).ready(function() {
                     // Adiciona evento de clique em cada linha
                     $('#results-table tbody tr').on('click', function() {
                         var name = $(this).find('td:eq(0)').text();
-                        $('#visitor-name-input').val(name);
+                        var email = $(this).find('td:eq(2)').text();
+                        $('#visitor-name-input').val("");
+                        $('#visitor-email-input').val(email);
                         $('#results-container').hide(); // Esconde a tabela após seleção
                     });
                 } else {
