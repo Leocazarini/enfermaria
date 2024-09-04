@@ -202,16 +202,14 @@ def employee_record(request):
             notes = data.get('notes')
             revaluation = data.get('revaluation')
 
-
-
-            # Desempacotando os valores da lista para os dados do aluno
+            # Desempacotando os valores da lista para os dados do funcionário
             data_info_list = [
                 employee_id,
                 allergies,
                 patient_notes
             ]
 
-            # Verificar e atualizar os dados do aluno se necessário
+            # Verificar e atualizar os dados do funcionário se necessário
             info = get_info_by_patient(EmployeeInfo, employee_id, 'employee')
             logger.debug('Info: %s', info)
             if info:
@@ -224,7 +222,6 @@ def employee_record(request):
                 # Caso não exista informação prévia, crie-a
                 create_info(EmployeeInfo, employee_id, 'employee', allergies, patient_notes)
                 logger.debug('New employee info created: %s', data_info_list)
-
 
             # Montando o dicionário para os dados de atendimento
             data_dict = {
@@ -243,7 +240,7 @@ def employee_record(request):
 
             # Criar registro na tabela de atendimentos
             response = create_objects(EmployeeAppointment, data_list)
-            logger.debug('Response:: %s', response)
+            logger.debug('Response: %s', response)
 
             # Retornar a resposta de sucesso ou erro
             return response

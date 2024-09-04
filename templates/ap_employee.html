@@ -287,7 +287,7 @@
                         <p class="card-description">
                             Informações do atendimento
                         </p>
-                        <form class="forms-sample" action="" method="POST">  {% csrf_token %}                                   
+                        <form class="forms-sample" action="#" method="POST">  {% csrf_token %}                                   
                             <div class="form-group">
                                 <label for="reason">Ocorrência:</label>
                                 <textarea class="form-control" id="reason" rows="4"></textarea>
@@ -325,7 +325,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <button id="employee-submit-button" type="submit" class="btn btn-primary mr-2">Submit</button>
+                            <button id="employee-submit-button" type="submit" class="btn btn-primary mr-2">Salvar</button>
                             <a href="{% url 'index' %}" class="btn btn-light">Cancelar</a>
                         </form>
                     </div>
@@ -362,7 +362,7 @@
   <script src="{% static 'assets/js/session.js' %}"></script>
 
    <!-- Form Script -->
-   <script src="{% static 'assets/js/form-submit.js' %}"></script>
+   <script src="{% static 'assets/js/form-submit-employee.js' %}"></script>
 
   <!-- Plugin js for this page -->
   <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
