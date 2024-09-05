@@ -42,11 +42,18 @@ document.getElementById("employee-submit-button").addEventListener("click", func
     })
     .then(response => response.json())
     .then(data => {
-        console.log("Success:", data);
-        // Aqui você pode adicionar lógica para tratar a resposta do backend
+        if (data.status === 'success') {
+            // Exibir um alerta de sucesso
+            alert("Atendimento salvo com sucesso!");
+
+            // Redirecionar para a página principal 
+            window.location.href = "/"; 
+        } else {
+            alert("Ocorreu um erro ao salvar o atendimento.");
+        }
     })
     .catch((error) => {
         console.error("Error:", error);
-        // Aqui você pode adicionar lógica para tratar erros na requisição
+        alert("Ocorreu um erro na requisição. Por favor, tente novamente.");
     });
 });

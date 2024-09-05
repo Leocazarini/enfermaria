@@ -220,7 +220,7 @@
                             <div class="card">
                               <div class="card-body">
                                 <h4 class="card-title">Atendiemento - Visitante</h4>
-                                <form action="" method="POST" class="form-sample"> 
+                                <form class="form-sample" method="POST" > 
                                   {% csrf_token %}
                                   <p class="card-description">
                                     informações do paciente
@@ -246,15 +246,36 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">E-mail:</label>
+                                            <div class="col-sm-9">
+                                                <input id="email" type="email" class="form-control" value="{{ visitor.email }}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
                                             <label class="col-sm-3 col-form-label">Gênero:</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control">
+                                                <select id="gender" class="form-control">
                                                     <option {% if visitor.gender == 'Masculino' %}selected{% endif %}>Masculino</option>
                                                     <option {% if visitor.gender == 'Feminino' %}selected{% endif %}>Feminino</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
+
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Alergias:</label>
+                                            <div class="col-sm-9">
+                                                <input id="allergies" class="form-control" value="{{ visitor.allergies }}" />
+                                            </div>
+                                        </div>
+                                    </div> 
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label">Relação com a Escola:</label>
@@ -267,21 +288,17 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Alergias:</label>
-                                            <div class="col-sm-9">
-                                                <input id="allergies" class="form-control" value="{{ visitor.allergies }}" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
                                             <label class="col-sm-3 col-form-label">Observações do Paciente:</label>
                                             <div class="col-sm-9">
-                                                <input id="visitor_notes" class="form-control" value="{{ visitor.notes }}" />
+                                                <textarea id="visitor-notes" rows="4" class="form-control" >{{ visitor.patient_notes }}</textarea>
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" id="visitor-id" name="visitor-id" value="{{ visitor.id }}">
+
+
                                 </div>
+                                
                                 
                                   <p class="card-description">
                                     Informações do atendimento
@@ -343,7 +360,7 @@
                                         
                                     </div> 
                                   </div>
-                                    <button type="submit" class="btn btn-primary mr-2">Salvar</button>
+                                    <button id="visitor-submit-button" type="submit" class="btn btn-primary mr-2">Salvar</button>
                                     <a href="{% url 'index' %}" class="btn btn-light">Cancelar</a>
 
                                 </form>
@@ -378,6 +395,8 @@
   <!-- endinject -->
   <!-- Session scripts-->
   <script src="{% static 'assets/js/session.js' %}"></script>
+
+  <script src="{% static 'assets/js/form-submit-visitor.js' %}"></script>
 
   <!-- Plugin js for this page -->
   <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>

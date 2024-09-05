@@ -87,7 +87,7 @@ def create_visitors_direct(data_list):
             age = data.get('age')
             gender = data.get('gender')
             relationship = data.get('relationship')
-            email = data.get('email')  # Adicionando email
+            email = data.get('email')  
             allergies = data.get('allergies', '')
             patient_notes = data.get('patient_notes', '')
 
@@ -100,7 +100,7 @@ def create_visitors_direct(data_list):
                 age=age,
                 gender=gender,
                 relationship=relationship,
-                email=email,  # Adicionando email ao objeto Visitor
+                email=email,  
                 allergies=allergies,
                 patient_notes=patient_notes
             )
@@ -143,7 +143,7 @@ def run_data_insertion():
          'father_name': parent_names[i % len(parent_names)][0], 
          'father_phone': '123456789', 'mother_name': parent_names[i % len(parent_names)][1], 
          'mother_phone': '987654321', 'email': f'{student_names[i].lower().replace(" ", ".")}@example.com'} 
-         for i in range(30)  # Adicionando email para estudantes
+         for i in range(30)  
     ]
 
     # Adicionando homônimos
@@ -177,7 +177,7 @@ def run_data_insertion():
         {'name': employee_names[i], 'age': 25 + i % 10, 'gender': 'Masculino' if i % 2 == 0 else 'Feminino', 
          'registry': f'EMP{100+i:03}', 'department_id': (i % len(departments_data)) + 1, 'position': f'Cargo {i}', 
          'birth_date': f'198{i % 10}-01-01', 'email': f'{employee_names[i].lower().replace(" ", ".")}@example.com'} 
-         for i in range(30)  # Adicionando email para funcionários
+         for i in range(30)  
     ]
 
     employee_info_data = [
@@ -197,7 +197,7 @@ def run_data_insertion():
     visitors_data = [
         {'name': visitor_names[i], 'age': 30 + i % 20, 'gender': 'Masculino' if i % 2 == 0 else 'Feminino', 
          'relationship': 'Parente', 
-         'email': f'{visitor_names[i].lower().replace(" ", ".")}@example.com'} for i in range(30)  # Adicionando email
+         'email': f'{visitor_names[i].lower().replace(" ", ".")}@example.com'} for i in range(30)  
     ]
 
     # Inserir dados usando as funções de criação

@@ -45,6 +45,7 @@ def get_object(model, name=None, registry=None, email=None, related_fields=None)
         logger.debug(f"Filtering object with email: {email}.")
         obj = get_object_or_404(query, email=email)
         logger.info(f"Object found with email: {email}.")
+        logger.debug(f"Returning object: {[obj]}.")
         return [obj]
 
     if name:
@@ -170,3 +171,28 @@ def create_info(info_model, foreign_key_value, foreign_key_field, allergies=None
     
     logger.info(f"Information created successfully for {foreign_key_field} = {foreign_key_value}.")
     return info
+
+
+########### Visitor update info ###########
+
+def update_visitor_info(visitor_model, visitor_email, allergies=None, patient_notes=None):
+    # Obter o objeto real do visitante
+    visitor = get_object(visitor_model, email=visitor_email)
+
+    if visitor and len(visitor) > 0:
+        # Acessar o primeiro visitante da lista
+        visitor_obj = visitor[0]
+
+        # Atualizar os campos diretamente no objeto
+        visitor_obj.allergies = allergies
+        visitor_obj.patient_notes = patient_notes
+
+        # Salvar as alterações no banco de dados
+        visitor_obj.save()
+
+        logger.info(f"Information updated for visitor with email: {visitor_email}.")
+        return JsonResponse({'status': 'success', 'data': model_to_dict(visitor_obj)})
+    
+    else:
+        logger.warning(f"No visitor found with email: {visitor_email}.")
+        return JsonResponse({'status': 'error', 'message': 'Visitor not found'}, status=404)

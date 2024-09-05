@@ -392,7 +392,7 @@ def search_visitor_by_name(request):
                 
                     'name': visitor.name,
                     'age': visitor.age,
-                    'relationship': visitor.relationship,
+                    'email': visitor.email,
                 }
                 for visitor in results
             ]
