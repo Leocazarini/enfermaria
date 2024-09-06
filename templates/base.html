@@ -6,27 +6,32 @@
     <!-- Meta Tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Enfermaria Beit Yaacov</title>
+    
+    <!-- Block for dynamic page title -->
+    <title>{% block title %}Enfermaria Beit Yaacov{% endblock %}</title>
 
-    <!-- CSS Principal -->
+    <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'assets/vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/ti-icons/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
     
-    <!-- CSS Customizado -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/vertical-layout-light/style.css' %}">
     
     <!-- Favicon -->
     <link rel="shortcut icon" href="{% static 'assets/images/BY_logo_WHITE.png' %}" />
+
+    <!-- Block for extra CSS if needed -->
+    {% block extra_css %}{% endblock %}
   </head>
 
   <body>
 
     <div class="container-scroller">
 
-      <!-- Navbar (Menu Superior) -->
+      <!-- Navbar (Top Menu) -->
       <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        <!-- Logotipo -->
+        <!-- Logo -->
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
           <a class="navbar-brand brand-logo mr-5" href="{% url 'index' %}">
             <img src="{% static 'assets/images/2logo365x90.svg' %}" class="mr-2" alt="logo"/>
@@ -36,15 +41,17 @@
           </a>
         </div>
 
-        <!-- Menu do lado direito -->
+        <!-- Right Side Menu -->
         <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-
-          <!-- Botão de Minimizador de Menu -->
+          
+          <!-- Block for customizable navbar content -->
+          {% block navbar_content %}
+          <!-- Menu Minimize Button -->
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
             <span class="icon-menu"></span>
           </button>
 
-          <!-- Notificações -->
+          <!-- Notifications -->
           <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item dropdown">
               <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
@@ -52,9 +59,9 @@
                 <span class="count"></span>
               </a>
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                <p class="mb-0 font-weight-normal float-left dropdown-header">Notificações</p>
 
-                <!-- Notificação de Erro -->
+                <!-- Error Notification -->
                 <a class="dropdown-item preview-item">
                   <div class="preview-thumbnail">
                     <div class="preview-icon bg-success">
@@ -62,14 +69,14 @@
                     </div>
                   </div>
                   <div class="preview-item-content">
-                    <h6 class="preview-subject font-weight-normal">Application Error</h6>
+                    <h6 class="preview-subject font-weight-normal">Erro de Aplicação</h6>
                     <p class="font-weight-light small-text mb-0 text-muted">
-                      Just now
+                      Agora mesmo
                     </p>
                   </div>
                 </a>
 
-                <!-- Notificação de Configurações -->
+                <!-- Settings Notification -->
                 <a class="dropdown-item preview-item">
                   <div class="preview-thumbnail">
                     <div class="preview-icon bg-warning">
@@ -77,14 +84,14 @@
                     </div>
                   </div>
                   <div class="preview-item-content">
-                    <h6 class="preview-subject font-weight-normal">Settings</h6>
+                    <h6 class="preview-subject font-weight-normal">Configurações</h6>
                     <p class="font-weight-light small-text mb-0 text-muted">
-                      Private message
+                      Mensagem privada
                     </p>
                   </div>
                 </a>
 
-                <!-- Notificação de Novo Usuário -->
+                <!-- New User Notification -->
                 <a class="dropdown-item preview-item">
                   <div class="preview-thumbnail">
                     <div class="preview-icon bg-info">
@@ -92,16 +99,16 @@
                     </div>
                   </div>
                   <div class="preview-item-content">
-                    <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                    <h6 class="preview-subject font-weight-normal">Novo registro de usuário</h6>
                     <p class="font-weight-light small-text mb-0 text-muted">
-                      2 days ago
+                      Há 2 dias
                     </p>
                   </div>
                 </a>
               </div>
             </li>
 
-            <!-- Perfil do Usuário -->
+            <!-- User Profile -->
             <li class="nav-item nav-profile dropdown">
               <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                 <img src="{% static 'assets/images/faces/face28.jpg' %}" alt="profile"/>
@@ -115,52 +122,25 @@
                   </a>
                 </form>
               </div>
-              
-              <!-- Adicione o script antes do fechamento da tag </body> -->
-            
             </li>
           </ul>
-          
-          <!-- Botão de Toggle para Offcanvas (Menu lateral em dispositivos móveis) -->
+
+          <!-- Toggle Button for Offcanvas Menu (Mobile) -->
           <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
             <span class="icon-menu"></span>
           </button>
+          {% endblock %}
         </div>
       </nav>
-      <!-- Fim da Navbar -->
+      <!-- End of Navbar -->
 
       
-      <!-- Início  do Page Body Wrapper -->
+      <!-- Page Body Wrapper -->
       <div class="container-fluid page-body-wrapper">
         
-        
-        <!-- Botão de Configurações Flutuante -->
-        <div class="theme-setting-wrapper">
-          <div id="settings-trigger"><i class="ti-settings"></i></div>
-          <div id="theme-settings" class="settings-panel">
-            <i class="settings-close ti-close"></i>
-            <p class="settings-heading">SIDEBAR SKINS</p>
-            <div class="sidebar-bg-options selected" id="sidebar-light-theme">
-              <div class="img-ss rounded-circle bg-light border mr-3"></div>Light
-            </div>
-            <div class="sidebar-bg-options" id="sidebar-dark-theme">
-              <div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark
-            </div>
-            <p class="settings-heading mt-2">HEADER SKINS</p>
-            <div class="color-tiles mx-0 px-4">
-              <div class="tiles success"></div>
-              <div class="tiles warning"></div>
-              <div class="tiles danger"></div>
-              <div class="tiles info"></div>
-              <div class="tiles dark"></div>
-              <div class="tiles default"></div>
-            </div>
-          </div>
-        </div>
-    
-      
-
-        <!-- Sidebar (Menu Lateral) -->
+        <!-- Block for customizable sidebar -->
+        {% block sidebar %}
+        <!-- Sidebar (Left Menu) -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
           <ul class="nav">
             <li class="nav-item">
@@ -214,53 +194,43 @@
                 </ul>
               </div>
             </li>
-            
           </ul>
         </nav>
-        <!-- Fim do Sidebar -->
-  
-
+        <!-- End of Sidebar -->
+        {% endblock %}
+        
+        <!-- Block for main page content -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            {% block content %}
+            <!-- The content of each child page goes here -->
+            {% endblock %}
+          </div>
+        </div>
 
       </div>   
-        <!-- Fim do Wrapper da Página -->
-
+      <!-- End of Page Body Wrapper -->
 
     </div>
-      <!-- Fim do Container Scroller -->
+    <!-- End of Container Scroller -->
 
+    <!-- Main Scripts -->
+    <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
+    <!-- Session scripts -->
+    <script src="{% static 'assets/js/session.js' %}"></script>
+    
+    <script src="{% static 'assets/js/settings.js' %}"></script>
+    <script src="{% static 'assets/js/off-canvas.js' %}"></script>
+    <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'assets/js/template.js' %}"></script>
 
-
-      <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
-    
-      <!-- Session scripts-->
-      <script src="{% static 'assets/js/session.js' %}"></script>
-      
-      <!-- Plugin js for this page -->
-    
-      <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
-      <script src="{% static 'assets/js/chart.js' %}"></script>
-      <script src="{% static 'assets/vendors/datatables.net/jquery.dataTables.js' %}"></script>
-      <script src="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js' %}"></script>
-      <script src="{% static 'assets/js/dataTables.select.min.js' %}"></script>
-    
-      <!-- End plugin js for this page -->
-      <!-- inject:js -->
-      
-      <script src="{% static 'assets/js/off-canvas.js' %}"></script>
-      <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
-      <script src="{% static 'assets/js/template.js' %}"></script>
-      <script src="{% static 'assets/js/settings.js' %}"></script>
-      
-      <!-- endinject -->
-      <!-- Custom js for this page-->
-      
-      <script src="{% static 'assets/js/dashboard.js' %}"></script>
-      <script src="{% static 'assets/js/Chart.roundedBarCharts.js' %}"></script>
-      
-      <!-- End custom js for this page-->
-      
-    
+    <!-- Block for extra scripts if needed -->
+    {% block extra_scripts %}
+        
+    <script src="{% static 'assets/js/dashboard.js' %}"></script>
+    <script src="{% static 'assets/js/Chart.roundedBarCharts.js' %}"></script>
+    {% endblock %}
+  
   </body>
   
 </html>
-  

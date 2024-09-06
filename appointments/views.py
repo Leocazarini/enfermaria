@@ -303,27 +303,8 @@ def visitor_record(request):
             revaluation = data.get('revaluation')
             date = data.get('date')
 
-
-            logger.debug('Visitor ID: %s', visitor_id)
-            logger.debug('Visitor Name: %s', visitor_name)
-            logger.debug('Visitor Age: %s', visitor_age)
-            logger.debug('Visitor Email: %s', visitor_email)
-            logger.debug('Visitor Gender: %s', visitor_gender)
-            logger.debug('Allergies: %s', allergies)
-            logger.debug('Visitor Relationship: %s', visitor_relationship)
-            logger.debug('Patient Notes: %s', patient_notes)
-            logger.debug('Infirmary: %s', infirmary)
-            logger.debug('Nurse: %s', nurse)
-            logger.debug('Reason: %s', reason)
-            logger.debug('Treatment: %s', treatment)
-            logger.debug('Notes: %s', notes)
-            logger.debug('Revaluation: %s', revaluation)
-
-
-
             # Montando dicionário de dados do visitante
             visitor_data_dict = {
-                'visitor_id': visitor_id,
                 'visitor_name': visitor_name,
                 'visitor_age': visitor_age,
                 'visitor_email': visitor_email,
@@ -333,44 +314,38 @@ def visitor_record(request):
                 'patient_notes': patient_notes
             }
 
-            # Obtendo o visitante (lista de resultados)
-            visitors = get_object(Visitor, name=visitor_name, email=visitor_email)
+            # Obtendo o visitante (lista de resultados ou None)
+            visitors = get_object(Visitor, email=visitor_email)
 
-            if visitors and len(visitors) > 0:
+            if visitors:
                 visitor = visitors[0]
-                visitor_dict = model_to_dict(visitor)
+                logger.debug('Visitor already exists: %s', visitor)
 
-
-                db_allergies = visitor_dict['allergies']
-                db_patient_notes = visitor_dict['patient_notes']
-            logger.debug('Visitors: %s', visitor)
-
-            logger.debug('Visitor: %s', visitor)
-            logger.debug('Visitor Allergies: %s', db_allergies) 
-            logger.debug('Visitor Patient Notes: %s', db_patient_notes)
-
-            if visitor:
-                logger.debug('Visitor: %s', visitor)
-                if isinstance(visitor, Visitor):  # Verifica se o visitante é um objeto do modelo Visitor
-                    logger.debug('Visitor already exists')
-
-                    # Verificar se há diferenças nos dados para atualizar
-                    if allergies != db_allergies or patient_notes != db_patient_notes:
-                        update_visitor_info(Visitor, visitor_email, allergies, patient_notes)
-                        logger.debug('Data updated successfully')
-                    else:
-                        logger.debug('No update needed for visitor info')
+                # Atualizando as informações do visitante, se necessário
+                if allergies != visitor.allergies or patient_notes != visitor.patient_notes:
+                    update_visitor_info(Visitor, visitor_email, allergies, patient_notes)
+                    logger.debug('Visitor info updated')
                 else:
-                    logger.error('First item in visitors list is not a valid Visitor object.')
-                    return JsonResponse({'error': 'Invalid visitor object'}, status=400)
+                    logger.debug('No update needed for visitor info')
             else:
-                # Se não houver visitante, crie um novo
+                # Se não houver visitante, criar um novo
+                logger.debug('No visitor found, creating new visitor')
                 visitor_data_list = [visitor_data_dict]
                 create_objects(Visitor, visitor_data_list)
 
+                # Após criar o novo visitante, obtê-lo novamente
+                visitors = get_object(Visitor, email=visitor_email)
+                
+                if visitors:
+                    visitor = visitors[0]
+                    logger.debug('New visitor created: %s', visitor)
+                else:
+                    # Se por algum motivo o visitante não foi criado corretamente
+                    return JsonResponse({'error': 'Erro ao criar novo visitante'}, status=500)
+
             # Montando dicionário de dados do atendimento
             appointment_data_dict = {
-                'visitor_id': visitor_id,
+                'visitor_id': visitor.id,  # Usar o ID do visitante recém-criado ou existente
                 'infirmary': infirmary,
                 'nurse': nurse,
                 'reason': reason,
@@ -397,5 +372,7 @@ def visitor_record(request):
     # Se a requisição não for POST, retornar um erro
     logger.error('Method not allowed')
     return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+
       
 

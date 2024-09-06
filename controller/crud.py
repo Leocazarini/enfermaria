@@ -43,10 +43,13 @@ def get_object(model, name=None, registry=None, email=None, related_fields=None)
     
     if email:
         logger.debug(f"Filtering object with email: {email}.")
-        obj = get_object_or_404(query, email=email)
-        logger.info(f"Object found with email: {email}.")
-        logger.debug(f"Returning object: {[obj]}.")
-        return [obj]
+        try:
+            obj = query.get(email=email)
+            logger.info(f"Object found with email: {email}.")
+            return [obj]
+        except model.DoesNotExist:
+            logger.warning(f"No records found with email: {email}")
+            return None
 
     if name:
         logger.debug(f"Filtering objects with name containing: {name}.")
