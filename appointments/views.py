@@ -49,6 +49,14 @@ def visitor_identify(request):
 
 @login_required
 def student_appointment(request):
+    """
+    View function for handling student appointment.
+    Args:
+        request (HttpRequest): The HTTP request object.
+    Returns:
+        HttpResponse: The HTTP response object.
+
+    """
     if request.method == 'GET':
         name = request.GET.get('name', None)
         registry = request.GET.get('registry', None)
@@ -99,6 +107,10 @@ def visitor_appointment(request):
     if request.method == 'GET':
         name = request.GET.get('name', None)
         email = request.GET.get('email', None)
+
+        if not name and not email:
+            return render(request, 'ap_visitor.html')
+
         visitor = search_visitor(name, email)
         
 
@@ -108,7 +120,7 @@ def visitor_appointment(request):
 
         return render(request, 'ap_visitor.html', {'visitor': visitor}) 
               
-    return render(request, 'ap_visitor.html')
+    
     
 
 

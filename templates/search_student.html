@@ -236,7 +236,7 @@
                           {{ error_message }}
                       </div>
                     {% endif %}
-                    <form id="searchForm" action="{% url 'student_appointment' %}" method="GET" class="form-inline">
+                    <form id="searchForm" action="{% block form_action %}{% url 'student_appointment' %}{% endblock %}" method="GET" class="form-inline">
                     {% csrf_token %}
                         
                         <label class="mr-2" for="name">Nome</label>
@@ -312,7 +312,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Form scripts-->
+{% block extra_scripts %}
+ 
 <script src="{% static 'assets/js/form.js' %}?v=1.0"></script>
+{% endblock %}
 
 <!-- Plugin js for this page -->
 <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
