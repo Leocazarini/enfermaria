@@ -13,7 +13,7 @@ urlpatterns = [
     path('employees/search/name/', search_employee_by_name, name='search_employee_by_name'),
     path('employees/search/id/', search_employee_by_id, name='search_employee_by_id'),
 
-    path('visitors/create/', create_visitor, name='create_visitor'),
+    path('visitors/create/', manage_visitor_data, name='create_visitor'),
     path('visitors/search/', search_visitor, name='search_visitor'),
     path('visitors/search/name/', search_visitor_by_name, name='search_visitor_by_name'),
     path('visitors/search/id/', search_visitor_by_id, name='search_visitor_by_id'),

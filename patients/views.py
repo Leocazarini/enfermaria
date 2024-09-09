@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from .models import *
-from controller.crud import create_objects, get_object, get_by_id, update_object, update_info
+from controller.crud import create_objects, get_object, get_by_id, update_object, update_info, update_visitor_info
 import json
 import logging
 
@@ -450,37 +450,53 @@ def search_employee_by_id(request):
 ########################## ----------------- VISITORS VIEWS ----------------- ##############################
 
 # endpoint - /visitors/create -> # User operation
-@csrf_exempt
-def create_visitor(request):
+def manage_visitor_data(visitor_data):
     """
-    Create visitors based on the given request data.
+    Manage the creation or update of a visitor based on the provided data.
+    
     Args:
-        request (HttpRequest): The HTTP request object.
+        visitor_data (dict): The data of the visitor to be created or updated.
+    
     Returns:
-        JsonResponse: The JSON response indicating the status of the operation.
-    Raises:
-        None
+        Visitor object or None in case of error.
     """
-    if request.method == 'POST':
-        logger.info("Received a POST request to create visitors.")
-        
-        try:
-            data = json.loads(request.body)
-            logger.debug(f"Request body successfully parsed: {data}")
-            
-            if isinstance(data, list):
-                logger.debug(f"Data is a list with {len(data)} items.")
-                return create_objects(Visitor, data)
+    try:
+        # Verificar se o visitante já existe baseado no email
+        visitor_email = visitor_data.get('email')
+        visitors = get_object(Visitor, email=visitor_email)
+
+        if visitors and len(visitors) > 0:
+            visitor = visitors[0]
+            logger.info(f"Visitor already exists: {visitor}")
+
+            # Atualizar as informações do visitante se necessário
+            if visitor.allergies != visitor_data['allergies'] or visitor.patient_notes != visitor_data['patient_notes']:
+                update_visitor_info(Visitor, visitor_email, visitor_data['allergies'], visitor_data['patient_notes'])
+                logger.info(f"Visitor info updated: {visitor}")
+
+            return visitor  # Retornar o visitante existente
+
+        else:
+            # Se o visitante não existir, criar um novo visitante
+            visitor_data_list = [visitor_data]
+            visitor_response = create_objects(Visitor, visitor_data_list)
+
+            # O retorno de create_objects precisa ser verificado
+            if visitor_response.status_code == 201:
+                created_visitor_data = visitor_response.content  # Acessar o conteúdo JSON diretamente
+                created_visitor_data = json.loads(created_visitor_data)['data'][0]  # Converter para dicionário Python
+                visitor = Visitor(**created_visitor_data)  # Criar uma instância local do visitante
+                logger.info(f"New visitor created: {visitor}")
+                return visitor
             else:
-                logger.warning("Invalid data format, expected a list of objects.")
-                return JsonResponse({'status': 'error', 'message': 'Invalid data format, expected a list of objects'}, status=400)
-        
-        except json.JSONDecodeError:
-            logger.error("Failed to parse JSON from request body.")
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
-    else:
-        logger.error(f"Invalid request method: {request.method}")
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+                logger.error(f"Error creating visitor: {visitor_response.content}")
+                return None
+
+    except Exception as e:
+        logger.error(f"Error managing visitor data: {e}")
+        return None
+
+
 
 ###
 

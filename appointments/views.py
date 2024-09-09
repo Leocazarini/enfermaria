@@ -1,14 +1,17 @@
+import logging
+import json
 from django.shortcuts import render
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from .models import *
 from patients.models import Student, Employee, Visitor
-from patients.views import search_student, search_employee, search_visitor
-from controller.crud import create_objects, create_info, get_object, get_info_by_patient, update_info, update_visitor_info
-from django.contrib.auth.decorators import login_required
-import logging
-import json
+from patients.views import search_student, search_employee, search_visitor, manage_visitor_data
+
+from controller.crud import (create_objects, create_info, get_object, 
+                             get_info_by_patient, update_info, update_visitor_info)
+
 
 
 
@@ -278,100 +281,93 @@ def employee_record(request):
     return JsonResponse({'error': 'Método não permitido'}, status=405)
 
 
+
+
+def register_visitor_appointment(visitor, appointment_data):
+    """
+    Register a visitor appointment based on the provided data.
+    
+    Args:
+        visitor: The visitor object (not just the ID) for whom the appointment is being registered.
+        appointment_data (dict): The data for the appointment to be created.
+    
+    Returns:
+        JsonResponse: Success or error response.
+    """
+    try:
+        # Adicionar o objeto visitor à appointment_data
+        appointment_data['visitor'] = visitor  # Aqui estamos passando a instância do visitante
+
+        # Criar o registro do atendimento
+        appointment_response = create_objects(VisitorAppointment, [appointment_data])
+
+        if appointment_response.status_code != 201:
+            logger.error(f"Error creating appointment: {appointment_response.content}")
+            return JsonResponse({'status': 'error', 'message': 'Erro ao criar o atendimento'}, status=500)
+
+        logger.info("Appointment created successfully.")
+        return JsonResponse({'status': 'success', 'message': 'Atendimento salvo com sucesso!'}, status=201)
+
+    except Exception as e:
+        logger.error(f"Error registering appointment: {e}")
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
+
+
 @csrf_exempt
 def visitor_record(request):
     if request.method == 'POST':
         try:
             # Lendo o JSON da requisição
             data = json.loads(request.body)
-            logger.debug('Data: %s', data)
+            logger.debug('Data received: %s', data)
 
-            # Extraindo os campos do JSON
-            visitor_id = data.get('visitor_id')
-            visitor_name = data.get('visitor_name')
-            visitor_age = data.get('visitor_age')
-            visitor_email = data.get('visitor_email')
-            visitor_gender = data.get('visitor_gender')
-            allergies = data.get('allergies')
-            visitor_relationship = data.get('visitor_relationship')
-            patient_notes = data.get('patient_notes')
-            infirmary = data.get('infirmary')
-            nurse = data.get('nurse')
-            reason = data.get('reason')
-            treatment = data.get('treatment')
-            notes = data.get('notes')
-            revaluation = data.get('revaluation')
-            date = data.get('date')
-
-            # Montando dicionário de dados do visitante
-            visitor_data_dict = {
-                'visitor_name': visitor_name,
-                'visitor_age': visitor_age,
-                'visitor_email': visitor_email,
-                'visitor_gender': visitor_gender,
-                'allergies': allergies,
-                'visitor_relationship': visitor_relationship,
-                'patient_notes': patient_notes
+            # Extraindo os dados do visitante
+            visitor_data = {
+                'name': data.get('visitor_name'),
+                'age': data.get('visitor_age'),
+                'email': data.get('visitor_email'),
+                'gender': data.get('visitor_gender'),
+                'allergies': data.get('allergies'),
+                'relationship': data.get('visitor_relationship'),
+                'patient_notes': data.get('patient_notes'),
             }
 
-            # Obtendo o visitante (lista de resultados ou None)
-            visitors = get_object(Visitor, email=visitor_email)
+            logger.debug('Visitor Data Extracted: %s', visitor_data)
+            
+            # Chamar a função para verificar e gerenciar o visitante
+            visitor = manage_visitor_data(visitor_data)
+            if not visitor:
+                return JsonResponse({'status': 'error', 'message': 'Erro ao gerenciar os dados do visitante'}, status=500)
 
-            if visitors:
-                visitor = visitors[0]
-                logger.debug('Visitor already exists: %s', visitor)
-
-                # Atualizando as informações do visitante, se necessário
-                if allergies != visitor.allergies or patient_notes != visitor.patient_notes:
-                    update_visitor_info(Visitor, visitor_email, allergies, patient_notes)
-                    logger.debug('Visitor info updated')
-                else:
-                    logger.debug('No update needed for visitor info')
-            else:
-                # Se não houver visitante, criar um novo
-                logger.debug('No visitor found, creating new visitor')
-                visitor_data_list = [visitor_data_dict]
-                create_objects(Visitor, visitor_data_list)
-
-                # Após criar o novo visitante, obtê-lo novamente
-                visitors = get_object(Visitor, email=visitor_email)
-                
-                if visitors:
-                    visitor = visitors[0]
-                    logger.debug('New visitor created: %s', visitor)
-                else:
-                    # Se por algum motivo o visitante não foi criado corretamente
-                    return JsonResponse({'error': 'Erro ao criar novo visitante'}, status=500)
-
-            # Montando dicionário de dados do atendimento
-            appointment_data_dict = {
-                'visitor_id': visitor.id,  # Usar o ID do visitante recém-criado ou existente
-                'infirmary': infirmary,
-                'nurse': nurse,
-                'reason': reason,
-                'treatment': treatment,
-                'notes': notes,
-                'revaluation': revaluation,
-                'date': date
+            # Dados do atendimento
+            appointment_data = {
+                'infirmary': data.get('infirmary'),
+                'nurse': data.get('nurse'),
+                'reason': data.get('reason'),
+                'treatment': data.get('treatment'),
+                'notes': data.get('notes'),
+                'revaluation': data.get('revaluation'),
+                'date': data.get('date'),
             }
 
-            # Criar lista e gravar os dados do atendimento
-            appointment_data_list = [appointment_data_dict]
-            response = create_objects(VisitorAppointment, appointment_data_list)
-            logger.debug('Response: %s', response)
-
-            return response
+            # Registrar o atendimento
+            return register_visitor_appointment(visitor, appointment_data)
 
         except json.JSONDecodeError:
             logger.error('Failed to decode JSON', exc_info=True)
             return JsonResponse({'error': 'Falha ao decodificar JSON'}, status=400)
         except Exception as e:
-            logger.error('An error occurred: %s', e, exc_info=True)
+            logger.error(f"An error occurred: {e}", exc_info=True)
             return JsonResponse({'error': str(e)}, status=500)
 
-    # Se a requisição não for POST, retornar um erro
+    # Se a requisição não for POST, retornar erro
     logger.error('Method not allowed')
     return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+
+
 
 
       

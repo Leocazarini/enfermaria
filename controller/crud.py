@@ -10,6 +10,20 @@ logger = logging.getLogger('controller.crud')
 
 
 def create_objects(model, data_list):
+    """
+    Create objects in the specified model using the provided data.
+
+    Args:
+        model (Model): The model in which the objects will be created.
+        data_list (list): A list of dictionaries containing the data for each object.
+
+    Returns:
+        JsonResponse: A JSON response containing the status and data of the created objects.
+
+    Raises:
+        ValidationError: If there is a validation error while creating the objects.
+        Exception: If any other exception occurs during the creation process.
+    """
     try:
         logger.info(f"Creating objects in model: {model}")
         logger.info(f"Data received: {data_list}")
@@ -29,6 +43,20 @@ def create_objects(model, data_list):
 
 
 def get_object(model, name=None, registry=None, email=None, related_fields=None):
+    """
+    Retrieve an object from the database based on the provided parameters.
+    Args:
+        model: The model class to query.
+        name (str, optional): The name to filter the objects by. Defaults to None.
+        registry (str, optional): The registry to filter the object by. Defaults to None.
+        email (str, optional): The email to filter the object by. Defaults to None.
+        related_fields (str or list, optional): The related fields to select. Defaults to None.
+    Returns:
+        list or None: A list of objects matching the provided parameters, or None if no objects are found.
+    Raises:
+        Http404: If no objects are found with the provided name or registry.
+    """
+    ...
     logger.info(f"Starting get_object function for model: {model.__name__}.")
 
     query = model.objects.all()
@@ -179,12 +207,26 @@ def create_info(info_model, foreign_key_value, foreign_key_field, allergies=None
 ########### Visitor update info ###########
 
 def update_visitor_info(visitor_model, visitor_email, allergies=None, patient_notes=None):
+    """
+    Update the information of a visitor.
+    Args:
+        visitor_model: The model class for the visitor.
+        visitor_email: The email of the visitor.
+        allergies (optional): The allergies of the visitor. Defaults to None.
+        patient_notes (optional): The notes about the patient. Defaults to None.
+    Returns:
+        A JSON response containing the status and data of the updated visitor if successful,
+        or an error message if the visitor is not found.
+    """
     # Obter o objeto real do visitante
     visitor = get_object(visitor_model, email=visitor_email)
 
     if visitor and len(visitor) > 0:
         # Acessar o primeiro visitante da lista
         visitor_obj = visitor[0]
+
+        logger.info(f"Updating visitor: allergies={allergies}, patient_notes={patient_notes}")
+
 
         # Atualizar os campos diretamente no objeto
         visitor_obj.allergies = allergies
