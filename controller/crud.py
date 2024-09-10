@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger('controller.crud')
 
 
+########### Generic CRUD functions ###########
 
 def create_objects(model, data_list):
     """
@@ -241,3 +242,41 @@ def update_visitor_info(visitor_model, visitor_email, allergies=None, patient_no
     else:
         logger.warning(f"No visitor found with email: {visitor_email}.")
         return JsonResponse({'status': 'error', 'message': 'Visitor not found'}, status=404)
+    
+
+
+
+########### Appointment search ###########
+
+def get_appointment(model, identifier_field, patient_id=None, appointment_date=None):
+    logger.info(f"Starting get_appointment function for model: {model.__name__}.")
+    
+    if patient_id is None and appointment_date is None:
+        logger.warning("No search parameters provided.")
+        return []
+
+    # Inicia a query base
+    query = model.objects.all()
+
+    # Filtro dinâmico por patient_id (student_id ou employee_id)
+    if patient_id:
+        filter_kwargs = {identifier_field: patient_id}  # Usamos o identificador dinâmico
+        query = query.filter(**filter_kwargs)
+        logger.debug(f"Filtering appointments by {identifier_field} = {patient_id}.")
+
+    # Filtro por appointment_date
+    if appointment_date:
+        query = query.filter(appointment_date=appointment_date)
+        logger.debug(f"Filtering appointments by appointment_date = {appointment_date}.")
+
+    # Verifica se há resultados
+    if not query.exists():
+        logger.warning(f"No appointments found for the given criteria: {identifier_field} = {patient_id}, appointment_date = {appointment_date}.")
+        return []
+
+    # Converte os resultados em dicionários
+    results = list(query.values())
+    logger.info(f"Appointments found: {len(results)} record(s) found.")
+    
+    return results
+

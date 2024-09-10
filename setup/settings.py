@@ -164,6 +164,12 @@ LOGGING = {
             'filename': LOGS_DIR / 'controller' / 'api_totvs.log',
             'formatter': 'verbose',
         },
+        'reports_views_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOGS_DIR / 'reports' / 'views.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         # Loggers app patients
@@ -199,7 +205,12 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-    },
+        'reports.views': {
+            'handlers': ['reports_views_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
 }
 
 

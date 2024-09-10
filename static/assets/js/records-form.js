@@ -11,7 +11,7 @@ $(document).ready(function() {
 // Adiciona um evento de submissão ao formulário
     form.on("submit", function(event) {
         console.log("Evento de submissão capturado."); // Log de depuração
-        // Seleciona os campos de nome e RA
+        // Seleciona os campos de nome e registro
         var nameField = $("#student-name-input").length ? $("#student-name-input") : $("#employee-name-input");
         var registryField = $("#student-registry-input").length ? $("#student-registry-input") : $("#employee-registry-input");
 
@@ -51,7 +51,7 @@ $(document).ready(function() {
     // Função para buscar alunos
     function searchStudents(query) {
         $.ajax({
-            url: '/patients/students/search/name/',
+            url: '/records/student/',
             data: {
                 'q': query
             },

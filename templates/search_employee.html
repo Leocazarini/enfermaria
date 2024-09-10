@@ -17,7 +17,7 @@
               {{ error_message }}
           </div>
         {% endif %}
-        <form id="searchForm" action="{% url 'employee_appointment' %}" method="GET" class="form-inline">
+        <form id="searchForm" action="{% block form_action %}{% url 'employee_appointment' %}{% endblock %}" method="GET" class="form-inline">
         {% csrf_token %}
             
             <label class="mr-2"for="name">Nome</label>

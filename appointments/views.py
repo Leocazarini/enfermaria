@@ -207,6 +207,8 @@ def student_record(request):
 
 
 
+
+
 @csrf_exempt
 def employee_record(request):
     if request.method == 'POST':
@@ -279,6 +281,7 @@ def employee_record(request):
     # Se a requisição não for POST, retornar um erro
     logger.error('Method not allowed')
     return JsonResponse({'error': 'Método não permitido'}, status=405)
+
 
 
 
