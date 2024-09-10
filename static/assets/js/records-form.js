@@ -51,7 +51,7 @@ $(document).ready(function() {
     // Função para buscar alunos
     function searchStudents(query) {
         $.ajax({
-            url: '/records/student/',
+            url: '/patients/students/search/name/',
             data: {
                 'q': query
             },
