@@ -10,8 +10,8 @@
   <div class="col-md-12 grid-margin">
     <div class="row">
       <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-        <h3 class="font-weight-bold">Seja bem vinda, <span id="userFirstName"> {{ first_name }}!</span></h3>
-        <h6 class="font-weight-bold mb-0">Enfermaria: <p class="mt-3 badge badge-success" id="selectedInfirmary">Nenhuma enfermaria selecionada</p></h6>
+        <h3 class="font-weight-bold">Olá, <span id="userFirstName"> {{ first_name }}!</span></h3>
+        <h6 class="font-weight-bold mb-0">Enfermaria selecionada: <p class="mt-3 badge badge-success" id="selectedInfirmary">Nenhuma enfermaria selecionada</p></h6>
       </div>
 
       
@@ -93,7 +93,7 @@
 
 {% block extra_scripts %}
 <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
-<script src="{% static 'assets/js/chart.js' %}"></script>
+<script src="{% static 'assets/js/chart.js' %}?v=1.0"></script>
 <script src="{% static 'assets/js/dashboard.js' %}"></script>
 <script src="{% static 'assets/js/Chart.roundedBarCharts.js' %}"></script>
 {% endblock %}

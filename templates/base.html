@@ -53,8 +53,8 @@
 
           <!-- Notifications -->
           <ul class="navbar-nav navbar-nav-right">
-            <li class="nav-item dropdown">
-              <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+            <li  class="nav-item dropdown">
+              <a style="display: none;" class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
                 <i class="icon-bell mx-0"></i>
                 <span class="count"></span>
               </a>
@@ -144,33 +144,41 @@
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
           <ul class="nav">
             <li class="nav-item mb-5">
-              <!-- <div class="col-12 col-xl-4"> -->
-                <div class="justify-content-start d-flex">
-                  <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                    <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      <i class="mdi mdi-calendar"></i> Enfermaria
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
-                      <a class="dropdown-item" href="#" onclick="saveInfirmary('Infantil')">Infantil</a>
-                      <a class="dropdown-item" href="#" onclick="saveInfirmary('Fundamental')">Fundamental</a>
-                      <a class="dropdown-item" href="#" onclick="saveInfirmary('Ensino Médio')">Ensino Médio</a>
-                      <a class="dropdown-item" href="#" onclick="saveInfirmary('Atendimento Externo')">Atendimento Externo</a>
-                    </div>
-                  </div>
-                </div>
-              <!-- </div> -->
-            </li> 
+              <a class="nav-link" data-toggle="collapse" href="#infirmaryDropdown" aria-expanded="false" aria-controls="infirmaryDropdown">
+                <i class="ti-home menu-icon"></i>
+                <span class="menu-title">Enfermaria</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="infirmaryDropdown">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="collapse" data-target="#infirmaryDropdown" onclick="saveInfirmary('Infantil')">Infantil</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="collapse" data-target="#infirmaryDropdown" onclick="saveInfirmary('Fundamental')">Fundamental</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="collapse" data-target="#infirmaryDropdown" onclick="saveInfirmary('Ensino Médio')">Ensino Médio</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="collapse" data-target="#infirmaryDropdown" onclick="saveInfirmary('Atendimento Externo')">Atendimento Externo</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            
+            
 
             <li class="nav-item">
               <a class="nav-link" href="{% url 'index' %}">
-                <i class="icon-grid menu-icon"></i>
+                <i class="ti-pulse menu-icon"></i>
                 <span class="menu-title">Home</span>
               </a>
             </li>
              
             <li class="nav-item">
               <a class="nav-link" data-toggle="collapse" href="#appointment" aria-expanded="false" aria-controls="appointment">
-                <i class="icon-layout menu-icon"></i>
+                <i class="ti-receipt menu-icon"></i>
                 <span class="menu-title">Novo Atendimento</span>
                 <i class="menu-arrow"></i>
               </a>
@@ -190,7 +198,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="collapse" href="#records" aria-expanded="false" aria-controls="records">
-                <i class="icon-columns menu-icon"></i>
+                <i class="ti-clipboard menu-icon"></i>
                 <span class="menu-title">Prontuário</span>
                 <i class="menu-arrow"></i>
               </a>
@@ -203,7 +211,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="collapse" href="#reports" aria-expanded="false" aria-controls="reports">
-                <i class="icon-bar-graph menu-icon"></i>
+                <i class="ti-stats-up menu-icon"></i>
                 <span class="menu-title">Relatórios</span>
                 <i class="menu-arrow"></i>
               </a>

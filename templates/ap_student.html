@@ -31,13 +31,13 @@
                   </th>
                 </thead>
                 <tbody>
-                  <tr><th>ID</th><td id="student-id">{{ student.id }}</td></tr>
+                  <tr style="display: none;"><th>ID</th><td id="student-id" >{{ student.id }}</td></tr>
                   <tr><th>Nome</th><td>{{ student.name }}</td></tr>
+                  <tr><th>Turma</th><td>{{ student.class_group_name }}</td></tr>
                   <tr><th>RA</th><td>{{ student.registry }}</td></tr>
                   <tr><th>Idade</th><td>{{ student.age }}</td></tr>
                   <tr><th>Data de nascimento</th><td>{{ student.birth_date }}</td></tr>
                   <tr><th>Gênero</th><td>{{ student.gender }}</td></tr>
-                  <tr><th>Turma</th><td>{{ student.class_group_name }}</td></tr>
                   <tr><th>Nome da Mãe</th><td>{{ student.mother_name }}</td></tr>
                   <tr><th>Telefone da Mãe</th><td>{{ student.mother_phone }}</td></tr>
                   <tr><th>Nome do Pai</th><td>{{ student.father_name }}</td></tr>
@@ -87,7 +87,7 @@
                   <div class="form-group row">
                     <label class="col-sm-4 col-form-label">Enfermeira:</label>
                     <div class="col-sm-9">
-                      <input id="userFirstName" name="userFirstName" type="text" class="form-control" readonly />
+                      <input id="userFirstName" name="userFirstName" type="text" class="form-control" readonly/>
                     </div>
                   </div>
                 </div>

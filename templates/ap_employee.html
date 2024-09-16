@@ -29,14 +29,14 @@
               </th>
             </thead>
             <tbody>
-              <tr><th>ID</th><td id="employee-id">{{ employee.id }}</td></tr>
+              <tr style="display: none;"><th>ID</th><td id="employee-id">{{ employee.id }}</td></tr>
               <tr><th>Nome</th><td>{{ employee.name }}</td></tr>
+              <tr><th>Função</th><td>{{ employee.position }}</td></tr>
               <tr><th>Nº do Crachá</th><td>{{ employee.registry }}</td></tr>
               <tr><th>Idade</th><td>{{ employee.age }}</td></tr>
               <tr><th>Data de nascimento</th><td>{{ employee.birth_date }}</td></tr>
               <tr><th>Gênero</th><td>{{ employee.gender }}</td></tr>
               <tr><th>Departamento</th><td>{{ employee.department_name }}</td></tr>
-              <tr><th>Função</th><td>{{ employee.position }}</td></tr>
             </tbody>
           </table>
         </div>
