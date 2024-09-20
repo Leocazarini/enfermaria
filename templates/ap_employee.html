@@ -17,7 +17,7 @@
                   <div class="form-group">
                     <div class="row">
                       <label for="allergies">Alergias:</label>
-                      <input type="text" class="form-control mb-3" id="allergies" value="{{ employee.info.allergies }}">
+                      <textarea class="form-control mb-3" id="allergies" rows="3">{{ employee.info.allergies }}</textarea> 
                       <label for="employee-notes">Observações do Colaborador:</label>
                       <textarea class="form-control" id="employee-notes" rows="8">{{ employee.info.patient_notes }}</textarea>
                     </div>
