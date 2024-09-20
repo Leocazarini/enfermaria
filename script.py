@@ -9,7 +9,7 @@ from patients.models import (Student, ClassGroup, StudentInfo, Employee,
                              Department, EmployeeInfo, Visitor)
 from patients.views import (create_students, create_student_info, create_class_group, 
                             create_employees, create_employee_info, create_department, 
-                            create_visitor)
+                            )
 from controller.crud import create_objects, update_info
 
 def create_student_info_direct(data):

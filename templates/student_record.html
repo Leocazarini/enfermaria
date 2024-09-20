@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-lg-2 grid-margin stretch-card">
+    <div class="col-lg-3 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Aluno</h4>
@@ -41,7 +41,7 @@
                             <td>{{ student.registry }}</td>
                             
                             <th>Data de nascimento</th>
-                            <td>{{ student.birth_date }}</td>
+                            <td>{{ student.birth_date|date:"d/m/Y" }}</td>
                             
                             <th>Telefone do Pai</th>
                             <td>{{ student.father_phone }}</td>
@@ -67,8 +67,12 @@
                             <th></th>
                             <td></td>
                           </tr>
+                          
                         </tbody>
                       </table>
+                      <hr>
+                      <h4 class="card-title mt-3">Alergias</h4>
+                      <p>{{ student.info.allergies }}</p>
                       
                       
                   </div>
@@ -76,11 +80,19 @@
         </div>
     </div>
 </div>
+
 <div class="row">
-    <div class="col-lg-11 grid-margin stretch-card">
+    <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Atendimentos</h4>
+                <h4 class="card-title">
+                    Atendimentos do paciente: 
+                    {% if appointment %}
+                        {{ appointment|length }} <!-- Exibe o número total de atendimentos -->
+                    {% else %}
+                        0
+                    {% endif %}
+                </h4>
                 <div class="table-responsive">                   
                     <table class="table">
                         <thead>
@@ -101,7 +113,7 @@
                             <tr>
                                 <td>{{ appointment.infirmary }}</td>
                                 <td>{{ appointment.nurse }}</td>
-                                <td>{{ appointment.date }}</td>
+                                <td>{{ appointment.date|date:"d/m/Y - H:i" }}</td>
                                 <td>{{ appointment.current_class }}</td>
                                 <td>{{ appointment.reason }}</td>
                                 <td>{{ appointment.treatment }}</td>
