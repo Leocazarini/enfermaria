@@ -1,8 +1,13 @@
+import logging
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, Http404
 from django.core.exceptions import ValidationError
 from django.forms.models import model_to_dict
-import logging
+from django.utils import timezone
+from django.db.models import Count
+from collections import defaultdict
+from appointments.models import StudentAppointment, EmployeeAppointment, VisitorAppointment
+
 
 
 logger = logging.getLogger('controller.crud')
@@ -280,3 +285,146 @@ def get_appointment(model, identifier_field, patient_id=None, appointment_date=N
     
     return results
 
+
+
+
+########### Reports Module ###########
+
+def get_nurse_appointments_current_year():
+    # Obter o ano atual
+    current_year = timezone.now().year
+
+    # Filtrar atendimentos do ano atual para cada modelo
+    student_appointments = StudentAppointment.objects.filter(date__year=current_year)
+    employee_appointments = EmployeeAppointment.objects.filter(date__year=current_year)
+    visitor_appointments = VisitorAppointment.objects.filter(date__year=current_year)
+
+    # Combinar os querysets em uma lista
+    all_appointments = list(student_appointments) + list(employee_appointments) + list(visitor_appointments)
+
+    # Dicionário para armazenar a contagem por enfermeira
+    nurse_counts = defaultdict(int)
+
+    # Iterar sobre todos os atendimentos e contar por enfermeira
+    for appointment in all_appointments:
+        nurse = appointment.nurse
+        nurse_counts[nurse] += 1
+
+    # Converter o dicionário em uma lista de dicionários para o template
+    nurse_appointments = [{'nurse': nurse, 'count': count} for nurse, count in nurse_counts.items()]
+
+    return nurse_appointments
+
+
+def get_total_appointments_current_year():
+    current_year = timezone.now().year
+
+    total_students = StudentAppointment.objects.filter(date__year=current_year).count()
+    total_employees = EmployeeAppointment.objects.filter(date__year=current_year).count()
+    total_visitors = VisitorAppointment.objects.filter(date__year=current_year).count()
+
+    total_appointments = total_students + total_employees + total_visitors
+
+    return total_appointments
+
+
+
+def get_total_appointments_today():
+    today = timezone.now().date()
+
+    total_students = StudentAppointment.objects.filter(date__date=today).count()
+    total_employees = EmployeeAppointment.objects.filter(date__date=today).count()
+    total_visitors = VisitorAppointment.objects.filter(date__date=today).count()
+
+    total_appointments = total_students + total_employees + total_visitors
+
+    return total_appointments
+
+
+def get_total_appointments_infirmary_current_year(infirmary):
+    if not infirmary:
+        print("Infirmary is None or empty.")
+        return 0  # Retornar 0 se infirmary é None ou vazio
+
+    current_year = timezone.now().year
+    infirmary_normalized = infirmary.strip()
+
+    total_students = StudentAppointment.objects.filter(
+        date__year=current_year,
+        infirmary__iexact=infirmary_normalized
+    ).count()
+    total_employees = EmployeeAppointment.objects.filter(
+        date__year=current_year,
+        infirmary__iexact=infirmary_normalized
+    ).count()
+    total_visitors = VisitorAppointment.objects.filter(
+        date__year=current_year,
+        infirmary__iexact=infirmary_normalized
+    ).count()
+
+    total_appointments = total_students + total_employees + total_visitors
+
+    print(f"Total appointments for infirmary '{infirmary}': {total_appointments}")
+    return total_appointments
+
+
+
+def get_total_appointments_infirmary_today(infirmary):
+    if not infirmary:
+        print("Infirmary is None or empty.")
+        return 0  # Retornar 0 se infirmary é None ou vazio
+
+    today = timezone.now().date()
+    infirmary_normalized = infirmary.strip()
+
+    total_students = StudentAppointment.objects.filter(
+        date__date=today,
+        infirmary__iexact=infirmary_normalized
+    ).count()
+    total_employees = EmployeeAppointment.objects.filter(
+        date__date=today,
+        infirmary__iexact=infirmary_normalized
+    ).count()
+    total_visitors = VisitorAppointment.objects.filter(
+        date__date=today,
+        infirmary__iexact=infirmary_normalized
+    ).count()
+
+    total_appointments = total_students + total_employees + total_visitors
+
+    print(f"Total appointments for infirmary '{infirmary}': {total_appointments}")
+    return total_appointments
+
+
+
+def get_chart_data(request):
+    # Agregar as contagens por enfermaria
+    labels = ["Infantil", "Fundamental", "Ensino Médio", "Externo"]
+    infirmary_counts = {label: 0 for label in labels}
+
+    # Agregar contagens do StudentAppointment
+    student_counts = StudentAppointment.objects.values('infirmary').annotate(count=Count('id'))
+    for item in student_counts:
+        infirmary = item['infirmary']
+        if infirmary in infirmary_counts:
+            infirmary_counts[infirmary] += item['count']
+
+    # Agregar contagens do EmployeeAppointment
+    employee_counts = EmployeeAppointment.objects.values('infirmary').annotate(count=Count('id'))
+    for item in employee_counts:
+        infirmary = item['infirmary']
+        if infirmary in infirmary_counts:
+            infirmary_counts[infirmary] += item['count']
+
+    # Agregar contagens do VisitorAppointment
+    visitor_counts = VisitorAppointment.objects.values('infirmary').annotate(count=Count('id'))
+    for item in visitor_counts:
+        infirmary = item['infirmary']
+        if infirmary in infirmary_counts:
+            infirmary_counts[infirmary] += item['count']
+
+    # Preparar os dados para o gráfico
+    data = [infirmary_counts[label] for label in labels]
+
+    # Retornar os dados em formato JSON
+    return JsonResponse({'labels': labels, 'data': data})

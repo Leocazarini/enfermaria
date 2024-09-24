@@ -6,6 +6,8 @@ function saveInfirmary(infirmary) {
         
         // Atualizar o conteúdo do card com a enfermaria selecionada
     document.getElementById('selectedInfirmary').textContent = infirmary;
+
+    document.cookie = "infirmary=" + encodeURIComponent(infirmary) + "; path=/";
 }
 
     // Função para atualizar o card ao carregar a página
