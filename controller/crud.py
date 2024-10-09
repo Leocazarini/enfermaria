@@ -4,7 +4,8 @@ from django.http import JsonResponse, Http404
 from django.core.exceptions import ValidationError
 from django.forms.models import model_to_dict
 from django.utils import timezone
-from django.db.models import Count
+from datetime import datetime
+from django.db.models import Count, Q
 from collections import defaultdict
 from appointments.models import StudentAppointment, EmployeeAppointment, VisitorAppointment
 
@@ -288,7 +289,7 @@ def get_appointment(model, identifier_field, patient_id=None, appointment_date=N
 
 
 
-########### Reports Module ###########
+########### Index Module ###########
 
 def get_nurse_appointments_current_year():
     # Obter o ano atual
@@ -326,7 +327,6 @@ def get_total_appointments_current_year():
     total_appointments = total_students + total_employees + total_visitors
 
     return total_appointments
-
 
 
 def get_total_appointments_today():
@@ -368,7 +368,6 @@ def get_total_appointments_infirmary_current_year(infirmary):
     return total_appointments
 
 
-
 def get_total_appointments_infirmary_today(infirmary):
     if not infirmary:
         print("Infirmary is None or empty.")
@@ -396,6 +395,180 @@ def get_total_appointments_infirmary_today(infirmary):
     return total_appointments
 
 
+
+########### Reports Module ###########
+
+# controller/crud.py
+
+
+def get_student_appointments(date_begin, date_end, infirmaries, search_term):
+    logger.info(f"Obtendo atendimentos de estudantes de {date_begin} a {date_end} nas enfermarias: {infirmaries} com termo de busca: {search_term}")
+
+    # Filtros básicos
+    filters = Q(
+        date__range=[date_begin, date_end],
+        infirmary__in=infirmaries,
+    )
+
+    if search_term:
+        search_filters = Q(
+            student__name__icontains=search_term) | \
+            Q(current_class__icontains=search_term) | \
+            Q(student__class_group__name__icontains=search_term) | \
+            Q(student__age__icontains=search_term) | \
+            Q(student__gender__icontains=search_term) | \
+            Q(reason__icontains=search_term) | \
+            Q(treatment__icontains=search_term) | \
+            Q(notes__icontains=search_term) | \
+            Q(infirmary__icontains=search_term) | \
+            Q(nurse__icontains=search_term)
+        
+        # Tentar buscar por data se o termo corresponder a uma data
+        try:
+            search_date = datetime.strptime(search_term, '%d/%m/%Y').date()
+            search_filters |= Q(date__date=search_date)
+        except ValueError:
+            pass  # Não é uma data, ignorar
+
+        filters &= search_filters
+
+    return StudentAppointment.objects.filter(filters).select_related('student__class_group')
+
+
+def get_employee_appointments(date_begin, date_end, infirmaries, search_term):
+    logger.info(f"Obtendo atendimentos de funcionários de {date_begin} a {date_end} nas enfermarias: {infirmaries} com termo de busca: {search_term}")
+
+    filters = Q(
+        date__range=[date_begin, date_end],
+        infirmary__in=infirmaries,
+    )
+
+    if search_term:
+        search_filters = Q(
+            employee__name__icontains=search_term) | \
+            Q(employee__department__name__icontains=search_term) | \
+            Q(employee__age__icontains=search_term) | \
+            Q(employee__gender__icontains=search_term) | \
+            Q(reason__icontains=search_term) | \
+            Q(treatment__icontains=search_term) | \
+            Q(notes__icontains=search_term) | \
+            Q(infirmary__icontains=search_term) | \
+            Q(nurse__icontains=search_term)
+        
+        try:
+            search_date = datetime.strptime(search_term, '%d/%m/%Y').date()
+            search_filters |= Q(date__date=search_date)
+        except ValueError:
+            pass
+
+        filters &= search_filters
+
+    return EmployeeAppointment.objects.filter(filters).select_related('employee__department')
+
+
+
+def get_visitor_appointments(date_begin, date_end, infirmaries, search_term):
+    logger.info(f"Obtendo atendimentos de visitantes de {date_begin} a {date_end} nas enfermarias: {infirmaries} com termo de busca: {search_term}")
+
+    filters = Q(
+        date__range=[date_begin, date_end],
+        infirmary__in=infirmaries,
+    )
+
+    if search_term:
+        search_filters = Q(
+            visitor__name__icontains=search_term) | \
+            Q(visitor__relationship__icontains=search_term) | \
+            Q(visitor__age__icontains=search_term) | \
+            Q(visitor__gender__icontains=search_term) | \
+            Q(reason__icontains=search_term) | \
+            Q(treatment__icontains=search_term) | \
+            Q(notes__icontains=search_term) | \
+            Q(infirmary__icontains=search_term) | \
+            Q(nurse__icontains=search_term)
+        
+        try:
+            search_date = datetime.strptime(search_term, '%d/%m/%Y').date()
+            search_filters |= Q(date__date=search_date)
+        except ValueError:
+            pass
+
+        filters &= search_filters
+
+    return VisitorAppointment.objects.filter(filters).select_related('visitor')
+
+
+
+
+
+def get_all_appointments(date_begin, date_end, infirmaries, search_term):
+    student_appointments = get_student_appointments(date_begin, date_end, infirmaries, search_term)
+    employee_appointments = get_employee_appointments(date_begin, date_end, infirmaries, search_term)
+    visitor_appointments = get_visitor_appointments(date_begin, date_end, infirmaries, search_term)
+
+    
+
+    # Unificar os atendimentos em uma lista única
+    all_appointments = []
+
+    for appointment in student_appointments:
+        all_appointments.append({
+            'type': 'Estudante',
+            'name': appointment.student.name,
+            'additional_info_label': 'Turma',
+            'additional_info': appointment.student.class_group.name if appointment.student.class_group else '',
+            'age': appointment.student.age,
+            'gender': appointment.student.gender,
+            'date': appointment.date,
+            'reason': appointment.reason,
+            'treatment': appointment.treatment,
+            'notes': appointment.notes,
+            'infirmary': appointment.infirmary,
+            'nurse': appointment.nurse,
+            'current_class': appointment.current_class,  
+        })
+
+    for appointment in employee_appointments:
+        all_appointments.append({
+            'type': 'Funcionário',
+            'name': appointment.employee.name,
+            'additional_info_label': 'Departamento',
+            'additional_info': appointment.employee.department.name if appointment.employee.department else '',
+            'age': appointment.employee.age,
+            'gender': appointment.employee.gender,
+            'date': appointment.date,
+            'reason': appointment.reason,
+            'treatment': appointment.treatment,
+            'notes': appointment.notes,
+            'infirmary': appointment.infirmary,
+            'nurse': appointment.nurse,
+            'current_class': '',  
+        })
+
+    for appointment in visitor_appointments:
+        all_appointments.append({
+            'type': 'Visitante',
+            'name': appointment.visitor.name,
+            'additional_info_label': 'Relacionamento',
+            'additional_info': appointment.visitor.relationship,
+            'age': appointment.visitor.age,
+            'gender': appointment.visitor.gender,
+            'date': appointment.date,
+            'reason': appointment.reason,
+            'treatment': appointment.treatment,
+            'notes': appointment.notes,
+            'infirmary': appointment.infirmary,
+            'nurse': appointment.nurse,
+            'current_class': '', 
+        })
+
+
+    all_appointments.sort(key=lambda x: x['date'], reverse=True)
+    logger.info(f"All appointments: {all_appointments}")
+    return all_appointments
+
+
+########### Charts Module ###########
 
 def get_chart_data(request):
     # Agregar as contagens por enfermaria

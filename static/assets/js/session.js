@@ -8,6 +8,8 @@ function saveInfirmary(infirmary) {
     document.getElementById('selectedInfirmary').textContent = infirmary;
 
     document.cookie = "infirmary=" + encodeURIComponent(infirmary) + "; path=/";
+
+    window.location.reload();
 }
 
     // Função para atualizar o card ao carregar a página

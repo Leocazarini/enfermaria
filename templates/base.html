@@ -111,7 +111,7 @@
             <!-- User Profile -->
             <li class="nav-item nav-profile dropdown">
               <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                <img src="{% static 'assets/images/faces/face28.jpg' %}" alt="profile"/>
+                <img src="{% static 'assets/images/nurse2.png' %}" alt="profile"/>
               </a>
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                 <form id="logoutForm" method="GET" action="{% url 'logout' %}">
@@ -217,7 +217,7 @@
               </a>
               <div class="collapse" id="reports">
                 <ul class="nav flex-column sub-menu">
-                  <li class="nav-item"> <a class="nav-link" href="">Diário</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="{% url 'search_reports' %}">Pesquisa</a></li>
                 </ul>
               </div>
             </li>

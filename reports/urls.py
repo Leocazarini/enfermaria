@@ -10,5 +10,8 @@ urlpatterns = [
     path('records/employee/', employee_record, name='employee_record'),
     path('records/employee/search/', employee_search, name='employee_search_record'),
 
+    path('search_reports/', reports, name='search_reports'),
+
+
 
 ]
