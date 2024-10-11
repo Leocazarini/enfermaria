@@ -9,7 +9,7 @@ document.getElementById("visitor-submit-button").addEventListener("click", funct
     const visitorGender = document.getElementById("gender").value;
     const allergies = document.getElementById("allergies").value;
     const visitorRelationship = document.getElementById("relationship").value;
-    const patientNotes = document.getElementById("visitor-notes").textContent;
+    const patientNotes = document.getElementById("visitor-notes").value;
     const infirmary = sessionStorage.getItem('infirmary');
     const nurse = sessionStorage.getItem('userFirstName');
     const reason = document.getElementById("reason").value;
@@ -17,6 +17,7 @@ document.getElementById("visitor-submit-button").addEventListener("click", funct
     const notes = document.getElementById("notes").value;
     const revaluation = document.getElementById("revaluation").checked;
 
+    
 
     // Montando o objeto de dados
     const data = {
@@ -40,6 +41,8 @@ document.getElementById("visitor-submit-button").addEventListener("click", funct
     // Convertendo para JSON
     const jsonData = JSON.stringify(data);
 
+
+    
     // Enviando para o backend
     fetch("/appointments/visitor/record/", {
         method: "POST",
@@ -55,7 +58,7 @@ document.getElementById("visitor-submit-button").addEventListener("click", funct
             alert("Atendimento salvo com sucesso!");
 
             // Redirecionar para a página principal 
-            window.location.href = "/"; 
+             window.location.href = "/"; 
         } else {
             alert("Ocorreu um erro ao salvar o atendimento.");
         }

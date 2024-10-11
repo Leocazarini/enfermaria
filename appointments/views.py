@@ -1,14 +1,16 @@
-from django.shortcuts import render
-from django.forms.models import model_to_dict
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, JsonResponse
-from .models import *
-from patients.models import Student, Employee, Visitor
-from patients.views import search_student, search_employee, search_visitor
-from controller.crud import create_objects, create_info, get_object, get_info_by_patient, update_info, update_visitor_info
-from django.contrib.auth.decorators import login_required
 import logging
 import json
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import *
+from patients.views import (search_student, search_employee, 
+                            search_visitor, manage_visitor_data)
+
+from controller.crud import (create_objects, create_info, 
+                             get_info_by_patient, update_info )
+
 
 
 
@@ -17,7 +19,22 @@ logger = logging.getLogger('appointments.views')
 
 
 
-# Home view
+"""
+The following four functions render pages on the user interface:
+
+1. home(request):
+    Renders the home page of the application.
+
+2. student_identify(request):
+    Renders the page for identifying students.
+
+3. employee_identify(request):
+    Renders the page for identifying employees.
+
+4. visitor_identify(request):
+    Renders the page for identifying visitors.
+"""
+
 
 @login_required
 def home(request):
@@ -26,17 +43,19 @@ def home(request):
         return render(request, 'index.html')
     
 
-
+@login_required
 def student_identify(request):
     if request.method == 'GET':
         return render(request, 'search_student.html')
     
 
+@login_required
 def employee_identify(request):
     if request.method == 'GET':
         return render(request, 'search_employee.html')
     
 
+@login_required
 def visitor_identify(request):
     if request.method == 'GET':
         return render(request, 'search_visitor.html')
@@ -49,6 +68,22 @@ def visitor_identify(request):
 
 @login_required
 def student_appointment(request):
+    """
+    Handles the student appointment request.
+    This view function processes GET requests to search for a student based on the provided
+    name or registry. If neither name nor registry is provided, it returns an error response.
+    If the student is not found, it renders a template with an error message. If the student
+    is found, it renders a template with the student's information.
+    Args:
+        request (HttpRequest): The HTTP request object containing GET parameters.
+    Returns:
+        JsonResponse: If neither name nor registry is provided, returns a JSON response with
+                    an error message and status code 400.
+        HttpResponse: If the student is not found, returns an HTTP response rendering the
+                    'search_student.html' template with an error message.
+                    If the student is found, returns an HTTP response rendering the
+                    'ap_student.html' template with the student's information.
+    """
     if request.method == 'GET':
         name = request.GET.get('name', None)
         registry = request.GET.get('registry', None)
@@ -64,11 +99,21 @@ def student_appointment(request):
         return render(request, 'ap_student.html', {'student': student})
 
 
-
-
-
 @login_required
 def employee_appointment(request):
+    """
+    Handles the employee appointment view.
+    This view processes GET requests to search for an employee based on the provided
+    'name' and 'registry' parameters. If the employee is found, it renders the 
+    'ap_employee.html' template with the employee's information. If the employee is 
+    not found, it logs an error and renders the 'search_employee.html' template with 
+    an error message.
+    Args:
+        request (HttpRequest): The HTTP request object containing metadata about the 
+                               request.
+    Returns:
+        HttpResponse: The rendered HTML response based on the search results.
+    """
     if request.method == 'GET':
         name = request.GET.get('name', None)
         registry = request.GET.get('registry', None)
@@ -80,25 +125,28 @@ def employee_appointment(request):
 
         return render(request, 'ap_employee.html', {'employee': employee})
 
- 
-    
-
 
 @login_required
 def visitor_appointment(request):
     """
-    View function for handling visitor appointments.
+    Handle visitor appointment requests.
+    This view function processes GET requests to search for a visitor by name and email.
+    If both name and email are not provided, it renders the 'ap_visitor.html' template.
+    If a visitor is found, it renders the 'ap_visitor.html' template with the visitor's details.
+    If a visitor is not found, it logs an error and renders the 'search_visitor.html' template with an error message.
     Args:
         request (HttpRequest): The HTTP request object.
     Returns:
-        HttpResponse: The HTTP response object.
-    Raises:
-        None
+        HttpResponse: The rendered template response.
     """
-    ...
+
     if request.method == 'GET':
         name = request.GET.get('name', None)
         email = request.GET.get('email', None)
+
+        if not name and not email:
+            return render(request, 'ap_visitor.html')
+
         visitor = search_visitor(name, email)
         
 
@@ -108,13 +156,28 @@ def visitor_appointment(request):
 
         return render(request, 'ap_visitor.html', {'visitor': visitor}) 
               
-    return render(request, 'ap_visitor.html')
-    
-
-
 
 @csrf_exempt
 def student_record(request):
+    """
+    Handles the student record creation and update process based on the incoming POST request.
+    Args:
+        request (HttpRequest): The HTTP request object containing the student record data in JSON format.
+    Returns:
+        JsonResponse: A JSON response indicating the success or failure of the operation.
+    Raises:
+        json.JSONDecodeError: If the JSON data in the request body cannot be decoded.
+        Exception: For any other exceptions that occur during the process.
+    The function performs the following steps:
+    1. Reads and parses the JSON data from the request body.
+    2. Extracts relevant fields from the JSON data.
+    3. Checks if student information exists and updates it if necessary.
+    4. Creates new student information if it does not exist.
+    5. Constructs a dictionary for the student appointment data.
+    6. Creates a new student appointment record.
+    7. Returns a JSON response indicating the result of the operation.
+    If the request method is not POST, it returns a JSON response with a 405 status code indicating that the method is not allowed.
+    """
     if request.method == 'POST':
         try:
             # Lendo o JSON da requisição
@@ -191,9 +254,21 @@ def student_record(request):
     return JsonResponse({'error': 'Método não permitido'}, status=405)
 
 
-
 @csrf_exempt
 def employee_record(request):
+    """
+    Handles the employee record creation and update based on the incoming POST request.
+    This function processes a POST request containing employee information in JSON format.
+    It extracts the relevant fields from the JSON, checks if the employee information needs
+    to be updated or created, and then creates a record in the EmployeeAppointment table.
+    Args:
+        request (HttpRequest): The HTTP request object containing the JSON payload.
+    Returns:
+        JsonResponse: A JSON response indicating success or failure of the operation.
+    Raises:
+        json.JSONDecodeError: If the JSON payload cannot be decoded.
+        Exception: For any other exceptions that occur during processing.
+    """
     if request.method == 'POST':
         try:
             # Lendo o JSON da requisição
@@ -267,123 +342,102 @@ def employee_record(request):
 
 
 @csrf_exempt
+def register_visitor_appointment(visitor, appointment_data):
+    """
+    Registers a visitor appointment by adding the visitor object to the appointment data
+    and creating a new appointment record.
+    Args:
+        visitor (object): The visitor instance to be added to the appointment.
+        appointment_data (dict): A dictionary containing the appointment details.
+    Returns:
+        JsonResponse: A JSON response indicating the success or failure of the operation.
+                    - On success: {'status': 'success', 'message': 'Atendimento salvo com sucesso!'}, status=201
+                    - On failure: {'status': 'error', 'message': 'Erro ao criar o atendimento'}, status=500
+                    - On exception: {'status': 'error', 'message': str(e)}, status=500
+    Raises:
+        Exception: If an error occurs during the appointment registration process.
+    """
+   
+    try:
+        # Adicionar o objeto visitor à appointment_data
+        appointment_data['visitor'] = visitor  # Aqui estamos passando a instância do visitante
+
+        # Criar o registro do atendimento
+        appointment_response = create_objects(VisitorAppointment, [appointment_data])
+
+        if appointment_response.status_code != 201:
+            logger.error(f"Error creating appointment: {appointment_response.content}")
+            return JsonResponse({'status': 'error', 'message': 'Erro ao criar o atendimento'}, status=500)
+
+        logger.info("Appointment created successfully.")
+        return JsonResponse({'status': 'success', 'message': 'Atendimento salvo com sucesso!'}, status=201)
+
+    except Exception as e:
+        logger.error(f"Error registering appointment: {e}")
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
+@csrf_exempt
 def visitor_record(request):
+    """
+    Handles the visitor record creation process.
+    This view function processes a POST request containing visitor and appointment data in JSON format.
+    It extracts the visitor information, manages the visitor data, and registers the visitor's appointment.
+    Args:
+        request (HttpRequest): The HTTP request object containing the visitor and appointment data in JSON format.
+    Returns:
+        JsonResponse: A JSON response indicating the success or failure of the operation.
+            - On success: Returns a JSON response with the registered appointment data.
+            - On failure: Returns a JSON response with an error message and appropriate HTTP status code.
+    Raises:
+        json.JSONDecodeError: If the JSON data in the request body cannot be decoded.
+        Exception: For any other exceptions that occur during the process.
+    """
     if request.method == 'POST':
         try:
             # Lendo o JSON da requisição
             data = json.loads(request.body)
-            logger.debug('Data: %s', data)
+            logger.debug('Data received: %s', data)
 
-            # Extraindo os campos do JSON
-            visitor_id = data.get('visitor_id')
-            visitor_name = data.get('visitor_name')
-            visitor_age = data.get('visitor_age')
-            visitor_email = data.get('visitor_email')
-            visitor_gender = data.get('visitor_gender')
-            allergies = data.get('allergies')
-            visitor_relationship = data.get('visitor_relationship')
-            patient_notes = data.get('patient_notes')
-            infirmary = data.get('infirmary')
-            nurse = data.get('nurse')
-            reason = data.get('reason')
-            treatment = data.get('treatment')
-            notes = data.get('notes')
-            revaluation = data.get('revaluation')
-            date = data.get('date')
-
-
-            logger.debug('Visitor ID: %s', visitor_id)
-            logger.debug('Visitor Name: %s', visitor_name)
-            logger.debug('Visitor Age: %s', visitor_age)
-            logger.debug('Visitor Email: %s', visitor_email)
-            logger.debug('Visitor Gender: %s', visitor_gender)
-            logger.debug('Allergies: %s', allergies)
-            logger.debug('Visitor Relationship: %s', visitor_relationship)
-            logger.debug('Patient Notes: %s', patient_notes)
-            logger.debug('Infirmary: %s', infirmary)
-            logger.debug('Nurse: %s', nurse)
-            logger.debug('Reason: %s', reason)
-            logger.debug('Treatment: %s', treatment)
-            logger.debug('Notes: %s', notes)
-            logger.debug('Revaluation: %s', revaluation)
-
-
-
-            # Montando dicionário de dados do visitante
-            visitor_data_dict = {
-                'visitor_id': visitor_id,
-                'visitor_name': visitor_name,
-                'visitor_age': visitor_age,
-                'visitor_email': visitor_email,
-                'visitor_gender': visitor_gender,
-                'allergies': allergies,
-                'visitor_relationship': visitor_relationship,
-                'patient_notes': patient_notes
+            # Extraindo os dados do visitante
+            visitor_data = {
+                'name': data.get('visitor_name'),
+                'age': data.get('visitor_age'),
+                'email': data.get('visitor_email'),
+                'gender': data.get('visitor_gender'),
+                'allergies': data.get('allergies'),
+                'relationship': data.get('visitor_relationship'),
+                'patient_notes': data.get('patient_notes'),
             }
 
-            # Obtendo o visitante (lista de resultados)
-            visitors = get_object(Visitor, name=visitor_name, email=visitor_email)
+            logger.debug('Visitor Data Extracted: %s', visitor_data)
+            
+            # Chamar a função para verificar e gerenciar o visitante
+            visitor = manage_visitor_data(visitor_data)
+            if not visitor:
+                return JsonResponse({'status': 'error', 'message': 'Erro ao gerenciar os dados do visitante'}, status=500)
 
-            if visitors and len(visitors) > 0:
-                visitor = visitors[0]
-                visitor_dict = model_to_dict(visitor)
-
-
-                db_allergies = visitor_dict['allergies']
-                db_patient_notes = visitor_dict['patient_notes']
-            logger.debug('Visitors: %s', visitor)
-
-            logger.debug('Visitor: %s', visitor)
-            logger.debug('Visitor Allergies: %s', db_allergies) 
-            logger.debug('Visitor Patient Notes: %s', db_patient_notes)
-
-            if visitor:
-                logger.debug('Visitor: %s', visitor)
-                if isinstance(visitor, Visitor):  # Verifica se o visitante é um objeto do modelo Visitor
-                    logger.debug('Visitor already exists')
-
-                    # Verificar se há diferenças nos dados para atualizar
-                    if allergies != db_allergies or patient_notes != db_patient_notes:
-                        update_visitor_info(Visitor, visitor_email, allergies, patient_notes)
-                        logger.debug('Data updated successfully')
-                    else:
-                        logger.debug('No update needed for visitor info')
-                else:
-                    logger.error('First item in visitors list is not a valid Visitor object.')
-                    return JsonResponse({'error': 'Invalid visitor object'}, status=400)
-            else:
-                # Se não houver visitante, crie um novo
-                visitor_data_list = [visitor_data_dict]
-                create_objects(Visitor, visitor_data_list)
-
-            # Montando dicionário de dados do atendimento
-            appointment_data_dict = {
-                'visitor_id': visitor_id,
-                'infirmary': infirmary,
-                'nurse': nurse,
-                'reason': reason,
-                'treatment': treatment,
-                'notes': notes,
-                'revaluation': revaluation,
-                'date': date
+            # Dados do atendimento
+            appointment_data = {
+                'infirmary': data.get('infirmary'),
+                'nurse': data.get('nurse'),
+                'reason': data.get('reason'),
+                'treatment': data.get('treatment'),
+                'notes': data.get('notes'),
+                'revaluation': data.get('revaluation'),
+                'date': data.get('date'),
             }
 
-            # Criar lista e gravar os dados do atendimento
-            appointment_data_list = [appointment_data_dict]
-            response = create_objects(VisitorAppointment, appointment_data_list)
-            logger.debug('Response: %s', response)
-
-            return response
+            # Registrar o atendimento
+            return register_visitor_appointment(visitor, appointment_data)
 
         except json.JSONDecodeError:
             logger.error('Failed to decode JSON', exc_info=True)
             return JsonResponse({'error': 'Falha ao decodificar JSON'}, status=400)
         except Exception as e:
-            logger.error('An error occurred: %s', e, exc_info=True)
+            logger.error(f"An error occurred: {e}", exc_info=True)
             return JsonResponse({'error': str(e)}, status=500)
 
-    # Se a requisição não for POST, retornar um erro
+    # Se a requisição não for POST, retornar erro
     logger.error('Method not allowed')
     return JsonResponse({'error': 'Método não permitido'}, status=405)
-      
-

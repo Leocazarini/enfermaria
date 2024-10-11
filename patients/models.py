@@ -4,23 +4,23 @@ from django.db import models
 
 #### ----------------- Students models ----------------- ####
 class ClassGroup(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, unique=True)
-    segment = models.CharField(max_length=50)
-    director = models.CharField(max_length=100)
+    id = models.CharField(max_length=50, primary_key=True)
+    name = models.CharField(max_length=100)
+    segment = models.CharField(max_length=50, blank=True)
+    director = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.name
 
 class Student(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=100)
-    age = models.IntegerField()
+    age = models.IntegerField(blank=True)
     gender = models.CharField(max_length=10)
     email = models.EmailField(null=True, blank=True)
     registry = models.CharField(max_length=20, unique=True)
     class_group = models.ForeignKey(ClassGroup, on_delete=models.SET_NULL, null=True, related_name='students')
-    birth_date = models.DateField(null=True, blank=True)
+    birth_date = models.DateTimeField(null=True, blank=True)
     father_name = models.CharField(max_length=100, null=True, blank=True)
     father_phone = models.CharField(max_length=20, null=True, blank=True)
     mother_name = models.CharField(max_length=100, null=True, blank=True)
@@ -28,11 +28,14 @@ class Student(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+    
+
     def __str__(self):
         return self.name
 
 class StudentInfo(models.Model):
-    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='info')
+    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='info', blank=True, null=True)
     allergies = models.TextField(blank=True, null=True)
     patient_notes = models.TextField(blank=True, null=True)
 
@@ -49,20 +52,20 @@ class StudentInfo(models.Model):
 #### ----------------- Employee models ----------------- ####
 
 class Department(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, unique=True)
+    id = models.CharField(max_length=50, primary_key=True)
+    name = models.CharField(max_length=100)
     director = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 class Employee(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=100)
-    age = models.IntegerField()
+    age = models.IntegerField(blank=True)
     gender = models.CharField(max_length=10)
     email = models.EmailField(null=True, blank=True)
-    birth_date = models.DateField(null=True, blank=True)
+    birth_date = models.DateTimeField(null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
     position = models.CharField(max_length=50, null=True, blank=True)
     registry = models.CharField(max_length=20, unique=True)
@@ -73,14 +76,14 @@ class Employee(models.Model):
         return self.name
 
 class EmployeeInfo(models.Model):
-    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, related_name='info')
+    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, related_name='info', blank=True, null=True)
     allergies = models.TextField(blank=True, null=True)
     patient_notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Info for {self.employee.name}"
 
-    
+
 
 
 
@@ -89,7 +92,7 @@ class EmployeeInfo(models.Model):
 class Visitor(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    age = models.IntegerField()
+    age = models.IntegerField(blank=True)
     gender = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
     relationship = models.CharField(max_length=50)

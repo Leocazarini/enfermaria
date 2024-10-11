@@ -10,6 +10,8 @@
     <!-- Adicionando links CSS necessários -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="{% static 'assets/auth_style/dist/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/auth_style/dist/icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/feather/feather.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/ti-icons/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
@@ -19,11 +21,11 @@
 
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card p-4" style="max-width: 400px; width: 100%;">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%; border-radius: 10px;">
         <h1 class="text-center mb-4 text-primary">{% trans "Sign In" %}</h1>
         
         {% if SOCIALACCOUNT_ENABLED %}
-            <div class="d-flex justify-content-center">
+            <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%; border-radius: 10px;">
                 <a href="{% provider_login_url 'google' %}" class="btn btn-outline-primary btn-block">
                     <i class="ti-google mr-2"></i> {% trans "Sign in with Google" %}
                 </a>

@@ -1,423 +1,156 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+
 {% load static %}
-<html lang="en">
 
-<head>
-  <!-- Meta Tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Enfermaria Beit Yaacov</title>
+{% block title %}Atendimento - Visitante{% endblock %}
 
-  <!-- CSS Principal -->
-  <link rel="stylesheet" href="{% static 'assets/vendors/feather/feather.css' %}">
-  <link rel="stylesheet" href="{% static 'assets/vendors/ti-icons/css/themify-icons.css' %}">
-  <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
-  
-  <!-- CSS Customizado -->
-  <link rel="stylesheet" href="{% static 'assets/css/vertical-layout-light/style.css' %}">
-  
-  <!-- Favicon -->
-  <link rel="shortcut icon" href="{% static 'assets/images/BY_logo_WHITE.png' %}" />
-</head>
-
-<body>
-
-    <div class="container-scroller">
-
-        <!-- Navbar (Menu Superior) -->
-        <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        <!-- Logotipo -->
-        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-            <a class="navbar-brand brand-logo mr-3" href="{% url 'index' %}">
-            <img src="{% static 'assets/images/2logo365x90.svg' %}" class="mr-5" alt="logo"/>
-            </a>
-            <a class="navbar-brand brand-logo-mini" href="{% url 'index' %}">
-            <img src="{% static 'assets/images/logo90x73.svg' %}" alt="logo"/>
-            </a>
-        </div>
-
-        <!-- Menu do lado direito -->
-        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-
-            <!-- Botão de Minimizador de Menu -->
-            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-            <span class="icon-menu"></span>
-            </button>
-
-            <!-- Notificações -->
-            <ul class="navbar-nav navbar-nav-right">
-            <li class="nav-item dropdown">
-                <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-                <i class="icon-bell mx-0"></i>
-                <span class="count"></span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
-
-                <!-- Notificação de Erro -->
-                <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                    <div class="preview-icon bg-success">
-                        <i class="ti-info-alt mx-0"></i>
+{% block content %}
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-12 ">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Atendimento - Visitante</h4>
+            <form class="form-sample" method="POST">
+              {% csrf_token %}
+              <p class="card-description">Informações do paciente</p>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Nome:</label>
+                    <div class="col-sm-9">
+                      <input id="name" type="text" class="form-control" value="{{ visitor.name }}" />
                     </div>
-                    </div>
-                    <div class="preview-item-content">
-                    <h6 class="preview-subject font-weight-normal">Application Error</h6>
-                    <p class="font-weight-light small-text mb-0 text-muted">
-                        Just now
-                    </p>
-                    </div>
-                </a>
-
-                <!-- Notificação de Configurações -->
-                <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                    <div class="preview-icon bg-warning">
-                        <i class="ti-settings mx-0"></i>
-                    </div>
-                    </div>
-                    <div class="preview-item-content">
-                    <h6 class="preview-subject font-weight-normal">Settings</h6>
-                    <p class="font-weight-light small-text mb-0 text-muted">
-                        Private message
-                    </p>
-                    </div>
-                </a>
-
-                <!-- Notificação de Novo Usuário -->
-                <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                    <div class="preview-icon bg-info">
-                        <i class="ti-user mx-0"></i>
-                    </div>
-                    </div>
-                    <div class="preview-item-content">
-                    <h6 class="preview-subject font-weight-normal">New user registration</h6>
-                    <p class="font-weight-light small-text mb-0 text-muted">
-                        2 days ago
-                    </p>
-                    </div>
-                </a>
+                  </div>
                 </div>
-            </li>
-
-            <!-- Perfil do Usuário -->
-            <li class="nav-item nav-profile dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                <img src="{% static 'assets/images/faces/face28.jpg' %}" alt="profile"/>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                <form id="logoutForm" method="GET" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <a class="dropdown-item" id="logoutButton" href="#">
-                    <i class="ti-power-off text-primary"></i>
-                    Logout
-                    </a>
-                </form>
-                </div>
-                
-                <!-- Adicione o script antes do fechamento da tag </body> -->
-            </li>
-            </ul>
-            
-            <!-- Botão de Toggle para Offcanvas (Menu lateral em dispositivos móveis) -->
-            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-            <span class="icon-menu"></span>
-            </button>
-        </div>
-        </nav>
-        <!-- Fim da Navbar -->
-
-        
-        <!-- Início do Page Body Wrapper -->
-        <div class="container-fluid page-body-wrapper">
-        
-        
-            <!-- Botão de Configurações Flutuante -->
-            <div class="theme-setting-wrapper">
-                <div id="settings-trigger"><i class="ti-settings"></i></div>
-                <div id="theme-settings" class="settings-panel">
-                <i class="settings-close ti-close"></i>
-                <p class="settings-heading">SIDEBAR SKINS</p>
-                <div class="sidebar-bg-options selected" id="sidebar-light-theme">
-                    <div class="img-ss rounded-circle bg-light border mr-3"></div>Light
-                </div>
-                <div class="sidebar-bg-options" id="sidebar-dark-theme">
-                    <div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark
-                </div>
-                <p class="settings-heading mt-2">HEADER SKINS</p>
-                <div class="color-tiles mx-0 px-4">
-                    <div class="tiles success"></div>
-                    <div class="tiles warning"></div>
-                    <div class="tiles danger"></div>
-                    <div class="tiles info"></div>
-                    <div class="tiles dark"></div>
-                    <div class="tiles default"></div>
-                </div>
-                </div>
-            </div>
-        
-            
-
-            <!-- Sidebar (Menu Lateral) -->
-            <nav class="sidebar sidebar-offcanvas" id="sidebar">
-                <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">
-                    <i class="icon-grid menu-icon"></i>
-                    <span class="menu-title">Home</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#appointment" aria-expanded="false" aria-controls="appointment">
-                    <i class="icon-layout menu-icon"></i>
-                    <span class="menu-title">Novo Atendimento</span>
-                    <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="appointment">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="{% url 'student_identify' %}">Aluno</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="{% url 'employee_identify' %}">Colaborador</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="{% url 'visitor_identify'%}">Visitante</a></li>
-                    </ul>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Idade:</label>
+                    <div class="col-sm-9">
+                      <input id="age" type="number" class="form-control" value="{{ visitor.age }}" />
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#records" aria-expanded="false" aria-controls="records">
-                    <i class="icon-columns menu-icon"></i>
-                    <span class="menu-title">Prontuário</span>
-                    <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="records">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="">Aluno</a></li>
-                        <li class="nav-item"><a class="nav-link" href="">Colaborador</a></li>
-                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">E-mail:</label>
+                    <div class="col-sm-9">
+                      <input id="email" type="email" class="form-control" value="{{ visitor.email }}" />
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#reports" aria-expanded="false" aria-controls="reports">
-                    <i class="icon-bar-graph menu-icon"></i>
-                    <span class="menu-title">Relatórios</span>
-                    <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="reports">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="">Diário</a></li>
-                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Gênero:</label>
+                    <div class="col-sm-9">
+                      <select id="gender" class="form-control">
+                        <option {% if visitor.gender == 'Masculino' %}selected{% endif %}>Masculino</option>
+                        <option {% if visitor.gender == 'Feminino' %}selected{% endif %}>Feminino</option>
+                      </select>
                     </div>
-                </li>
-                
-                </ul>
-            </nav>
-            <!-- Fim do Sidebar -->
-            
-            <div class="main-panel">
-                <div class="content-wrapper">
-                
-                    <div class="row">
-                        <div class="col-12 grid-margin">
-                            <div class="card">
-                              <div class="card-body">
-                                <h4 class="card-title">Atendiemento - Visitante</h4>
-                                <form class="form-sample" method="POST" > 
-                                  {% csrf_token %}
-                                  <p class="card-description">
-                                    informações do paciente
-                                  </p>
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Nome:</label>
-                                            <div class="col-sm-9">
-                                                <input id="name" type="text" class="form-control" value="{{ visitor.name }}" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Idade:</label>
-                                            <div class="col-sm-9">
-                                                <input id="age" type="number" class="form-control" value="{{ visitor.age }}" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">E-mail:</label>
-                                            <div class="col-sm-9">
-                                                <input id="email" type="email" class="form-control" value="{{ visitor.email }}" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Gênero:</label>
-                                            <div class="col-sm-9">
-                                                <select id="gender" class="form-control">
-                                                    <option {% if visitor.gender == 'Masculino' %}selected{% endif %}>Masculino</option>
-                                                    <option {% if visitor.gender == 'Feminino' %}selected{% endif %}>Feminino</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Alergias:</label>
+                    <div class="col-sm-9">
+                      <input id="allergies" class="form-control" value="{{ visitor.allergies }}" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Relação com a Escola:</label>
+                    <div class="col-sm-9">
+                      <input id="relationship" class="form-control" value="{{ visitor.relationship }}" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Observações do Paciente:</label>
+                    <div class="col-sm-9">
+                      <textarea id="visitor-notes" rows="4" class="form-control">{{ visitor.patient_notes }}</textarea>
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" id="visitor-id" name="visitor-id" value="{{ visitor.id }}">
+              </div>
 
-
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Alergias:</label>
-                                            <div class="col-sm-9">
-                                                <input id="allergies" class="form-control" value="{{ visitor.allergies }}" />
-                                            </div>
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Relação com a Escola:</label>
-                                            <div class="col-sm-9">
-                                                <input id="relationship" class="form-control" value="{{ visitor.relationship }}" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label">Observações do Paciente:</label>
-                                            <div class="col-sm-9">
-                                                <textarea id="visitor-notes" rows="4" class="form-control" >{{ visitor.patient_notes }}</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="visitor-id" name="visitor-id" value="{{ visitor.id }}">
-
-
-                                </div>
-                                
-                                
-                                  <p class="card-description">
-                                    Informações do atendimento
-                                  </p>
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                      <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Ocorrência:</label>
-                                        <div class="col-sm-9">
-                                          <textarea id="reason" class="form-control" rows="4"></textarea>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Procedimentos:</label>
-                                        <div class="col-sm-9">
-                                            <textarea id="treatment" class="form-control" rows="4"></textarea>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                      <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Observações:</label>
-                                        <div class="col-sm-9">
-                                            <textarea id="notes" class="form-control" rows="4"></textarea>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-check form-check-flat form-check-primary">
-                                            <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" id="revaluation">
-                                                Reavaliação
-                                            </label>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-4 col-form-label">Enfermeira:</label>
-                                                    <div class="col-sm-8">
-                                                        <input id="userFirstName" type="text" class="form-control" value="{{ user.first_name }}" readonly />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group row">
-                                                    <label class="col-sm-4 col-form-label">Enfermaria:</label>
-                                                    <div class="col-sm-8">
-                                                        <input id="selectedInfirmary" type="text" class="form-control" readonly />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                            
-                                       
-                                        
-                                    </div> 
-                                  </div>
-                                    <button id="visitor-submit-button" type="submit" class="btn btn-primary mr-2">Salvar</button>
-                                    <a href="{% url 'index' %}" class="btn btn-light">Cancelar</a>
-
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                            
+              <p class="card-description">Informações do atendimento</p>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Ocorrência:</label>
+                    <div class="col-sm-9">
+                      <textarea id="reason" class="form-control" rows="4"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Procedimentos:</label>
+                    <div class="col-sm-9">
+                      <textarea id="treatment" class="form-control" rows="4"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Observações:</label>
+                    <div class="col-sm-9">
+                      <textarea id="notes" class="form-control" rows="4"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check form-check-flat form-check-primary">
+                    <label class="form-check-label">
+                      <input type="checkbox" class="form-check-input" id="revaluation"> Reavaliação
+                    </label>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Enfermeira:</label>
+                        <div class="col-sm-8">
+                          <input id="userFirstName" type="text" class="form-control" value="{{ user.first_name }}" readonly />
                         </div>
-
-
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Enfermaria:</label>
+                        <div class="col-sm-8">
+                          <input id="selectedInfirmary" type="text" class="form-control" readonly />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
-
-            </div>
-            <!-- Fim do Main Panel -->
-        
-        
-
-
-        </div>   
-        <!-- Fim do Wrapper da Página -->
-
-
+              </div>
+              <button id="visitor-submit-button" type="submit" class="btn btn-primary mr-2">Salvar</button>
+              <a href="{% url 'index' %}" class="btn btn-light">Cancelar</a>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- Fim do Container Scroller -->
+  </div>
+</div>
+{% endblock %}
 
+{% block extra_scripts %}
+<!-- Form Script -->
+<script src="{% static 'assets/js/form-submit-visitor.js' %}"></script>
 
-
-
-  <!-- Scripts -->
-  <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
-  <!-- endinject -->
-  <!-- Session scripts-->
-  <script src="{% static 'assets/js/session.js' %}"></script>
-
-  <script src="{% static 'assets/js/form-submit-visitor.js' %}"></script>
-
-  <!-- Plugin js for this page -->
-  <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
-  <script src="{% static 'assets/vendors/datatables.net/jquery.dataTables.js' %}"></script>
-  <script src="{% static 'assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js' %}"></script>
-  <script src="{% static 'assets/js/dataTables.select.min.js' %}"></script>
-
-  <!-- End plugin js for this page -->
-  <!-- inject:js -->
-  <script src="{% static 'assets/js/off-canvas.js' %}"></script>
-  <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
-  <script src="{% static 'assets/js/template.js' %}"></script>
-  <script src="{% static 'assets/js/settings.js' %}"></script>
-  <script src="{% static 'assets/js/todolist.js' %}"></script>
-  <!-- endinject -->
-  <!-- Custom js for this page-->
-  <script src="{% static 'assets/js/dashboard.js' %}"></script>
-  <script src="{% static 'assets/js/Chart.roundedBarCharts.js' %}"></script>
-  <!-- End custom js for this page-->
-  
-
-</body>
-
-</html>
+{% endblock %}

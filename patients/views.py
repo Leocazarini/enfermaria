@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from .models import *
-from controller.crud import create_objects, get_object, get_by_id, update_object, update_info
+from controller.crud import create_objects, get_object, get_by_id, update_object, update_info, update_visitor_info
 import json
 import logging
 
@@ -39,6 +39,14 @@ logger = logging.getLogger('patients.views')
 
 # endpoint -> # Internal operation 
 def create_students(data):
+    """
+    Create students based on the provided data.
+    Args:
+        data (list): A list of objects representing student data.
+    Returns:
+        dict: A dictionary with the status of the operation. If successful, the status will be 'success'.
+              If there is an error, the status will be 'error' and a corresponding error message will be provided.
+    """
     logger.info("Starting create_students function.")
     
     if data is not None:
@@ -57,6 +65,24 @@ def create_students(data):
 # endpoint - /students/create/info -> # User operation
 @csrf_exempt
 def create_student_info(request):
+
+    """
+        Create or update student information.
+        This view function handles a POST request to create or update student information. 
+        It expects the request body to contain a JSON object with the following fields:
+        - student_id: The ID of the student.
+        - allergies: Any allergies the student may have.
+        - patient_notes: Additional notes about the student's health.
+        If the request is successful, it returns a JSON response with the following fields:
+        - status: The status of the request (success or error).
+        - message: A message indicating the result of the request.
+        - data: The ID of the updated student information.
+        If the request method is not POST, it returns a JSON response with an error message.
+        If the request body is not a valid JSON object, it returns a JSON response with an error message.
+        Returns:
+            JsonResponse: A JSON response containing the result of the request.
+    """
+
     if request.method == 'POST':
         try:
             logger.info("Received POST request to create/update student info")
@@ -93,6 +119,15 @@ def create_student_info(request):
     
 # endpoint -> # Internal operation 
 def create_class_group(data):
+    """
+    Create class groups based on the provided data.
+    Args:
+        data (list): A list of objects representing class groups.
+    Returns:
+        dict: A dictionary with the status of the operation. If the class groups are successfully created, the status will be 'success'. 
+        Otherwise, the status will be 'error' and a message will be provided.
+    
+    """
     logger.info("Starting create_class_group function.")
     
     if data is not None:
@@ -114,6 +149,16 @@ def create_class_group(data):
 
 # endpoint - /students/search -> # Internal operation
 def search_student(name, registry):    
+    """
+    Search for a student with the given name and registry.
+    Args:
+        name (str): The name of the student.
+        registry (str): The registry number of the student.
+    Returns:
+        dict or None: A dictionary containing the student's information if found, 
+                      or None if no records were found.
+   
+    """
     logger.info(f"Starting search for student with name: {name} and registry: {registry}.")
     
     try:
@@ -128,7 +173,7 @@ def search_student(name, registry):
         student_data = model_to_dict(student)
         student_info_data = model_to_dict(student.info)
         student_data['info'] = student_info_data
-        student_data['class_group_name'] = student.class_group.name if student.class_group else None
+        student_data['class_group_name'] = student.class_group.segment if student.class_group else None
 
         logger.info(f"Student found: {student_data}")
         return student_data
@@ -139,6 +184,27 @@ def search_student(name, registry):
 
 # endpoint - /students/search/name -> # User operation
 def search_student_by_name(request):
+    """
+    Search for a student by name.
+    Args:
+        request (HttpRequest): The HTTP request object.
+    Returns:
+        JsonResponse: A JSON response containing the search results.
+    Example:
+        >>> search_student_by_name(request)
+        {'results': [
+                'name': 'John Doe',
+                'registry': '123456',
+                'age': 18,
+                'class_group_name': 'Class A'
+            },
+                'name': 'Jane Smith',
+                'registry': '654321',
+                'age': 17,
+                'class_group_name': 'Class B'
+        ]}
+
+    """
     query = request.GET.get('q', '')
     logger.info(f"Starting search for student by name with query: {query}")
     
@@ -188,6 +254,16 @@ def search_student_by_id(request):
 
 # endpoint --> # Internal operation
 def create_employees(data):
+    """
+    Create employees based on the provided data.
+    Args:
+        data (list): A list of objects representing employees.
+    Returns:
+        dict: A dictionary with the status of the operation.
+            - If the data is a list, employees are created and the status is 'success'.
+            - If the data is not a list, the status is 'error' and a message is provided.
+            - If no data is provided, the status is 'error' and a message is provided.
+    """
     logger.info("Starting create_employees function.")
     
     if data is not None:
@@ -206,6 +282,15 @@ def create_employees(data):
 # endpoint - /employees-info/create -> # User operation
 @csrf_exempt 
 def create_employee_info(request):
+    """
+    Create or update employee information.
+    Args:
+        request: The HTTP request object.
+    Returns:
+        A JSON response indicating the status of the operation.
+    Raises:
+        JSONDecodeError: If the request body is not a valid JSON format.
+    """
     if request.method == 'POST':
         try:
             logger.info("Received POST request to create/update employee info")
@@ -240,6 +325,14 @@ def create_employee_info(request):
 
 # endpoint - /departments/create -> # Internal operation 
 def create_department(data):
+    """
+    Create departments based on the provided data.
+    Args:
+        data (list): A list of objects representing departments.
+    Returns:
+        dict: A dictionary with the status of the operation.
+   
+    """
     logger.info("Starting create_department function.")
     
     if data is not None:
@@ -261,6 +354,16 @@ def create_department(data):
 
 # endpoint --> # Internal operation
 def search_employee(name, registry):
+    """
+    Search for an employee with the given name and registry.
+    Args:
+        name (str): The name of the employee.
+        registry (str): The registry of the employee.
+    Returns:
+        dict or None: A dictionary containing the employee's information if found, 
+        or None if no records were found.
+
+    """
     logger.info(f"Starting search for employee with name: {name} and registry: {registry}.")
     
     try:
@@ -286,6 +389,17 @@ def search_employee(name, registry):
 
 # endpoint - /employees/search/name -> # User operation
 def search_employee_by_name(request):
+    """
+    Search for an employee by name.
+    Args:
+        request (HttpRequest): The HTTP request object.
+    Returns:
+        JsonResponse: A JSON response containing the search results.
+    Raises:
+        None.
+    Example:
+        >>> response = search_employee_by_name(request)
+    """
     query = request.GET.get('q', '')
     logger.info(f"Starting search for employee by name with query: {query}")
     
@@ -336,33 +450,68 @@ def search_employee_by_id(request):
 ########################## ----------------- VISITORS VIEWS ----------------- ##############################
 
 # endpoint - /visitors/create -> # User operation
-@csrf_exempt
-def create_visitor(request):
-    if request.method == 'POST':
-        logger.info("Received a POST request to create visitors.")
-        
-        try:
-            data = json.loads(request.body)
-            logger.debug(f"Request body successfully parsed: {data}")
-            
-            if isinstance(data, list):
-                logger.debug(f"Data is a list with {len(data)} items.")
-                return create_objects(Visitor, data)
+def manage_visitor_data(visitor_data):
+    """
+    Manage the creation or update of a visitor based on the provided data.
+    
+    Args:
+        visitor_data (dict): The data of the visitor to be created or updated.
+    
+    Returns:
+        Visitor object or None in case of error.
+    """
+    try:
+        # Verificar se o visitante já existe baseado no email
+        visitor_email = visitor_data.get('email')
+        visitors = get_object(Visitor, email=visitor_email)
+
+        if visitors and len(visitors) > 0:
+            visitor = visitors[0]
+            logger.info(f"Visitor already exists: {visitor}")
+
+            # Atualizar as informações do visitante se necessário
+            if visitor.allergies != visitor_data['allergies'] or visitor.patient_notes != visitor_data['patient_notes']:
+                update_visitor_info(Visitor, visitor_email, visitor_data['allergies'], visitor_data['patient_notes'])
+                logger.info(f"Visitor info updated: {visitor}")
+
+            return visitor  # Retornar o visitante existente
+
+        else:
+            # Se o visitante não existir, criar um novo visitante
+            visitor_data_list = [visitor_data]
+            visitor_response = create_objects(Visitor, visitor_data_list)
+
+            # O retorno de create_objects precisa ser verificado
+            if visitor_response.status_code == 201:
+                created_visitor_data = visitor_response.content  # Acessar o conteúdo JSON diretamente
+                created_visitor_data = json.loads(created_visitor_data)['data'][0]  # Converter para dicionário Python
+                visitor = Visitor(**created_visitor_data)  # Criar uma instância local do visitante
+                logger.info(f"New visitor created: {visitor}")
+                return visitor
             else:
-                logger.warning("Invalid data format, expected a list of objects.")
-                return JsonResponse({'status': 'error', 'message': 'Invalid data format, expected a list of objects'}, status=400)
-        
-        except json.JSONDecodeError:
-            logger.error("Failed to parse JSON from request body.")
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
-    else:
-        logger.error(f"Invalid request method: {request.method}")
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+                logger.error(f"Error creating visitor: {visitor_response.content}")
+                return None
+
+    except Exception as e:
+        logger.error(f"Error managing visitor data: {e}")
+        return None
+
+
 
 ###
 
 # endpoint - /visitors/search -> # Internal operation
 def search_visitor(name, email):
+    """
+    Search for a visitor by name and email.
+    Args:
+        name (str): The name of the visitor.
+        email (str): The email of the visitor.
+    Returns:
+        dict or None: A dictionary containing the visitor's data if found, or None if no records were found.
+    Raises:
+        Http404: If no records were found.
+    """
     try:
         visitors = get_object(Visitor, name=name, email=email)
         
@@ -379,6 +528,25 @@ def search_visitor(name, email):
     
 # endpoint - /visitors/search/name -> # User operation
 def search_visitor_by_name(request):
+    """
+    Search for a visitor by name.
+    Args:
+        request (HttpRequest): The HTTP request object.
+    Returns:
+        JsonResponse: A JSON response containing the search results.
+
+    Example:
+        >>> search_visitor_by_name(request)
+        {'results': [
+                'name': 'John Doe',
+                'age': 30,
+                'email': 'johndoe@example.com'
+            },
+                'name': 'Jane Smith',
+                'age': 25,
+                'email': 'janesmith@example.com'
+        ]}
+    """
     query = request.GET.get('q', '')
     logger.info(f"Starting search for visitor by name with query: {query}")
     
