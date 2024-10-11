@@ -173,7 +173,7 @@ def search_student(name, registry):
         student_data = model_to_dict(student)
         student_info_data = model_to_dict(student.info)
         student_data['info'] = student_info_data
-        student_data['class_group_name'] = student.class_group.name if student.class_group else None
+        student_data['class_group_name'] = student.class_group.segment if student.class_group else None
 
         logger.info(f"Student found: {student_data}")
         return student_data

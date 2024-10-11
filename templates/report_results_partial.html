@@ -18,12 +18,14 @@
                                 <th>Paciente</th>
                                 <th>Nome</th>
                                 <th>Turma/Departamento</th>
-                                <th>Aula Atual</th> <!-- Nova coluna adicionada -->
+                                <th>Aula Atual</th> 
                                 <th>Idade</th>
                                 <th>Gênero</th>
                                 <th>Motivo</th>
                                 <th>Tratamento</th>
                                 <th>Observações</th>
+                                <th>Reavalição</th>
+                                <th>Contato com Pais</th>
                                 <th>Enfermaria</th>
                                 <th>Enfermeira</th>
                             </tr>
@@ -35,18 +37,20 @@
                                 <td>{{ appointment.type }}</td>
                                 <td>{{ appointment.name }}</td>
                                 <td>{{ appointment.additional_info }}</td>
-                                <td>{{ appointment.current_class }}</td> <!-- Nova célula adicionada -->
+                                <td>{{ appointment.current_class }}</td> 
                                 <td>{{ appointment.age }}</td>
                                 <td>{{ appointment.gender }}</td>
                                 <td>{{ appointment.reason }}</td>
                                 <td>{{ appointment.treatment }}</td>
                                 <td>{{ appointment.notes }}</td>
+                                <td>{{ appointment.revaluation }}</td>
+                                <td>{{ appointment.contact_parents }}</td>
                                 <td>{{ appointment.infirmary }}</td>
                                 <td>{{ appointment.nurse }}</td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="12">Nenhum atendimento encontrado.</td> <!-- Ajuste no colspan -->
+                                <td colspan="12">Nenhum atendimento encontrado.</td> 
                             </tr>
                             {% endfor %}
                         </tbody>

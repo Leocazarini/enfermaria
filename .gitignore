@@ -155,7 +155,9 @@ venv.bak/
 /site
 
 
-fotos/
+faces/
+students/
+employees/
 
 # mypy
 .mypy_cache/
