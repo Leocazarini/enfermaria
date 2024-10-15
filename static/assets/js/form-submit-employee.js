@@ -25,7 +25,7 @@ document.getElementById("employee-submit-button").addEventListener("click", func
         treatment: treatment,
         notes: notes,
         revaluation: revaluation,
-        date: new Date().toISOString() // Ajuste conforme necessário para obter a data no formato desejado
+        // date: new Date().toISOString() 
     };
 
     // Convertendo para JSON

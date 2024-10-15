@@ -32,7 +32,7 @@ class EmployeeAppointment(models.Model):
     nurse = models.CharField(max_length=50)
     date = models.DateTimeField()
     reason = models.TextField()
-    treatment = models.TextField()
+    treatment = models.TextField ()
     notes = models.TextField(blank=True, null=True)
     revaluation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

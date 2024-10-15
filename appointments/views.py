@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.utils import timezone
 from .models import *
 from patients.views import (search_student, search_employee, 
                             search_visitor, manage_visitor_data)
@@ -190,7 +191,7 @@ def student_record(request):
             infirmary = data.get('infirmary')
             nurse = data.get('nurse')
             current_class = data.get('current_class')
-            date = data.get('date')
+            date = timezone.now()
             reason = data.get('reason')
             treatment = data.get('treatment')
             notes = data.get('notes')
@@ -280,7 +281,7 @@ def employee_record(request):
             patient_notes = data.get('patient_notes')
             infirmary = data.get('infirmary')
             nurse = data.get('nurse')
-            date = data.get('date')
+            date = timezone.now()
             reason = data.get('reason')
             treatment = data.get('treatment')
             notes = data.get('notes')
@@ -425,7 +426,7 @@ def visitor_record(request):
                 'treatment': data.get('treatment'),
                 'notes': data.get('notes'),
                 'revaluation': data.get('revaluation'),
-                'date': data.get('date'),
+                'date': timezone.now(), 
             }
 
             # Registrar o atendimento

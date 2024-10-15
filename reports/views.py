@@ -52,6 +52,7 @@ def student_record(request):
         logger.debug(f'Appointments found: {appointment}')
 
         list_appointments = list(appointment)
+        list_appointments.sort(key=lambda x: x['date'], reverse=True)
 
         return render(request, 'student_record.html', {'student': student, 'appointment': list_appointments})
         
@@ -82,7 +83,7 @@ def employee_record(request):
     
         if employee is None:
             logger.error('Employee not found')
-            return render(request, 'employee_search_record.html', {'error_message': 'Estudante não encontrado.'}) 
+            return render(request, 'employee_search_record.html', {'error_message': 'Colaborador não encontrado.'}) 
 
         # Identifica o campo correto do ID
         identifier_field = 'employee_id' 
@@ -93,6 +94,7 @@ def employee_record(request):
         logger.debug(f'Appointments found: {appointment}')
 
         list_appointments = list(appointment)
+        list_appointments.sort(key=lambda x: x['date'], reverse=True)
 
         return render(request, 'employee_record.html', {'employee': employee, 'appointment': list_appointments})
 
@@ -137,7 +139,7 @@ def reports(request):
 
 
          # Número de resultados por página
-        RESULTS_PER_PAGE = 30 
+        RESULTS_PER_PAGE = 100 
 
         # Obtenção dos atendimentos
         all_appointments = get_all_appointments(date_begin, date_end, infirmaries, search_term)
