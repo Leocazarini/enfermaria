@@ -9,10 +9,7 @@ from django.db.models import Count, Q
 from collections import defaultdict
 from appointments.models import StudentAppointment, EmployeeAppointment, VisitorAppointment
 
-
-
 logger = logging.getLogger('controller.crud')
-
 
 ########### Generic CRUD functions ###########
 
@@ -28,27 +25,30 @@ def create_objects(model, data_list):
         ValidationError: If there is a validation error while creating the objects.
         Exception: For any other exceptions that occur during the creation process.
     Logs:
-        Info: Logs the model and data received, and each created object.
+        Info: Logs the start of the function and general information.
+        Debug: Logs the model and data received, and each created object.
         Error: Logs validation errors and any other exceptions.
     """
-    
+    logger.info("Iniciando create_objects")
     try:
-        logger.info(f"Creating objects in model: {model}")
-        logger.info(f"Data received: {data_list}")
+        logger.debug(f"Creating objects in model: {model}")
+        logger.debug(f"Data received: {data_list}")
         objects = []
         for data in data_list:
             obj = model.objects.create(**data)
             obj.save()
             objects.append(model_to_dict(obj))
-            logger.info(f"Created object: {obj}")
+            logger.debug(f"Created object: {obj}")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'success', 'data': objects}, status=201)
     except ValidationError as e:
         logger.error(f"Validation Error: {e.message_dict}")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'error', 'message': e.message_dict}, status=400)
     except Exception as e:
         logger.error(f"Exception: {e}")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
 
 def get_object(model, name=None, registry=None, email=None, related_fields=None):
     """
@@ -69,9 +69,8 @@ def get_object(model, name=None, registry=None, email=None, related_fields=None)
         - Warning: Logs when no records are found for the provided email or name.
         - Error: Logs when neither name nor registry is provided.
     """
-
+    logger.info("Iniciando get_object")
     logger.info(f"Starting get_object function for model: {model.__name__}.")
-
     query = model.objects.all()
     
     if related_fields:
@@ -87,6 +86,7 @@ def get_object(model, name=None, registry=None, email=None, related_fields=None)
         try:
             obj = query.get(email=email)
             logger.info(f"Object found with email: {email}.")
+            logger.info("Dados enviados para a interface do usuário.")
             return [obj]
         except model.DoesNotExist:
             logger.warning(f"No records found with email: {email}")
@@ -99,16 +99,17 @@ def get_object(model, name=None, registry=None, email=None, related_fields=None)
             logger.warning("No records found with the provided name.")
             raise Http404('No records found.')
         logger.info(f"{len(objs)} objects found with the name containing: {name}.")
+        logger.info("Dados enviados para a interface do usuário.")
         return list(objs)  
     elif registry:
         logger.debug(f"Filtering object with registry: {registry}.")
         obj = get_object_or_404(query, registry=registry)
         logger.info(f"Object found with registry: {registry}.")
+        logger.info("Dados enviados para a interface do usuário.")
         return [obj]  
     else:
         logger.error("Neither name nor registry was provided. Raising Http404.")
         raise Http404('Name or registry must be provided.')
-
 
 def get_by_id(model, pk, related_fields=None):
     """
@@ -122,6 +123,7 @@ def get_by_id(model, pk, related_fields=None):
     Raises:
         Http404: If the object does not exist.
     """
+    logger.info("Iniciando get_by_id")
     query = model.objects.all()
     
     if related_fields:
@@ -130,8 +132,9 @@ def get_by_id(model, pk, related_fields=None):
         else:
             query = query.select_related(related_fields)
     
-    return get_object_or_404(query, pk=pk)
-
+    result = get_object_or_404(query, pk=pk)
+    logger.info("Dados enviados para a interface do usuário.")
+    return result
 
 def update_object(model, registry, data):
     """
@@ -152,6 +155,7 @@ def update_object(model, registry, data):
         - Logs a warning if the object is not found.
         - Logs an error if there is a validation error during the update.
     """
+    logger.info("Iniciando update_object")
     logger.info(f"Starting update_object function for model: {model.__name__}, registry: {registry}.")
     
     try:
@@ -163,16 +167,18 @@ def update_object(model, registry, data):
         
         obj.save()
         logger.info(f"Object with registry {registry} updated successfully.")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'success', 'data': model_to_dict(obj)})
     
     except Http404:
         logger.warning(f"Object with registry {registry} not found.")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'error', 'message': 'Object not found'}, status=404)
     
     except ValidationError as e:
         logger.error(f"Validation error while updating object with registry {registry}: {e.message_dict}")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'error', 'message': e.message_dict}, status=400)
-
 
 def delete_object(model, registry):
     """
@@ -192,6 +198,7 @@ def delete_object(model, registry):
         - Logs a warning if the object is not found.
         - Logs an error if any other exception occurs during the delete operation.
     """
+    logger.info("Iniciando delete_object")
     logger.info(f"Starting delete_object function for model: {model.__name__}, registry: {registry}.")
     
     try:
@@ -200,16 +207,18 @@ def delete_object(model, registry):
         
         obj.delete()
         logger.info(f"Object with registry {registry} deleted successfully.")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'success', 'message': 'Deleted successfully'})    
     
     except Http404:
         logger.warning(f"Object with registry {registry} not found.")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'error', 'message': 'Object not found'}, status=404)
     
     except Exception as e:
         logger.error(f"Error occurred while deleting object with registry {registry}: {str(e)}")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
 
 ########### Info tables ###########
 
@@ -225,18 +234,19 @@ def get_info_by_patient(info_model, foreign_key_value, foreign_key_field):
     Raises:
         info_model.DoesNotExist: If no instance is found matching the foreign key field and value.
     """
+    logger.info("Iniciando get_info_by_patient")
     logger.info(f"Starting get_info_by_patient function for model: {info_model.__name__}.")
     logger.debug(f"Looking up {info_model.__name__} with {foreign_key_field} = {foreign_key_value}.")
     
     try:
         result = info_model.objects.get(**{foreign_key_field: foreign_key_value})
         logger.info(f"Information found for {foreign_key_field} = {foreign_key_value}.")
+        logger.info("Dados enviados para a interface do usuário.")
         return result
         
     except info_model.DoesNotExist:
         logger.warning(f"No information found for {foreign_key_field} = {foreign_key_value}.")
         return None
-
 
 def update_info(info_model, foreign_key_value, foreign_key_field, allergies=None, patient_notes=None):
     """
@@ -250,6 +260,7 @@ def update_info(info_model, foreign_key_value, foreign_key_field, allergies=None
     Returns:
         Model: The updated or newly created model instance.
     """
+    logger.info("Iniciando update_info")
     logger.info(f"Starting update_info function for model: {info_model.__name__}.")
     logger.debug(f"Updating information for {foreign_key_field} = {foreign_key_value}. Allergies: {allergies}, Notes: {patient_notes}")
     
@@ -261,12 +272,11 @@ def update_info(info_model, foreign_key_value, foreign_key_field, allergies=None
         info.patient_notes = patient_notes
         info.save()
         logger.info(f"Information updated for {foreign_key_field} = {foreign_key_value}.")
+        logger.info("Dados enviados para a interface do usuário.")
         return info
     else:
         logger.warning(f"No information found for {foreign_key_field} = {foreign_key_value}. Creating new record.")
-        
         return create_info(info_model, foreign_key_value, foreign_key_field, allergies, patient_notes)
-
 
 def create_info(info_model, foreign_key_value, foreign_key_field, allergies=None, patient_notes=None):
     """
@@ -282,6 +292,7 @@ def create_info(info_model, foreign_key_value, foreign_key_field, allergies=None
     Logs:
         Logs the start and successful completion of the information creation process.
     """
+    logger.info("Iniciando create_info")
     logger.info(f"Starting create_info function for model: {info_model.__name__}.")
     logger.debug(f"Creating information for {foreign_key_field} = {foreign_key_value}. Allergies: {allergies}, Notes: {patient_notes}")
     
@@ -292,8 +303,8 @@ def create_info(info_model, foreign_key_value, foreign_key_field, allergies=None
     })
     
     logger.info(f"Information created successfully for {foreign_key_field} = {foreign_key_value}.")
+    logger.info("Dados enviados para a interface do usuário.")
     return info
-
 
 ########### Visitor update info ###########
 
@@ -310,16 +321,14 @@ def update_visitor_info(visitor_model, visitor_email, allergies=None, patient_no
                       If successful, returns the updated visitor data.
                       If the visitor is not found, returns an error message with a 404 status.
     """
-
+    logger.info("Iniciando update_visitor_info")
     # Obter o objeto real do visitante
     visitor = get_object(visitor_model, email=visitor_email)
 
     if visitor and len(visitor) > 0:
         # Acessar o primeiro visitante da lista
         visitor_obj = visitor[0]
-
-        logger.info(f"Updating visitor: allergies={allergies}, patient_notes={patient_notes}")
-
+        logger.debug(f"Updating visitor: allergies={allergies}, patient_notes={patient_notes}")
 
         # Atualizar os campos diretamente no objeto
         visitor_obj.allergies = allergies
@@ -329,13 +338,14 @@ def update_visitor_info(visitor_model, visitor_email, allergies=None, patient_no
         visitor_obj.save()
 
         logger.info(f"Information updated for visitor with email: {visitor_email}.")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'success', 'data': model_to_dict(visitor_obj)})
     
     else:
         logger.warning(f"No visitor found with email: {visitor_email}.")
+        logger.info("Dados enviados para a interface do usuário.")
         return JsonResponse({'status': 'error', 'message': 'Visitor not found'}, status=404)
     
-
 ########### Appointment search ###########
 
 def get_appointment(model, identifier_field, patient_id=None, appointment_date=None):
@@ -356,8 +366,9 @@ def get_appointment(model, identifier_field, patient_id=None, appointment_date=N
         - Debug information for applied filters.
         - Info on the number of records found.
     """
+    logger.info("Iniciando get_appointment")
     logger.info(f"Starting get_appointment function for model: {model.__name__}.")
-    
+
     if patient_id is None and appointment_date is None:
         logger.warning("No search parameters provided.")
         return []
@@ -384,9 +395,8 @@ def get_appointment(model, identifier_field, patient_id=None, appointment_date=N
     # Converte os resultados em dicionários
     results = list(query.values())
     logger.info(f"Appointments found: {len(results)} record(s) found.")
-    
+    logger.info("Dados enviados para a interface do usuário.")
     return results
-
 
 ########### Index Module ###########
 
@@ -402,6 +412,7 @@ def get_nurse_appointments_current_year():
         list: A list of dictionaries, each containing a 'nurse' and their 'count' of 
               appointments for the current year.
     """
+    logger.info("Iniciando get_nurse_appointments_current_year")
     # Get the current year
     current_year = timezone.now().year
 
@@ -424,8 +435,8 @@ def get_nurse_appointments_current_year():
     # Convert the dictionary into a list of dictionaries for the template
     nurse_appointments = [{'nurse': nurse, 'count': count} for nurse, count in nurse_counts.items()]
 
+    logger.info("Dados enviados para a interface do usuário.")
     return nurse_appointments
-
 
 def get_total_appointments_current_year():
     """
@@ -436,6 +447,7 @@ def get_total_appointments_current_year():
     Returns:
         int: The total number of appointments for the current year.
     """
+    logger.info("Iniciando get_total_appointments_current_year")
     current_year = timezone.now().year
 
     total_students = StudentAppointment.objects.filter(date__year=current_year).count()
@@ -444,8 +456,8 @@ def get_total_appointments_current_year():
 
     total_appointments = total_students + total_employees + total_visitors
 
+    logger.info("Dados enviados para a interface do usuário.")
     return total_appointments
-
 
 def get_total_appointments_today():
     """
@@ -455,6 +467,7 @@ def get_total_appointments_today():
     Returns:
         int: The total number of appointments for today.
     """
+    logger.info("Iniciando get_total_appointments_today")
     today = timezone.now().date()
 
     total_students = StudentAppointment.objects.filter(date__date=today).count()
@@ -463,22 +476,23 @@ def get_total_appointments_today():
 
     total_appointments = total_students + total_employees + total_visitors
 
+    logger.info("Dados enviados para a interface do usuário.")
     return total_appointments
-
 
 def get_total_appointments_infirmary_current_year(infirmary):
     """
     Calculate the total number of appointments in a given infirmary for the current year.
     This function sums up the number of student, employee, and visitor appointments
     for the specified infirmary in the current year. If the infirmary is None or empty,
-    it returns 0 and prints a message.
+    it returns 0 and logs a warning.
     Args:
         infirmary (str): The name of the infirmary to calculate appointments for.
     Returns:
         int: The total number of appointments in the specified infirmary for the current year.
     """
+    logger.info("Iniciando get_total_appointments_infirmary_current_year")
     if not infirmary:
-        print("Infirmary is None or empty.")
+        logger.warning("Infirmary is None or empty.")
         return 0  # Retornar 0 se infirmary é None ou vazio
 
     current_year = timezone.now().year
@@ -499,16 +513,16 @@ def get_total_appointments_infirmary_current_year(infirmary):
 
     total_appointments = total_students + total_employees + total_visitors
 
-    print(f"Total appointments for infirmary '{infirmary}': {total_appointments}")
+    logger.debug(f"Total appointments for infirmary '{infirmary}': {total_appointments}")
+    logger.info("Dados enviados para a interface do usuário.")
     return total_appointments
-
 
 def get_total_appointments_infirmary_today(infirmary):
     """
     Calculate the total number of appointments in a given infirmary for today.
     This function retrieves the total number of student, employee, and visitor appointments
     scheduled for the current day in the specified infirmary. If the infirmary is None or empty,
-    it returns 0 and prints a message indicating the issue.
+    it returns 0 and logs a warning.
     Args:
         infirmary (str): The name of the infirmary to check for appointments.
     Returns:
@@ -519,8 +533,9 @@ def get_total_appointments_infirmary_today(infirmary):
         total_appointments = get_total_appointments_infirmary_today("Main Infirmary")
         print(total_appointments)
     """
+    logger.info("Iniciando get_total_appointments_infirmary_today")
     if not infirmary:
-        print("Infirmary is None or empty.")
+        logger.warning("Infirmary is None or empty.")
         return 0  # Retornar 0 se infirmary é None ou vazio
 
     today = timezone.now().date()
@@ -541,15 +556,11 @@ def get_total_appointments_infirmary_today(infirmary):
 
     total_appointments = total_students + total_employees + total_visitors
 
-    print(f"Total appointments for infirmary '{infirmary}': {total_appointments}")
+    logger.debug(f"Total appointments for infirmary '{infirmary}': {total_appointments}")
+    logger.info("Dados enviados para a interface do usuário.")
     return total_appointments
 
-
-
 ########### Reports Module ###########
-
-# controller/crud.py
-
 
 def get_student_appointments(date_begin, date_end, infirmaries, search_term):
     """
@@ -562,6 +573,7 @@ def get_student_appointments(date_begin, date_end, infirmaries, search_term):
     Returns:
         QuerySet: A Django QuerySet of StudentAppointment objects that match the specified filters.
     """
+    logger.info("Iniciando get_student_appointments")
     logger.info(f"Obtendo atendimentos de estudantes de {date_begin} a {date_end} nas enfermarias: {infirmaries} com termo de busca: {search_term}")
 
     # Filtros básicos
@@ -594,8 +606,9 @@ def get_student_appointments(date_begin, date_end, infirmaries, search_term):
 
         filters &= search_filters
 
-    return StudentAppointment.objects.filter(filters).select_related('student__class_group')
-
+    result = StudentAppointment.objects.filter(filters).select_related('student__class_group')
+    logger.info("Dados enviados para a interface do usuário.")
+    return result
 
 def get_employee_appointments(date_begin, date_end, infirmaries, search_term):
     """
@@ -608,6 +621,7 @@ def get_employee_appointments(date_begin, date_end, infirmaries, search_term):
     Returns:
         QuerySet: A Django QuerySet containing the filtered employee appointments with related employee department data.
     """
+    logger.info("Iniciando get_employee_appointments")
     logger.info(f"Obtendo atendimentos de funcionários de {date_begin} a {date_end} nas enfermarias: {infirmaries} com termo de busca: {search_term}")
 
     filters = Q(
@@ -636,8 +650,9 @@ def get_employee_appointments(date_begin, date_end, infirmaries, search_term):
 
         filters &= search_filters
 
-    return EmployeeAppointment.objects.filter(filters).select_related('employee__department')
-
+    result = EmployeeAppointment.objects.filter(filters).select_related('employee__department')
+    logger.info("Dados enviados para a interface do usuário.")
+    return result
 
 def get_visitor_appointments(date_begin, date_end, infirmaries, search_term):
     """
@@ -650,6 +665,7 @@ def get_visitor_appointments(date_begin, date_end, infirmaries, search_term):
     Returns:
         QuerySet: A Django QuerySet of VisitorAppointment objects that match the specified filters.
     """
+    logger.info("Iniciando get_visitor_appointments")
     logger.info(f"Obtendo atendimentos de visitantes de {date_begin} a {date_end} nas enfermarias: {infirmaries} com termo de busca: {search_term}")
 
     filters = Q(
@@ -678,8 +694,9 @@ def get_visitor_appointments(date_begin, date_end, infirmaries, search_term):
 
         filters &= search_filters
 
-    return VisitorAppointment.objects.filter(filters).select_related('visitor')
-
+    result = VisitorAppointment.objects.filter(filters).select_related('visitor')
+    logger.info("Dados enviados para a interface do usuário.")
+    return result
 
 def get_all_appointments(date_begin, date_end, infirmaries, search_term):
     """
@@ -707,11 +724,10 @@ def get_all_appointments(date_begin, date_end, infirmaries, search_term):
             - nurse (str): The nurse who attended the appointment.
             - current_class (str): The current class of the student (empty for employees and visitors).
     """
+    logger.info("Iniciando get_all_appointments")
     student_appointments = get_student_appointments(date_begin, date_end, infirmaries, search_term)
     employee_appointments = get_employee_appointments(date_begin, date_end, infirmaries, search_term)
     visitor_appointments = get_visitor_appointments(date_begin, date_end, infirmaries, search_term)
-
-    
 
     # Unificar os atendimentos em uma lista única
     all_appointments = []
@@ -773,11 +789,10 @@ def get_all_appointments(date_begin, date_end, infirmaries, search_term):
             'contact_parents' : '',
         })
 
-
     all_appointments.sort(key=lambda x: x['date'], reverse=True)
-    logger.info(f"All appointments: {all_appointments}")
+    logger.debug(f"All appointments: {all_appointments}")
+    logger.info("Dados enviados para a interface do usuário.")
     return all_appointments
-
 
 ########### Charts Module ###########
 
@@ -792,6 +807,7 @@ def get_chart_data(request):
     Returns:
         JsonResponse: A JSON response containing the labels and aggregated data for the chart.
     """
+    logger.info("Iniciando get_chart_data")
     # Agregar as contagens por enfermaria
     labels = ["Infantil", "Fundamental", "Ensino Médio", "Externo"]
     infirmary_counts = {label: 0 for label in labels}
@@ -820,5 +836,6 @@ def get_chart_data(request):
     # Preparar os dados para o gráfico
     data = [infirmary_counts[label] for label in labels]
 
+    logger.info("Dados enviados para a interface do usuário.")
     # Retornar os dados em formato JSON
     return JsonResponse({'labels': labels, 'data': data})

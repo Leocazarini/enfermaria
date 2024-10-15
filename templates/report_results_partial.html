@@ -15,7 +15,7 @@
                         <thead>
                             <tr>
                                 <th>Data</th>
-                                <th>Paciente</th>
+                                
                                 <th>Nome</th>
                                 <th>Turma/Departamento</th>
                                 <th>Aula Atual</th> 
@@ -25,16 +25,16 @@
                                 <th>Tratamento</th>
                                 <th>Observações</th>
                                 <th>Reavalição</th>
-                                <th>Contato com Pais</th>
+                                <th>Contato com Pais</th>                               
                                 <th>Enfermaria</th>
                                 <th>Enfermeira</th>
+                                <th>Paciente</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for appointment in page_obj.object_list %}
                             <tr>
-                                <td>{{ appointment.date|date:"d/m/Y H:i" }}</td>
-                                <td>{{ appointment.type }}</td>
+                                <td>{{ appointment.date|date:"d/m/Y H:i" }}</td>                                
                                 <td>{{ appointment.name }}</td>
                                 <td>{{ appointment.additional_info }}</td>
                                 <td>{{ appointment.current_class }}</td> 
@@ -43,10 +43,19 @@
                                 <td>{{ appointment.reason }}</td>
                                 <td>{{ appointment.treatment }}</td>
                                 <td>{{ appointment.notes }}</td>
-                                <td>{{ appointment.revaluation }}</td>
-                                <td>{{ appointment.contact_parents }}</td>
+                                <td>{% if appointment.revaluation %}
+                                    Sim
+                                {% else %}
+                                    Não
+                                {% endif %}</td>
+                                <td>{% if appointment.contact_parents %}
+                                    Sim
+                                {% else %}
+                                    Não
+                                {% endif %}</td>                               
                                 <td>{{ appointment.infirmary }}</td>
                                 <td>{{ appointment.nurse }}</td>
+                                <td>{{ appointment.type }}</td>
                             </tr>
                             {% empty %}
                             <tr>

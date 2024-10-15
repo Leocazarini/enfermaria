@@ -118,8 +118,16 @@
                                 <td>{{ appointment.reason }}</td>
                                 <td>{{ appointment.treatment }}</td>
                                 <td>{{ appointment.notes }}</td>
-                                <td>{{ appointment.revaluation }}</td>
-                                <td>{{ appointment.contact_parents }}</td>
+                                <td>{% if appointment.revaluation %}
+                                    Sim
+                                {% else %}
+                                    Não
+                                {% endif %}</td>
+                                <td>{{% if appointment.contact_parents %}
+                                    Sim
+                                {% else %}
+                                    Não
+                                {% endif %}</td>
                             </tr>
                             {% empty %}
                             <tr>

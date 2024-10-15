@@ -158,10 +158,10 @@ LOGGING = {
             'filename': LOGS_DIR / 'controller' / 'crud.log',
             'formatter': 'verbose',
         },
-        'controller_api_totvs_file': {
+        'controller_views_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': LOGS_DIR / 'controller' / 'api_totvs.log',
+            'filename': LOGS_DIR / 'controller' / 'views.log',
             'formatter': 'verbose',
         },
         'reports_views_file': {
@@ -178,19 +178,9 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'patients.models': {
-            'handlers': ['patients_models_file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
         # Loggers app appointments
         'appointments.views': {
             'handlers': ['appointments_views_file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'appointments.models': {
-            'handlers': ['appointments_models_file'],
             'level': 'DEBUG',
             'propagate': False,
         },
@@ -200,8 +190,8 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'controller.api_totvs': {
-            'handlers': ['controller_api_totvs_file'],
+        'controller.views': {
+            'handlers': ['controller_views_file'],
             'level': 'DEBUG',
             'propagate': False,
         },
