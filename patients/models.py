@@ -5,7 +5,7 @@ from django.db import models
 #### ----------------- Students models ----------------- ####
 class ClassGroup(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
     segment = models.CharField(max_length=50, blank=True)
     director = models.CharField(max_length=100, blank=True)
 
@@ -53,7 +53,7 @@ class StudentInfo(models.Model):
 
 class Department(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
     director = models.CharField(max_length=100)
 
     def __str__(self):

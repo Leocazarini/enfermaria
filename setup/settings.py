@@ -4,6 +4,37 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
+"""
+        Sistema web desenvolvido para suprir as necessidades da enfermaria Beit Yaacov.
+
+        A necessidade do desenvolvimento do sistema surgiu devido a falta de um sistema de gestão para os atendimentos,
+        Fazendo que fosse necessário o uso de planilhas e papel para o controle dos atendimentos.
+
+        O sistema foi desenvolvido com o intuito de facilitar o controle dos atendimentos, dos pacientes e do dia a dia das enfermeiras.
+
+        A migração dos dados foi feita através da sincronização dos dados da planilha anterior e precisou de revisão e adequação. 
+        Como anteriormente toda inserção de dados era feita manualmente, era passível de falha humana, portanto, 
+        como migramos a planilha para o sistema, possíveis erros humanos foram migrados também.
+        O desenvolvedor não se responsabiliza por possíveis inconsistências nos dados.
+
+
+        O sistema possui quatro módulos principais: patients, appointments, controller e reports.
+
+        Patients: Módulo responsável por conter funções, rotas e configurações de cadastro e controle dos dados dos pacientes.
+
+        Appointments: Módulo responsável por conter funções, rotas e configurações de cadastro e controle dos atendimentos.
+
+        Controller: Módulo responsável por conter funções, rotas e configurações de controles gerais do sistema e principalmente,
+        as funções de comunicação com o banco de dados.
+
+        Reports: Módulo responsável por conter funções, rotas e configurações de geração de relatórios.
+
+
+
+"""
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -90,9 +121,17 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
+     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ENFERMARIA_DB',
+        'USER': 'postgres',
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
