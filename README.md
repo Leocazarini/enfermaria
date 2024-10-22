@@ -17,5 +17,6 @@ Este é um sistema web para a gestão de atendimentos e dados de pacientes das q
 
 - **Backend:** Django (Python)
 - **Frontend:** HTML5, CSS e JavaScript
+- **Banco de dados:** PostgreSQL
 
 O projeto está organizado para ser modular e de fácil manutenção, permitindo futuras expansões e ajustes conforme as necessidades da escola.
